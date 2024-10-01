@@ -1,8 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SysNavBar from "./SysNabBar/SysNavBar";
-import UserNavBar from "./UserNavBar/UserNavBar";
 import "./Home.scss";
+import Users from "./Users/Users";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -12,35 +12,18 @@ const BodyContentWrapper = ({ children }) => {
 
 const Home = () => {
   return (
-    <div>
-      <UserNavBar />
+    <div className="">
       <SysNavBar />
 
       <Routes>
-{/*         <Route
-          path="/vacations"
+        <Route
+          path="/users"
           element={
             <BodyContentWrapper>
-              <Vacations />
+              <Users />
             </BodyContentWrapper>
           }
         />
-        <Route
-          path="/vacations/*"
-          element={
-            <BodyContentWrapper>
-              <Vacations />
-            </BodyContentWrapper>
-          }
-        />
-        <Route
-          path="/timesheet"
-          element={
-            <BodyContentWrapper>
-              <Timesheet />
-            </BodyContentWrapper>
-          }
-        /> */}
       </Routes>
     </div>
   );

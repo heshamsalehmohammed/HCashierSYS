@@ -1,36 +1,71 @@
 import React from "react";
-
+import { Menubar } from "primereact/menubar";
+import { InputText } from "primereact/inputtext";
+import { Badge } from "primereact/badge";
+import { Avatar } from "primereact/avatar";
 import "./SysNavBar.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../../redux/slices/authSlice";
 
 const SysNavBar = () => {
-  return (
-    <div className="sys-nav-container">
-      {/* <Navbar
-        collapseOnSelect
-        expand="lg"
-        className="bg-body-tertiary"
-        bg="dark"
-        data-bs-theme="dark"
-      >
-        <Container>
-          <Navbar.Brand as={Link} to="/home" style={{ marginLeft: "20px" }}>
-            TMS
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Link to="/home/vacations" className="nav-link">
-                Vacations
-              </Link>
-              <Link to="/home/timesheet" className="nav-link">
-                Time Sheet
-              </Link>
-            </Nav>
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
-          </Navbar.Collapse>
-        </Container>
-      </Navbar> */}
+  const handleLogout = () => {
+    dispatch(logoutUser()).then(() => {
+      navigate("/login");
+    });
+  };
+
+  const itemRenderer = (item) => (
+    <a className="flex align-items-center p-menuitem-link">
+      <span className={item.icon} />
+      <span className="mx-2">{item.label}</span>
+      {item.badge && <Badge className="ml-auto" value={item.badge} />}
+      {item.shortcut && (
+        <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">
+          {item.shortcut}
+        </span>
+      )}
+    </a>
+  );
+  const items = [
+    {
+      label: "Users",
+      icon: "pi pi-user",
+      command: (event) => {
+        navigate("users");
+      },
+    },
+    {
+      label: "Shop",
+      icon: "pi pi-shop",
+    },
+    {
+      label: "Orders",
+      icon: "pi pi-objects-column",
+      badge: 3,
+      template: itemRenderer,
+    },
+  ];
+
+  const start = (
+    <img alt="logo" src="/HCashierSYS.png" height="40" className="mr-2"></img>
+  );
+  const end = (
+    <div className="flex align-items-center gap-2">
+      <Avatar image="/profile.png" />
+      <p className="cursor-pointer" onClick={handleLogout}>
+        Logout
+      </p>
+    </div>
+  );
+
+  return (
+    <div className="card">
+      <Menubar model={items} start={start} end={end} />
     </div>
   );
 };
