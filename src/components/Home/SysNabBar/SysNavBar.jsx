@@ -33,10 +33,10 @@ const SysNavBar = () => {
   );
   const items = [
     {
-      label: "Users",
+      label: "Customers",
       icon: "pi pi-user",
       command: (event) => {
-        navigate("users");
+        navigate("customers");
       },
     },
     {

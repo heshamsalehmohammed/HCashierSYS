@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SysNavBar from "./SysNabBar/SysNavBar";
 import "./Home.scss";
-import Users from "./Users/Users";
+import Customers from "./Customers/Customers";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -17,10 +17,10 @@ const Home = () => {
 
       <Routes>
         <Route
-          path="/users"
+          path="/customers"
           element={
             <BodyContentWrapper>
-              <Users />
+              <Customers />
             </BodyContentWrapper>
           }
         />

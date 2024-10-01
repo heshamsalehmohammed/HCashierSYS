@@ -5,12 +5,12 @@ import { Button } from "primereact/button";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { openAddUserPopupAddress } from "../../../redux/slices/usersSlice";
-import CreateUserPopup from "./CreateUserPopup";
+import { openAddCustomerPopupAddress } from "../../../redux/slices/customersSlice";
+import CreateCustomerPopup from "./CreateCustomerPopup";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-const Users = () => {
+const Customers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,21 +28,21 @@ const headerStyles = {
 
   return (
     <div className="">
-      <CreateUserPopup />
+      <CreateCustomerPopup />
       <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <Button
           type="button"
-          label="Add New User"
-          icon="pi pi-users"
+          label="Add New Customer"
+          icon="pi pi-customers"
           outlined
           badgeClassName="p-badge-danger"
           className="mb-4"
           onClick={() => {
-            dispatch(openAddUserPopupAddress());
+            dispatch(openAddCustomerPopupAddress());
           }}
         />
 
-        <div className="m-1">Or search for existing user</div>
+        <div className="m-1">Or search for existing customer</div>
         <IconField iconPosition="left" className="mt-0 m-3">
           <InputIcon className="pi pi-search"> </InputIcon>
           <InputText placeholder="Search by number or name" />
@@ -64,4 +64,4 @@ const headerStyles = {
   );
 };
 
-export default Users;
+export default Customers;
