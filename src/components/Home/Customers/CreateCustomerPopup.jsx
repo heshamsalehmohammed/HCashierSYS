@@ -13,6 +13,7 @@ import {
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputTextarea } from "primereact/inputtextarea";
+import { addCustomer } from "../../../redux/slices/customersSlice";
 
 
 const CreateCustomerPopup = () => {
@@ -32,7 +33,10 @@ const CreateCustomerPopup = () => {
       <Button
         label="Create"
         icon="pi pi-check"
-        onClick={() => dispatch(closeAddCustomerPopupAddress())}
+        onClick={() => {
+          dispatch(closeAddCustomerPopupAddress())
+          dispatch(addCustomer())
+        }}
         autoFocus
       />
     </div>

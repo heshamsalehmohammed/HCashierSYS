@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import authReducer from './slices/authSlice';
 import utilitiesReducer from './slices/utilitiesSlice';
 import customersSlice from './slices/customersSlice';
+import  listenerMiddleware  from './middlewares/listenerMiddleware';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -24,7 +25,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }),
+    }).concat(listenerMiddleware),
 });
 
 export const persistor = persistStore(store);
