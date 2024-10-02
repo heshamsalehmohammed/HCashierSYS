@@ -40,14 +40,14 @@ const SysNavBar = () => {
       },
     },
     {
-      label: "Shop",
-      icon: "pi pi-shop",
-    },
-    {
       label: "Orders",
       icon: "pi pi-objects-column",
       badge: 3,
       template: itemRenderer,
+    },
+    {
+      label: "Shop",
+      icon: "pi pi-shop",
     },
   ];
 
