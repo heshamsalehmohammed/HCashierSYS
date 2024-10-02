@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Dialog } from 'primereact/dialog';
 import { closePopup } from '../../../redux/slices/utilitiesSlice';
 //import waringnIcon from '../../../../assets/images/warning-icon.png';
+import { Button } from 'primereact/button';
 
 
 const PopupMessage = ({
@@ -108,8 +109,8 @@ const PopupMessage = ({
                 )}
             </div>
             <div className='dialog-footer'>
-                <button
-                    className='btn btn-primary float-right tms-dark-btn'
+                <Button
+                    className=''
                     style={{
                         marginTop: '16px'
                         // className: {type === 'Error'}? ' ' : ''
@@ -117,7 +118,7 @@ const PopupMessage = ({
                     onClick={handlePopupClose}
                 >
                     {buttonLabel}
-                </button>
+                </Button>
             </div>
         </Dialog>
     );

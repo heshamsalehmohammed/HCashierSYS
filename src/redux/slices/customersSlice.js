@@ -17,7 +17,7 @@ export const addCustomer = createAsyncThunk(
     delete newCustomer._id;
     return handleHttpRequestPromise(addCustomerAPI(newCustomer), {
       type: "openPopup",
-      showForStatuses: "500,404,501",
+      showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
         title: "Error add Customer",
@@ -31,10 +31,6 @@ export const addCustomer = createAsyncThunk(
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
-        if ([400, 401].includes(error.response.status))
-          return thunkAPI.rejectWithValue({
-            error: "Invalid username or password",
-          });
         return thunkAPI.abort();
       });
   }
@@ -46,7 +42,7 @@ export const editCustomer = createAsyncThunk(
     const newCustomer = thunkAPI.getState().customers.addCustomerPopup;
     return handleHttpRequestPromise(editCustomerAPI(payload), {
       type: "openPopup",
-      showForStatuses: "500,404,501",
+      showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
         title: "Error add Customer",
@@ -59,10 +55,6 @@ export const editCustomer = createAsyncThunk(
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
-        if ([400, 401].includes(error.response.status))
-          return thunkAPI.rejectWithValue({
-            error: "Invalid username or password",
-          });
         return thunkAPI.abort();
       });
   }
@@ -77,7 +69,7 @@ export const fetchCustomers = createAsyncThunk(
     }
     return handleHttpRequestPromise(fetchCustomersAPI({searchTerm}), {
       type: "openPopup",
-      showForStatuses: "500,404,501",
+      showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
         title: "Error add Customer",
@@ -90,10 +82,6 @@ export const fetchCustomers = createAsyncThunk(
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
-        if ([400, 401].includes(error.response.status))
-          return thunkAPI.rejectWithValue({
-            error: "Invalid username or password",
-          });
         return thunkAPI.abort();
       });
   }
