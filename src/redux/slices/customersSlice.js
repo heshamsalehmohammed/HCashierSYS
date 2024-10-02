@@ -14,6 +14,7 @@ export const addCustomer = createAsyncThunk(
       thunkAPI.getState().customers.addCustomerPopup
     );
     delete newCustomer.isShown;
+    delete newCustomer._id;
     return handleHttpRequestPromise(addCustomerAPI(newCustomer), {
       type: "openPopup",
       showForStatuses: "500,404,501",
