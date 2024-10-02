@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { Button } from "primereact/button";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -19,7 +18,6 @@ import _ from "lodash";
 
 const Customers = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const customers = useSelector(selectCustomers);
 
@@ -38,7 +36,7 @@ const Customers = () => {
   const debouncedFetch = useCallback(
     _.debounce(() => {
       dispatch(fetchCustomers());
-    }, 300),  // 300ms delay for debounce
+    }, 300),
     [dispatch]
   );
 

@@ -1,18 +1,16 @@
-import React from "react";
 import { Menubar } from "primereact/menubar";
-import { InputText } from "primereact/inputtext";
 import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
 import "./SysNavBar.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { logoutUser } from "../../../redux/slices/authSlice";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
-
+/*   const user = useSelector((state) => state.auth.user);
+ */
   const handleLogout = () => {
     dispatch(logoutUser()).then(() => {
       navigate("/login");

@@ -1,6 +1,3 @@
-import http from "../services/apiServices";
-import generalConfig from "../GeneralConfig.json";
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const loginAPI = async ({ username, password }) => {

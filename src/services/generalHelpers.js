@@ -72,7 +72,7 @@ function isDecimal(str) {
  */
 
 function isInteger(str) {
-  if (str == undefined) return false;
+  if (str === undefined) return false;
   if (typeof str !== 'string') {
     str = str.toString();
   }

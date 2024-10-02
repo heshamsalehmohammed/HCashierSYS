@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
 });
 
 axiosInstance.interceptors.response.use(null, (error) => {
-  if (error.code == 'ERR_NETWORK') {
+  if (error.code === 'ERR_NETWORK') {
     error.response = {status: 404, statusText: 'Not Found'};
   }
 

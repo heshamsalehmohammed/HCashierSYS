@@ -1,6 +1,4 @@
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import {
@@ -18,7 +16,6 @@ import { addCustomer } from "../../../redux/slices/customersSlice";
 
 const CreateCustomerPopup = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const addCustomerPopup = useSelector(selectAddCustomerPopup);
 

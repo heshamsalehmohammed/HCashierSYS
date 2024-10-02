@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import { useState } from 'react';
 
 const useIsAuthenticated = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
