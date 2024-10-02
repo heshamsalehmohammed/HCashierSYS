@@ -18,7 +18,7 @@ export const logoutAPI = async () => {
 
 /* export const loginAPI = async (userDetails) => {
   const result = await http.post(
-    `${generalConfig.API_ENDPOINT_PREFIX}User/Login`,
+    `${process.env.REACT_APP_API_ENDPOINT_PREFIX}User/Login`,
     userDetails
   );
   return result;
@@ -26,14 +26,14 @@ export const logoutAPI = async () => {
 
 export const logoutAPI = async () => {
   const result = await http.post(
-    `${generalConfig.API_ENDPOINT_PREFIX}User/Logout`
+    `${process.env.REACT_APP_API_ENDPOINT_PREFIX}User/Logout`
   );
   return result;
 };
 
 export const registerAPI = async (userDetails) => {
   const result = await http.post(
-    `${generalConfig.API_ENDPOINT_PREFIX}/user/Register`,
+    `${process.env.REACT_APP_API_ENDPOINT_PREFIX}/user/Register`,
     userDetails
   );
   return result;
