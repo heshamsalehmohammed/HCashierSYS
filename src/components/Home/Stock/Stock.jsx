@@ -5,8 +5,10 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import {
+  deleteStockItem,
   fetchStockItems,
   openAddStockItemPopup,
+  prepareAndopenAddStockItemPopup,
   selectStockItems,
   selectStockSearchTerm,
   setStockSearchTerm,
@@ -44,6 +46,35 @@ const Stock = () => {
     dispatch(fetchStockItems());
   }, []);
 
+
+  const actionsTemplate = (rowData) => {
+    return (
+      <div className="flex justify-content-start">
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-rounded p-button-success mr-2"
+          onClick={() => handleEdit(rowData)} 
+          tooltip="Edit"
+        />
+
+        <Button
+          icon="pi pi-trash"
+          className="p-button-rounded p-button-danger"
+          onClick={() => handleDelete(rowData)}  
+          tooltip="Delete"
+        />
+      </div>
+    );
+  };
+
+  const handleEdit = (item) => {
+    dispatch(prepareAndopenAddStockItemPopup(item._id)); 
+  };
+
+  const handleDelete = (item) => {
+    dispatch(deleteStockItem(item._id)); 
+  };
+
   return (
     <div className="">
       <CreateStockItemPopup />
@@ -57,7 +88,7 @@ const Stock = () => {
             badgeClassName="p-badge-danger"
             className="mb-1"
             onClick={() => {
-              dispatch(openAddStockItemPopup());
+              dispatch(prepareAndopenAddStockItemPopup());
             }}
           />
 
@@ -96,6 +127,7 @@ const Stock = () => {
             header="Actions"
             headerStyle={headerStyles}
             headerClassName="text-center "
+            body={actionsTemplate}
           ></Column>
         </DataTable>
       </div>

@@ -34,7 +34,7 @@ const CreateStockItemCustomizationPopup = () => {
   const footerContent = (
     <div>
       <Button
-        label="Add Customization"
+        label={addStockItemCustomizationPopup._id?"Edit Customization":"Add Customization"}
         icon="pi pi-check"
         onClick={() => {
           dispatch(addStockItemCustomization());

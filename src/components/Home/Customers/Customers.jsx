@@ -40,6 +40,43 @@ const Customers = () => {
     [dispatch]
   );
 
+  const actionsTemplate = (rowData) => {
+    return (
+      <div className="flex justify-content-start">
+                <Button
+          icon="pi pi-plus"
+          label="New Order"
+          className=" p-button-success mr-2"
+          onClick={() => handleNewOrder(rowData)} 
+          tooltip="New Order"
+        />
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-rounded p-button-success mr-2"
+          onClick={() => handleEdit(rowData)} 
+          tooltip="Edit"
+        />
+
+        <Button
+          icon="pi pi-trash"
+          className="p-button-rounded p-button-danger"
+          onClick={() => handleDelete(rowData)} 
+          tooltip="Delete"
+        />
+      </div>
+    );
+  };
+
+    const handleEdit = (item) => {
+    };
+  
+    const handleDelete = (item) => {
+    };
+
+    const handleNewOrder = (item)=>{
+
+    }
+
   return (
     <div className="">
       <CreateCustomerPopup />
@@ -92,6 +129,7 @@ const Customers = () => {
           header="Actions"
           headerStyle={headerStyles}
           headerClassName="text-center "
+          body={actionsTemplate}
         ></Column>
       </DataTable>
     </div>

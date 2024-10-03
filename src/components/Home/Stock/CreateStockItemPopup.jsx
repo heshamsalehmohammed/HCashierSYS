@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import {
   closeAddStockItemPopup,
+  editStockItem,
   openAddStockItemCustomizationPopup,
   removeStockItemCustomization,
   selectAddStockItemPopup,
@@ -30,10 +31,15 @@ const CreateStockItemPopup = () => {
   const footerContent = (
     <div>
       <Button
-        label="Create"
+        label={addStockItemPopup._id?'Edit':'Create'}
         icon="pi pi-check"
         onClick={() => {
-          dispatch(addStockItem());
+          if(addStockItemPopup._id){
+            dispatch(editStockItem());
+          }else{
+
+            dispatch(addStockItem());
+          }
         }}
         autoFocus
       />
@@ -120,10 +126,20 @@ const CreateStockItemPopup = () => {
 
               <Button
                 icon="pi pi-times"
+                className="m-1"
                 severity="danger"
                 aria-label="Cancel"
                 onClick={() => {
                   dispatch(removeStockItemCustomization(index));
+                }}
+              />
+              <Button
+                icon="pi pi-pencil"
+                className="m-1"
+                severity="info"
+                aria-label="edit"
+                onClick={() => {
+                  dispatch(openAddStockItemCustomizationPopup(index));
                 }}
               />
             </div>
