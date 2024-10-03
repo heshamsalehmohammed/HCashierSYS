@@ -60,7 +60,7 @@ const SysNavBar = () => {
   );
   const end = (
     <div className="flex align-items-center gap-2">
-      <Avatar image="/profile.png" />
+      {/* <Avatar image="/profile.png" /> */}
       <p className="cursor-pointer" onClick={handleLogout}>
         Logout
       </p>

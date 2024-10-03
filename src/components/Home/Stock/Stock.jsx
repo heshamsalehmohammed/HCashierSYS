@@ -18,7 +18,8 @@ import { Column } from "primereact/column";
 import _ from "lodash";
 import CreateStockItemPopup from "./CreateStockItemPopup";
 
-const Stock = () => {
+const Stock = (props) => {
+  const { fromOrder = false } = props;
   const dispatch = useDispatch();
 
   const stockItems = useSelector(selectStockItems);
@@ -43,54 +44,75 @@ const Stock = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchStockItems());
-  }, []);
+    if(!fromOrder){
 
+      dispatch(fetchStockItems());
+    }
+  }, []);
 
   const actionsTemplate = (rowData) => {
     return (
       <div className="flex justify-content-start">
-        <Button
-          icon="pi pi-pencil"
-          className="p-button-rounded p-button-success mr-2"
-          onClick={() => handleEdit(rowData)} 
-          tooltip="Edit"
-        />
+        {fromOrder ? (
+          <>
+          <Button
+              icon="pi pi-plus"
+              className="p-button-success mr-2"
+              onClick={() => handleSelectItemForOrder(rowData)}
+              label="Select Item"
+            /></>
+        ) : (
+          <>
+            <Button
+              icon="pi pi-pencil"
+              className="p-button-rounded p-button-success mr-2"
+              onClick={() => handleEdit(rowData)}
+              tooltip="Edit"
+            />
 
-        <Button
-          icon="pi pi-trash"
-          className="p-button-rounded p-button-danger"
-          onClick={() => handleDelete(rowData)}  
-          tooltip="Delete"
-        />
+            <Button
+              icon="pi pi-trash"
+              className="p-button-rounded p-button-danger"
+              onClick={() => handleDelete(rowData)}
+              tooltip="Delete"
+            />
+          </>
+        )}
       </div>
     );
   };
 
   const handleEdit = (item) => {
-    dispatch(prepareAndopenAddStockItemPopup(item._id)); 
+    dispatch(prepareAndopenAddStockItemPopup(item._id));
   };
 
   const handleDelete = (item) => {
-    dispatch(deleteStockItem(item._id)); 
+    dispatch(deleteStockItem(item._id));
   };
+
+
+  const handleSelectItemForOrder = (item)=>{
+
+  }
 
   return (
     <div className="">
       <CreateStockItemPopup />
-      <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+      <div className={`surface-ground flex align-items-center justify-content-center flex-column ${fromOrder? "":" px-4 pb-8 pt-4 md:px-6 lg:px-8 "}`}>
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
-          <Button
-            type="button"
-            label="Add New Item"
-            icon="pi pi-stockItems"
-            outlined
-            badgeClassName="p-badge-danger"
-            className="mb-1"
-            onClick={() => {
-              dispatch(prepareAndopenAddStockItemPopup());
-            }}
-          />
+          {!fromOrder && (
+            <Button
+              type="button"
+              label="Add New Item"
+              icon="pi pi-stockItems"
+              outlined
+              badgeClassName="p-badge-danger"
+              className="mb-1"
+              onClick={() => {
+                dispatch(prepareAndopenAddStockItemPopup());
+              }}
+            />
+          )}
 
           <IconField iconPosition="left" className="mb-1">
             <InputIcon className="pi pi-search"> </InputIcon>
@@ -116,12 +138,14 @@ const Stock = () => {
             headerStyle={headerStyles}
             headerClassName="text-center "
           ></Column>
-          <Column
-            field="amount"
-            header="Available Amount In Stock By Kilo"
-            headerStyle={headerStyles}
-            headerClassName="text-center "
-          ></Column>
+          {!fromOrder && (
+            <Column
+              field="amount"
+              header="Available Amount In Stock By Kilo"
+              headerStyle={headerStyles}
+              headerClassName="text-center "
+            ></Column>
+          )}
           <Column
             field="actions"
             header="Actions"

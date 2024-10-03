@@ -1,9 +1,9 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SysNavBar from "./SysNabBar/SysNavBar";
 import "./Home.scss";
 import Customers from "./Customers/Customers";
 import Stock from "./Stock/Stock";
+import Order from "./Order/Order";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -25,8 +25,7 @@ const Home = () => {
             </BodyContentWrapper>
           }
         />
-      </Routes>
-      <Routes>
+
         <Route
           path="/stock/*"
           element={
@@ -35,16 +34,22 @@ const Home = () => {
             </BodyContentWrapper>
           }
         />
-      </Routes>
-      <Routes>
         <Route
-          path="/orders/*"
+          path="/order"
           element={
             <BodyContentWrapper>
-              
+              <Order />
             </BodyContentWrapper>
           }
         />
+{/*         <Route
+          path="/orders/*"
+          element={
+            <BodyContentWrapper>
+              <Orders />
+            </BodyContentWrapper>
+          }
+        /> */}
       </Routes>
     </div>
   );

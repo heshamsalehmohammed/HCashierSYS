@@ -3,6 +3,8 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import {
   closeAddCustomerPopup,
+  editCustomer,
+  handleNewOrderForCustomerButtonClick,
   selectAddCustomerPopup,
   setAddCustomerPopupAddress,
   setAddCustomerPopupName,
@@ -12,7 +14,7 @@ import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputTextarea } from "primereact/inputtextarea";
 import { addCustomer } from "../../../redux/slices/customersSlice";
-
+import _ from "lodash";
 
 const CreateCustomerPopup = () => {
   const dispatch = useDispatch();
@@ -21,21 +23,43 @@ const CreateCustomerPopup = () => {
 
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
-      <span className="font-bold white-space-nowrap">Add New Customer</span>
+      <span className="font-bold white-space-nowrap">
+        {addCustomerPopup._id ? "Edit" : "Add New"} Customer
+      </span>
     </div>
   );
 
   const footerContent = (
     <div>
       <Button
-        label="Create"
+        label={addCustomerPopup._id ? "Edit" : "Create"}
         icon="pi pi-check"
         onClick={() => {
-          dispatch(closeAddCustomerPopup())
-          dispatch(addCustomer())
+          if (addCustomerPopup._id) {
+            dispatch(editCustomer());
+          } else {
+            dispatch(addCustomer());
+          }
         }}
         autoFocus
       />
+      {addCustomerPopup._id && (
+        <Button
+          icon="pi pi-plus"
+          label="New Order"
+          className=" p-button-success mr-2"
+          onClick={() => {
+            const customer = _.cloneDeep(addCustomerPopup);
+            delete customer.isShown;
+            dispatch(
+              handleNewOrderForCustomerButtonClick({
+                customer
+              })
+            );
+          }}
+          tooltip="New Order"
+        />
+      )}
     </div>
   );
 
@@ -53,7 +77,7 @@ const CreateCustomerPopup = () => {
     >
       <div className=" card flex justify-content-center align-items-center mt-5 mb-5 flex-column">
         <FloatLabel className="w-12 w-12 md:w-8 mb-4">
-          <label htmlFor="customername">Customername</label>
+          <label htmlFor="customername">Customer Name</label>
           <InputText
             className="w-12"
             id="customername"
@@ -77,7 +101,9 @@ const CreateCustomerPopup = () => {
             id="Address"
             className="w-12"
             value={addCustomerPopup.address}
-            onChange={(e) => dispatch(setAddCustomerPopupAddress(e.target.value))}
+            onChange={(e) =>
+              dispatch(setAddCustomerPopupAddress(e.target.value))
+            }
             rows={5}
             cols={25}
           />

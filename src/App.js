@@ -1,11 +1,5 @@
-import React from "react";
 import "./App.scss"; // Import SCSS file
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home/Home";
 import NotFound from "./components/Notfound";
 import { useDispatch } from "react-redux";
@@ -16,6 +10,7 @@ import PrivateRoute from "./components/utilities/PrivateRoute";
 
 function App() {
   const dispatch = useDispatch();
+
   ReduxDispatchSingleton.setDispatch(dispatch);
   return (
     <Router>
@@ -24,14 +19,6 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route
-              path="/home"
-              element={
-                <PrivateRoute>
-                  <Home />
-                </PrivateRoute>
-              }
-            />
             <Route
               path="/home/*"
               element={

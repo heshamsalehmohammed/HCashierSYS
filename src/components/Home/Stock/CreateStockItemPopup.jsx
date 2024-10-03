@@ -24,7 +24,7 @@ const CreateStockItemPopup = () => {
 
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
-      <span className="font-bold white-space-nowrap">Add New Stock Item</span>
+      <span className="font-bold white-space-nowrap">{addStockItemPopup._id?'Edit':'Add New'} Stock Item</span>
     </div>
   );
 

@@ -5,8 +5,10 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import {
+  deleteCustomer,
   fetchCustomers,
-  openAddCustomerPopup,
+  handleNewOrderForCustomerButtonClick,
+  prepareAndopenAddCustomerPopup,
   selectCustomers,
   selectCustomersSearchTerm,
   setCustomersSearchTerm,
@@ -21,7 +23,7 @@ const Customers = () => {
 
   const customers = useSelector(selectCustomers);
 
-  const serachTermValue = useSelector(selectCustomersSearchTerm)
+  const serachTermValue = useSelector(selectCustomersSearchTerm);
 
   const tableStyles = {
     backgroundColor: "#333", // Dark background
@@ -43,39 +45,41 @@ const Customers = () => {
   const actionsTemplate = (rowData) => {
     return (
       <div className="flex justify-content-start">
-                <Button
+        <Button
           icon="pi pi-plus"
           label="New Order"
           className=" p-button-success mr-2"
-          onClick={() => handleNewOrder(rowData)} 
+          onClick={() => handleNewOrder(rowData)}
           tooltip="New Order"
         />
         <Button
           icon="pi pi-pencil"
           className="p-button-rounded p-button-success mr-2"
-          onClick={() => handleEdit(rowData)} 
+          onClick={() => handleEdit(rowData)}
           tooltip="Edit"
         />
 
         <Button
           icon="pi pi-trash"
           className="p-button-rounded p-button-danger"
-          onClick={() => handleDelete(rowData)} 
+          onClick={() => handleDelete(rowData)}
           tooltip="Delete"
         />
       </div>
     );
   };
 
-    const handleEdit = (item) => {
-    };
-  
-    const handleDelete = (item) => {
-    };
+  const handleEdit = (item) => {
+    dispatch(prepareAndopenAddCustomerPopup(item._id));
+  };
 
-    const handleNewOrder = (item)=>{
+  const handleDelete = (item) => {
+    dispatch(deleteCustomer(item._id));
+  };
 
-    }
+  const handleNewOrder = (item) => {
+    dispatch(handleNewOrderForCustomerButtonClick({customer:item}));
+  };
 
   return (
     <div className="">
@@ -89,7 +93,7 @@ const Customers = () => {
           badgeClassName="p-badge-danger"
           className="mb-4"
           onClick={() => {
-            dispatch(openAddCustomerPopup());
+            dispatch(prepareAndopenAddCustomerPopup());
           }}
         />
 
@@ -100,7 +104,7 @@ const Customers = () => {
             placeholder="Search by number or name"
             onChange={(e) => {
               dispatch(setCustomersSearchTerm(e.target.value));
-              debouncedFetch()
+              debouncedFetch();
             }}
             value={serachTermValue}
           />

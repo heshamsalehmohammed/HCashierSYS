@@ -95,7 +95,7 @@ export const deleteStockItem = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add StockItem",
+        title: "Error delete StockItem",
         message:
           "An unexpected error occurred, Cannot add StockItem at thee moment. ",
         buttonLabel: "OK",

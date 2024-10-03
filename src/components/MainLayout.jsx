@@ -4,6 +4,8 @@ import Spinner from './utilities/Spinner/Spinner';
 import PopupMessage from './utilities/PopupMessage/PopupMessage';
 import ConfirmationPopupMessage from './utilities/ConfirmationPopupMessage/ConfirmationPopupMessage';
 import ErrorPopup from './utilities/ErrorPopup/ErrorPopup';
+import { useNavigate } from 'react-router';
+import RouterNavigationSingleton from '../redux/routerNavigationSingleton';
 
 
 const MainLayout = (props) => {
@@ -19,6 +21,9 @@ const MainLayout = (props) => {
 
   const errorPopup = useSelector((state) => state.utilities.errorPopup);
 
+
+  const navigate = useNavigate();
+  RouterNavigationSingleton.setNavigation(navigate);
 
   return (
     <>
