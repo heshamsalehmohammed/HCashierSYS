@@ -15,6 +15,14 @@ export const addStockItem = createAsyncThunk(
     );
     delete newStockItem.isShown;
     delete newStockItem._id;
+    delete newStockItem.addStockItemCustomizationPopup;
+    newStockItem.customizations.forEach((customization) => {
+      delete customization._id;
+      delete customization.isShown;
+      customization.options.forEach((option) => {
+        delete option._id;
+      });
+    });
     return handleHttpRequestPromise(addStockItemAPI(newStockItem), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
@@ -27,12 +35,14 @@ export const addStockItem = createAsyncThunk(
       },
     })
       .then((result) => {
+        thunkAPI.dispatch(closeAddStockItemPopup());
         thunkAPI.dispatch(fetchStockItems());
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
         return thunkAPI.abort();
-      });
+      })
+      .finally(() => {});
   }
 );
 
@@ -64,10 +74,7 @@ export const fetchStockItems = createAsyncThunk(
   "stock/fetchStockItems",
   async (payload, thunkAPI) => {
     const searchTerm = thunkAPI.getState().stock.searchTerm;
-    if(!searchTerm){
-      return thunkAPI.fulfillWithValue([]);
-    }
-    return handleHttpRequestPromise(fetchStockItemsAPI({searchTerm}), {
+    return handleHttpRequestPromise(fetchStockItemsAPI({ searchTerm }), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
       payload: {
@@ -87,17 +94,12 @@ export const fetchStockItems = createAsyncThunk(
   }
 );
 
-
-
 /* 
-
 addStockItemCustomizationPopup options
-
 {
   name:"",
-  additinalPrice:""
+  additionalPrice:""
 } */
-
 
 // Define initial state
 const initialState = {
@@ -107,46 +109,44 @@ const initialState = {
     isShown: false,
     _id: "",
     name: "",
-    amount:"",
-    price:"",
-    customizations:[],
-    addStockItemCustomizationPopup:{
+    amount: 0,
+    price: 0,
+    customizations: [],
+    addStockItemCustomizationPopup: {
       isShown: false,
       _id: "",
-      name:"",
-      options:[]
-    }
+      name: "",
+      options: [],
+    },
   },
 };
 
-
-const _closeAddStockItemCustomizationPopup = (state)=>{
+const _closeAddStockItemCustomizationPopup = (state) => {
   state.addStockItemPopup.addStockItemCustomizationPopup.isShown = false;
   state.addStockItemPopup.addStockItemCustomizationPopup = {
     isShown: false,
     _id: "",
-    options: []
+    options: [],
   };
-}
+};
 
-const _closeAddStockItemPopup = (state)=>{
+const _closeAddStockItemPopup = (state) => {
   state.addStockItemPopup.isShown = false;
   state.addStockItemPopup = {
     isShown: false,
     _id: "",
     name: "",
-    amount:"",
-    price:"",
-    customizations:[],
-    addStockItemCustomizationPopup:{
+    amount: 0,
+    price: 0,
+    customizations: [],
+    addStockItemCustomizationPopup: {
       isShown: false,
       _id: "",
-      name:"",
-      options:[]
-    }
+      name: "",
+      options: [],
+    },
   };
-}
-
+};
 
 const stockSlice = createSlice({
   name: "stock",
@@ -159,52 +159,61 @@ const stockSlice = createSlice({
       state.addStockItemPopup.name = action.payload;
     },
     setAddStockItemPopupAmount: (state, action) => {
-      state.addStockItemPopup.amount = action.payload;
+      state.addStockItemPopup.amount = Number(action.payload);
     },
     setAddStockItemPopupPrice: (state, action) => {
-      state.addStockItemPopup.price = action.payload;
+      state.addStockItemPopup.price = Number(action.payload);
     },
     openAddStockItemPopup: (state, action) => {
       state.addStockItemPopup.isShown = true;
     },
     closeAddStockItemPopup: (state, action) => {
-      _closeAddStockItemPopup(state)
+      _closeAddStockItemPopup(state);
     },
 
     openAddStockItemCustomizationPopup: (state, action) => {
       state.addStockItemPopup.addStockItemCustomizationPopup.isShown = true;
     },
     closeAddStockItemCustomizationPopup: (state, action) => {
-      _closeAddStockItemCustomizationPopup(state)
+      _closeAddStockItemCustomizationPopup(state);
     },
     addStockItemCustomizationName: (state, action) => {
-      state.addStockItemPopup.addStockItemCustomizationPopup.name = action.payload
+      state.addStockItemPopup.addStockItemCustomizationPopup.name =
+        action.payload;
     },
     addStockItemCustomizationOption: (state, action) => {
       state.addStockItemPopup.addStockItemCustomizationPopup.options.push({
-        _id:"",
-        name:"",
-        additinalPrice:""
-      })
+        _id: "",
+        name: "",
+        additionalPrice: 0,
+      });
     },
     removeStockItemCustomizationOption: (state, action) => {
-      state.addStockItemPopup.addStockItemCustomizationPopup.options.splice(action.payload, 1);
-      
+      state.addStockItemPopup.addStockItemCustomizationPopup.options.splice(
+        action.payload,
+        1
+      );
     },
     setStockItemCustomizationOptionName: (state, action) => {
       const index = action.payload.index;
       const value = action.payload.value;
-      state.addStockItemPopup.addStockItemCustomizationPopup.options[index].name = value;
+      state.addStockItemPopup.addStockItemCustomizationPopup.options[
+        index
+      ].name = value;
     },
     setStockItemCustomizationOptionAdditionalPrice: (state, action) => {
       const index = action.payload.index;
       const value = action.payload.value;
-      state.addStockItemPopup.addStockItemCustomizationPopup.options[index].additionalPrice = value;
+      state.addStockItemPopup.addStockItemCustomizationPopup.options[
+        index
+      ].additionalPrice = Number(value);
     },
     addStockItemCustomization: (state, action) => {
-      const newCustomization = _.cloneDeep(state.addStockItemPopup.addStockItemCustomizationPopup);
+      const newCustomization = _.cloneDeep(
+        state.addStockItemPopup.addStockItemCustomizationPopup
+      );
       state.addStockItemPopup.customizations.push(newCustomization);
-      _closeAddStockItemCustomizationPopup(state)
+      _closeAddStockItemCustomizationPopup(state);
     },
     removeStockItemCustomization: (state, action) => {
       state.addStockItemPopup.customizations.splice(action.payload, 1);
@@ -212,7 +221,7 @@ const stockSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStockItems.fulfilled, (state, action) => {
-      state.stock = action.payload
+      state.stock = action.payload;
     });
   },
 });
@@ -232,14 +241,13 @@ export const {
   setStockItemCustomizationOptionName,
   setStockItemCustomizationOptionAdditionalPrice,
   addStockItemCustomization,
-  removeStockItemCustomization
+  removeStockItemCustomization,
 } = stockSlice.actions;
 
 export const selectStockSearchTerm = (state) => state.stock.searchTerm;
-export const selectAddStockItemPopup = (state) =>
-  state.stock.addStockItemPopup;
+export const selectAddStockItemPopup = (state) => state.stock.addStockItemPopup;
 export const selectAddStockItemCustomizationPopup = (state) =>
   state.stock.addStockItemPopup.addStockItemCustomizationPopup;
-export const selectStockItems= (state) => state.stock.stock 
+export const selectStockItems = (state) => state.stock.stock;
 
 export default stockSlice.reducer;

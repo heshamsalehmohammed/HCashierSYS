@@ -33,7 +33,6 @@ const CreateStockItemPopup = () => {
         label="Create"
         icon="pi pi-check"
         onClick={() => {
-          dispatch(closeAddStockItemPopup());
           dispatch(addStockItem());
         }}
         autoFocus

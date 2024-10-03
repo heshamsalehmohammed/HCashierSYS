@@ -9,15 +9,11 @@ import {
   removeStockItemCustomizationOption,
   selectAddStockItemCustomizationPopup,
   selectAddStockItemPopup,
-  setAddStockItemPopupAmount,
-  setAddStockItemPopupName,
-  setAddStockItemPopupPrice,
   setStockItemCustomizationOptionAdditionalPrice,
   setStockItemCustomizationOptionName,
 } from "../../../redux/slices/stockSlice";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
-import { addStockItem } from "../../../redux/slices/stockSlice";
 
 const CreateStockItemCustomizationPopup = () => {
   const dispatch = useDispatch();

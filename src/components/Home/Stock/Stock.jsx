@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
 import { IconField } from "primereact/iconfield";
@@ -19,7 +19,7 @@ import CreateStockItemPopup from "./CreateStockItemPopup";
 const Stock = () => {
   const dispatch = useDispatch();
 
-  const customers = useSelector(selectStockItems);
+  const stockItems = useSelector(selectStockItems);
 
   const serachTermValue = useSelector(selectStockSearchTerm);
 
@@ -40,6 +40,10 @@ const Stock = () => {
     [dispatch]
   );
 
+  useEffect(() => {
+    dispatch(fetchStockItems());
+  }, []);
+
   return (
     <div className="">
       <CreateStockItemPopup />
@@ -48,7 +52,7 @@ const Stock = () => {
           <Button
             type="button"
             label="Add New Item"
-            icon="pi pi-customers"
+            icon="pi pi-stockItems"
             outlined
             badgeClassName="p-badge-danger"
             className="mb-1"
@@ -70,7 +74,7 @@ const Stock = () => {
           </IconField>
         </div>
         <DataTable
-          value={customers}
+          value={stockItems}
           stripedRows
           className="w-12 m-auto shadow-7"
           style={tableStyles}
@@ -82,8 +86,8 @@ const Stock = () => {
             headerClassName="text-center "
           ></Column>
           <Column
-            field="amountInStock"
-            header="Amount In Stock By Kilo"
+            field="amount"
+            header="Available Amount In Stock By Kilo"
             headerStyle={headerStyles}
             headerClassName="text-center "
           ></Column>
