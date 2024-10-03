@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import {
-  closeAddCustomerPopupAddress,
+  closeAddCustomerPopup,
   selectAddCustomerPopup,
   setAddCustomerPopupAddress,
   setAddCustomerPopupName,
@@ -31,7 +31,7 @@ const CreateCustomerPopup = () => {
         label="Create"
         icon="pi pi-check"
         onClick={() => {
-          dispatch(closeAddCustomerPopupAddress())
+          dispatch(closeAddCustomerPopup())
           dispatch(addCustomer())
         }}
         autoFocus
@@ -48,7 +48,7 @@ const CreateCustomerPopup = () => {
       style={{ width: "50rem" }}
       onHide={() => {
         if (!addCustomerPopup.isShown) return;
-        dispatch(closeAddCustomerPopupAddress());
+        dispatch(closeAddCustomerPopup());
       }}
     >
       <div className=" card flex justify-content-center align-items-center mt-5 mb-5 flex-column">

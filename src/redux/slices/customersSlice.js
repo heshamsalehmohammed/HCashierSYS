@@ -104,7 +104,7 @@ const customersSlice = createSlice({
   name: "customers",
   initialState: initialState,
   reducers: {
-    setSearchTerm: (state, action) => {
+    setCustomersSearchTerm: (state, action) => {
       state.searchTerm = action.payload;
     },
     setAddCustomerPopupName: (state, action) => {
@@ -116,10 +116,10 @@ const customersSlice = createSlice({
     setAddCustomerPopupAddress: (state, action) => {
       state.addCustomerPopup.address = action.payload;
     },
-    openAddCustomerPopupAddress: (state, action) => {
+    openAddCustomerPopup: (state, action) => {
       state.addCustomerPopup.isShown = true;
     },
-    closeAddCustomerPopupAddress: (state, action) => {
+    closeAddCustomerPopup: (state, action) => {
       state.addCustomerPopup.isShown = false;
     },
   },
@@ -131,15 +131,15 @@ const customersSlice = createSlice({
 });
 
 export const {
-  setSearchTerm,
+  setCustomersSearchTerm,
   setAddCustomerPopupName,
   setAddCustomerPopupPhone,
   setAddCustomerPopupAddress,
-  closeAddCustomerPopupAddress,
-  openAddCustomerPopupAddress,
+  closeAddCustomerPopup,
+  openAddCustomerPopup,
 } = customersSlice.actions;
 
-export const selectSearchTerm = (state) => state.customers.searchTerm;
+export const selectCustomersSearchTerm = (state) => state.customers.searchTerm;
 export const selectAddCustomerPopup = (state) =>
   state.customers.addCustomerPopup;
 export const selectCustomers= (state) => state.customers.customers 

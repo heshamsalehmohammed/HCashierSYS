@@ -6,10 +6,10 @@ import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import {
   fetchCustomers,
-  openAddCustomerPopup,
+  openAddCustomerPopupAddress,
   selectCustomers,
   selectCustomersSearchTerm,
-  setCustomersSearchTerm,
+  setSearchTerm,
 } from "../../../redux/slices/customersSlice";
 import CreateCustomerPopup from "./CreateCustomerPopup";
 import { DataTable } from "primereact/datatable";
@@ -52,7 +52,7 @@ const Customers = () => {
           badgeClassName="p-badge-danger"
           className="mb-4"
           onClick={() => {
-            dispatch(openAddCustomerPopup());
+            dispatch(openAddCustomerPopupAddress());
           }}
         />
 
@@ -62,7 +62,7 @@ const Customers = () => {
           <InputText
             placeholder="Search by number or name"
             onChange={(e) => {
-              dispatch(setCustomersSearchTerm(e.target.value));
+              dispatch(setSearchTerm(e.target.value));
               debouncedFetch()
             }}
             value={serachTermValue}

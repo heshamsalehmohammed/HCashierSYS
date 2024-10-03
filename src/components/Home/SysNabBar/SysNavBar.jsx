@@ -42,10 +42,16 @@ const SysNavBar = () => {
       icon: "pi pi-objects-column",
       badge: 3,
       template: itemRenderer,
+      command: (event) => {
+        navigate("orders");
+      },
     },
     {
-      label: "Shop",
+      label: "Stock",
       icon: "pi pi-shop",
+      command: (event) => {
+        navigate("stock");
+      },
     },
   ];
 

@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import SysNavBar from "./SysNabBar/SysNavBar";
 import "./Home.scss";
 import Customers from "./Customers/Customers";
+import Stock from "./Stock/Stock";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -17,10 +18,30 @@ const Home = () => {
 
       <Routes>
         <Route
-          path="/customers"
+          path="/customers/*"
           element={
             <BodyContentWrapper>
               <Customers />
+            </BodyContentWrapper>
+          }
+        />
+      </Routes>
+      <Routes>
+        <Route
+          path="/stock/*"
+          element={
+            <BodyContentWrapper>
+              <Stock />
+            </BodyContentWrapper>
+          }
+        />
+      </Routes>
+      <Routes>
+        <Route
+          path="/orders/*"
+          element={
+            <BodyContentWrapper>
+              
             </BodyContentWrapper>
           }
         />
