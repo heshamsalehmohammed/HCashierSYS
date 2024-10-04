@@ -1,7 +1,7 @@
 class RouterNavigationSingleton {
-	static navigate: any;
+	static navigate;
 
-	static setNavigation(value: any) {
+	static setNavigation(value) {
 		RouterNavigationSingleton.navigate = value;
 	}
 	static getNavigation() {

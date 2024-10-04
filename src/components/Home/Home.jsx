@@ -41,7 +41,7 @@ const Home = () => {
               <Order />
             </BodyContentWrapper>
           }
-        />{" "}
+        />
         <Route
           path="/orders/*"
           element={

@@ -5,7 +5,7 @@ import PopupMessage from './utilities/PopupMessage/PopupMessage';
 import ConfirmationPopupMessage from './utilities/ConfirmationPopupMessage/ConfirmationPopupMessage';
 import ErrorPopup from './utilities/ErrorPopup/ErrorPopup';
 import { useNavigate } from 'react-router';
-import RouterNavigationSingleton from '../redux/routerNavigationSingleton';
+import RouterNavigationSingleton from '../services/routerNavigationSingleton';
 
 
 const MainLayout = (props) => {

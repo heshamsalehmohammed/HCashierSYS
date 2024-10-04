@@ -26,6 +26,7 @@ import { Tag } from "primereact/tag";
 import { Message } from "primereact/message";
 import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
+import { formatDate } from "../../../services/utilities";
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const Order = () => {
     <div className="">
       <StockItemForOrderPopup />
       <div className="surface-ground px-4 pb-4 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
-        {currentOrder.orderStatusId !== 0 && (
+        {(currentOrder.orderStatusId !== 0 && currentOrder.orderStatusId !== OrderStatusEnum.DELIVERED) && (
           <FloatLabel className="w-3 m-1 -mt-6" style={{ minWidth: "276px" }}>
             <Dropdown
               inputId={`dd-orderstatues`}
@@ -58,9 +59,9 @@ const Order = () => {
                 );
               }}
             />
-            <label htmlFor={`dd-orderstatues`}>
+            {/* <label className="shadow-8" htmlFor={`dd-orderstatues`}>
               Show Options For Order Status
-            </label>
+            </label> */}
           </FloatLabel>
         )}
         <Fieldset
@@ -119,12 +120,17 @@ const Order = () => {
                 {item.stockItemCustomizationsSelectedOptions.map((op, ind) => (
                   <Chip
                     key={`stockItemCustomizationsSelectedOptions-${currentOrderItemIndex}-${ind}`}
-                    label={`${
-                      op.stockItemCustomizationName
-                    } --- ${op.stockItemCustomizationSelectedOptionName.includes('-')?op.stockItemCustomizationSelectedOptionName.replace(
-                      "EGP",
-                      " EGP"
-                    ):op.stockItemCustomizationSelectedOptionName + ' - ' + op.stockItemCustomizationSelectedOptionAdditionalPrice + ' EGP'}`}
+                    label={`${op.stockItemCustomizationName} --- ${
+                      op.stockItemCustomizationSelectedOptionName.includes("-")
+                        ? op.stockItemCustomizationSelectedOptionName.replace(
+                            "EGP",
+                            " EGP"
+                          )
+                        : op.stockItemCustomizationSelectedOptionName +
+                          " - " +
+                          op.stockItemCustomizationSelectedOptionAdditionalPrice +
+                          " EGP"
+                    }`}
                     className="m-1 mr-2"
                   />
                 ))}
@@ -132,7 +138,8 @@ const Order = () => {
                   label={`Total Item Price ${item.price} EGP`}
                   className="m-1 mr-2"
                 />
-                <Button
+                {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+                currentOrder.orderStatusId === 0) && <><Button
                   icon="pi pi-pencil"
                   className="p-button-rounded p-button-success mr-2"
                   onClick={() =>
@@ -158,10 +165,27 @@ const Order = () => {
                     )
                   }
                   tooltip="Delete"
-                />
+                /></>}
               </div>
             );
           })}
+          <Divider type="solid" />
+          <div className="m-2 text-lg">
+            <span className="font-bold">Initialization Date: </span>{" "}
+            <span>{formatDate(currentOrder.date)}</span>
+          </div>
+          {currentOrder.statusChangeDate && (
+            <div className="m-2 text-lg">
+              <span className="font-bold">Status Change Date: </span>{" "}
+              <span>{formatDate(currentOrder.statusChangeDate)}</span>
+            </div>
+          )}
+          {currentOrder.updatedDate && (
+            <div className="m-2 text-lg">
+              <span className="font-bold">Update Date: </span>{" "}
+              <span>{formatDate(currentOrder.updatedDate)}</span>
+            </div>
+          )}
           <Divider type="solid" />
           <div className="m-2 text-lg">
             <span className="font-bold">Total Price: </span>
@@ -178,7 +202,8 @@ const Order = () => {
                 borderWidth: "0 0 0 6px",
                 color: "#696cff",
               }}
-              className="border-primary w-10 justify-content-start"
+              className={ `border-primary justify-content-start ${(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+                currentOrder.orderStatusId === 0)?'w-10':'w-full'}`}
               severity="info"
               content={
                 <div className="flex align-items-center">

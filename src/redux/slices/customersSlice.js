@@ -8,8 +8,8 @@ import {
   fetchCustomersAPI,
 } from "../../api/customersAPI";
 import _ from "lodash";
-import RouterNavigationSingleton from "../routerNavigationSingleton";
 import { setOrderCustomer } from "./ordersSlice";
+import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
 
 export const addCustomer = createAsyncThunk(
   "customers/addCustomer",

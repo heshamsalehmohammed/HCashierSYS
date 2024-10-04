@@ -13,6 +13,7 @@ import {
   fetchStockItem,
   populateAddStockItemPopup,
 } from "./stockSlice";
+import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
 
 export const addOrder = createAsyncThunk(
   "orders/addOrder",
@@ -28,7 +29,7 @@ export const addOrder = createAsyncThunk(
     newOrder.items.forEach((item) => {
       delete item._id;
       delete item.stockItemName;
-      delete item.itemIndexInOrder
+      delete item.itemIndexInOrder;
       item.stockItemCustomizationsSelectedOptions.forEach((option) => {
         delete option._id;
         delete option.stockItemCustomizationName;
@@ -61,6 +62,12 @@ export const editOrder = createAsyncThunk(
   async (payload, thunkAPI) => {
     let newOrder = _.cloneDeep(thunkAPI.getState().orders.currentOrder);
     const id = newOrder._id;
+    if (payload) {
+      newOrder = {
+        ...newOrder,
+        ...payload,
+      };
+    }
     delete newOrder._id;
     delete newOrder.customer;
     delete newOrder.orderStatus;
@@ -70,19 +77,14 @@ export const editOrder = createAsyncThunk(
     newOrder.items.forEach((item) => {
       delete item._id;
       delete item.stockItemName;
-      delete item.itemIndexInOrder
+      delete item.itemIndexInOrder;
       item.stockItemCustomizationsSelectedOptions.forEach((option) => {
         delete option._id;
         delete option.stockItemCustomizationName;
         delete option.stockItemCustomizationSelectedOptionName;
       });
     });
-    if(payload){
-      newOrder = {
-        ...newOrder,
-        ...payload
-      }
-    }
+
     return handleHttpRequestPromise(editOrderAPI(id, newOrder), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
@@ -129,8 +131,8 @@ export const deleteOrder = createAsyncThunk(
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (payload, thunkAPI) => {
-    const searchTerm = thunkAPI.getState().orders.searchTerm;
-    return handleHttpRequestPromise(fetchOrdersAPI({ searchTerm }), {
+    const criteria = thunkAPI.getState().orders.criteria;
+    return handleHttpRequestPromise(fetchOrdersAPI({}), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
       payload: {
@@ -198,6 +200,15 @@ export const prepareAndCloseSelectStockItemForOrderPopup = createAsyncThunk(
   }
 );
 
+export const prepareAndOpenOrderPage = createAsyncThunk(
+  "orders/prepareAndOpenOrderPage",
+  async (payload, thunkAPI) => {
+    const navigate = RouterNavigationSingleton.getNavigation();
+    await thunkAPI.dispatch(fetchOrder(payload));
+    navigate("home/order");
+  }
+);
+
 const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
   const calculatedPrice =
     state.selectStockItemForOrderPopup.amount *
@@ -233,7 +244,6 @@ const _closeSelectStockItemForOrderPopup = (state) => {
   };
 };
 
-
 export const OrderStatusEnum = Object.freeze({
   INITIALIZED: 1,
   PROCESSING: 2,
@@ -241,38 +251,40 @@ export const OrderStatusEnum = Object.freeze({
   CANCELED: 4,
 });
 
-
-/* 
-
-{
-  stockItemId: '66fe8ce652f8599d1d78cf5f',
-  stockItemName: 'fra5',
-  stockItemPrice: 55,
-  stockItemCustomizationsSelectedOptions: [
-    {
-      stockItemCustomizationId: '66fe9b9052f8599d1d78cfeb',
-      stockItemCustomizationName: 'no3 el fra5',
-      stockItemCustomizationSelectedOptionId: '66fe9b9052f8599d1d78cfec',
-      stockItemCustomizationSelectedOptionName: 'balady',
-      stockItemCustomizationSelectedOptionAdditionalPrice: 20
-    }
-  ],
-  amount: 1,
-  price: 75
-}
-
-*/
+export const ComparisonOperators = Object.freeze({
+  EQUALS: "equals",
+  NOT_EQUALS: "notEquals",
+  CONTAINS: "contains",
+  LESS_THAN: "lt",
+  LESS_THAN_OR_EQUAL_TO: "lte",
+  GREATER_THAN: "gt",
+  GREATER_THAN_OR_EQUAL_TO: "gte",
+  DATE_IS: "dateIs",
+  DATE_IS_NOT: "dateIsNot",
+  DATE_BEFORE: "dateBefore",
+  DATE_AFTER: "dateAfter",
+});
 
 // Define initial state
 const initialState = {
-  searchTerm: "",
+  criteria: {
+    customerName: { value: null, filterMatchMode: null },
+    customerPhone: { value: null, filterMatchMode: null },
+    totalPrice: { value: null, filterMatchMode: null },
+    date: { value: null, filterMatchMode: null },
+    statusChangeDate: { value: null, filterMatchMode: null },
+    orderStatusId: { value: null, filterMatchMode: null },
+    pageNumber: 0,
+    pageSize: 5,
+  },
   orderSatuses: [
-    { _id: 1, name: "INITIALIZED", label: "Initialized"  ,severity: "info"},
-    { _id: 2, name: "PROCESSING", label: "Processing" , severity: "warning"},
+    { _id: 1, name: "INITIALIZED", label: "Initialized", severity: "info" },
+    { _id: 2, name: "PROCESSING", label: "Processing", severity: "warning" },
     { _id: 3, name: "DELIVERED", label: "Delivered", severity: "success" },
     { _id: 4, name: "CANCELED", label: "Canceled", severity: "danger" },
   ],
   orders: [],
+  totalRecords: 0,
   searchStockItemForOrderPopup: {
     isShown: false,
   },
@@ -300,7 +312,7 @@ const initialState = {
       _id: 0,
       name: "",
       label: "",
-      severity: ''
+      severity: "",
     },
   },
 };
@@ -309,9 +321,6 @@ const ordersSlice = createSlice({
   name: "orders",
   initialState: initialState,
   reducers: {
-    setOrdersSearchTerm: (state, action) => {
-      state.searchTerm = action.payload;
-    },
     setOrderCustomer: (state, action) => {
       if (action.payload.resetCurrentOrder) {
         state.currentOrder = {
@@ -328,7 +337,7 @@ const ordersSlice = createSlice({
             id: 0,
             name: "",
             label: "",
-            severity: ''
+            severity: "",
           },
         };
       }
@@ -423,11 +432,21 @@ const ordersSlice = createSlice({
         calculateAndSetSelectStockItemForOrderPopupPrice(state);
       }
     },
+    setOrdersFilterCriteria: (state, action) => {
+      state.criteria = {
+        ...state.criteria,
+        ...action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
+        state.totalRecords = 100;
+      })
+      .addCase(fetchOrder.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
       })
       .addCase(addOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
@@ -439,7 +458,6 @@ const ordersSlice = createSlice({
 });
 
 export const {
-  setOrdersSearchTerm,
   setOrderCustomer,
   openSearchStockItemForOrderPopup,
   closeSearchStockItemForOrderPopup,
@@ -450,15 +468,17 @@ export const {
   setStockItemCustomizationsSelectedOption,
   addStockItemToCurrentOrder,
   removeStockItemFromCurrentOrder,
+  setOrdersFilterCriteria,
 } = ordersSlice.actions;
 
-export const selectOrdersSearchTerm = (state) => state.orders.searchTerm;
 export const selectCurrentOrder = (state) => state.orders.currentOrder;
+export const selectOrdersFilterCriteria = (state) => state.orders.criteria;
 export const selectSearchStockItemForOrderPopup = (state) =>
   state.orders.searchStockItemForOrderPopup;
 export const selectSelectStockItemForOrderPopup = (state) =>
   state.orders.selectStockItemForOrderPopup;
 export const selectOrders = (state) => state.orders.orders;
+export const selectOrdersTotalRecords = (state) => state.orders.totalRecords;
 export const selectOrderStatues = (state) => state.orders.orderSatuses;
 
 export default ordersSlice.reducer;
