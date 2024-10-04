@@ -190,7 +190,7 @@ const calculateCurrentOrderPrice = (state) => {
 const _closeSelectStockItemForOrderPopup = (state) => {
   state.selectStockItemForOrderPopup = {
     isShown: false,
-    itemIndexInOrder:null,
+    itemIndexInOrder: null,
     stockItemId: 0,
     stockItemName: "",
     stockItemPrice: 0,
@@ -246,7 +246,7 @@ const initialState = {
   },
   selectStockItemForOrderPopup: {
     isShown: false,
-    itemIndexInOrder:null,
+    itemIndexInOrder: null,
     stockItemId: 0,
     stockItemName: "",
     stockItemPrice: 0,
@@ -273,10 +273,21 @@ const ordersSlice = createSlice({
       state.searchTerm = action.payload;
     },
     setOrderCustomer: (state, action) => {
-      state.currentOrder.customerId = action.payload._id;
-      state.currentOrder.customer.name = action.payload.name;
-      state.currentOrder.customer.phone = action.payload.phone;
-      state.currentOrder.customer.address = action.payload.address;
+      if(action.payload.resetCurrentOrder){
+        state.currentOrder = {
+          _id: "",
+          date: new Date(),
+          customerId: 0,
+          customer: {},
+          items: [],
+          totalPrice: 0,
+          orderStatus: 0,
+        }
+      }
+      state.currentOrder.customerId = action.payload.customer._id;
+      state.currentOrder.customer.name = action.payload.customer.name;
+      state.currentOrder.customer.phone = action.payload.customer.phone;
+      state.currentOrder.customer.address = action.payload.customer.address;
     },
     openSearchStockItemForOrderPopup: (state, action) => {
       state.searchStockItemForOrderPopup.isShown = true;
@@ -323,21 +334,18 @@ const ordersSlice = createSlice({
       state.selectStockItemForOrderPopup.price =
         action.payload.orderStockItem?.price ?? 0;
 
-        state.selectStockItemForOrderPopup.itemIndexInOrder =
+      state.selectStockItemForOrderPopup.itemIndexInOrder =
         action.payload.orderStockItem?.itemIndexInOrder ?? null;
     },
     addStockItemToCurrentOrder: (state, action) => {
       const stockItem = _.cloneDeep(state.selectStockItemForOrderPopup);
       delete stockItem.isShown;
-      if(stockItem.itemIndexInOrder == null){
+      if (stockItem.itemIndexInOrder == null) {
         state.currentOrder.items.push(stockItem);
-      }else{
-let _itemIndexInOrder =  stockItem.itemIndexInOrder;
+      } else {
+        let _itemIndexInOrder = stockItem.itemIndexInOrder;
         delete stockItem.itemIndexInOrder;
-        state.currentOrder.items[
-          _itemIndexInOrder
-        ] = stockItem;
-        
+        state.currentOrder.items[_itemIndexInOrder] = stockItem;
       }
       calculateCurrentOrderPrice(state);
       _closeSelectStockItemForOrderPopup(state);

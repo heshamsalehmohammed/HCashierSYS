@@ -164,7 +164,7 @@ export const handleNewOrderForCustomerButtonClick = createAsyncThunk(
     const customer = payload.customer;
 
     thunkAPI.dispatch(closeAddCustomerPopup());
-    thunkAPI.dispatch(setOrderCustomer(customer))
+    thunkAPI.dispatch(setOrderCustomer({customer,resetCurrentOrder:true}))
     navigate("home/order");
   }
 );
