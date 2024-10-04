@@ -13,6 +13,7 @@ import {
   setSelectedMostSoldStockItemOption,
   selectSelectedNewlyAddedUsersCountOption,
   setSelectedNewlyAddedUsersCountOption,
+  fetchStats,
 } from "../../../redux/slices/statisticsSlice"; // Redux slice imports
 import "./Stat.scss";
 import OrdersItemsPreparationCard from "../Order/OrdersItemsPreparationCard";
@@ -49,9 +50,8 @@ const Stat = () => {
 
 
   useEffect(() => {
-    // Dispatch actions to fetch data when component mounts or days change
-    // Example: dispatch(fetchStatistics(...));
-  }, [dispatch]);
+    dispatch(fetchStats())
+  }, []);
 
   return (
     <div className="flex flex-column h-full">

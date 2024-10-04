@@ -37,7 +37,7 @@ export const fetchStats = createAsyncThunk(
 const initialState = {
   initializedOrdersCount: 0,
   mostSoldStockItem: "",
-  newlyAddedUsersCount:0,
+  newlyAddedUsersCount: 0,
   newlyAddedUsersCountPercent: 0,
 
   selectedInitializedOrdersCountOption: 7,
@@ -74,6 +74,15 @@ const statisticsSlice = createSlice({
     setNewlyAddedUsersCount: (state, action) => {
       state.newlyAddedUsersCount = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchStats.fulfilled, (state, action) => {
+      state.initializedOrdersCount = action.payload.initializedOrdersCount;
+      state.mostSoldStockItem = action.payload.mostSoldStockItem;
+      state.newlyAddedUsersCount = action.payload.newlyAddedUsersCount;
+      state.newlyAddedUsersCountPercent =
+        action.payload.newlyAddedUsersCountPercent;
+    });
   },
 });
 
