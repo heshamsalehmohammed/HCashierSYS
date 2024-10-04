@@ -8,13 +8,15 @@ import customersSlice from './slices/customersSlice';
 import  listenerMiddleware  from './middlewares/listenerMiddleware';
 import stockSlice from './slices/stockSlice';
 import ordersSlice from './slices/ordersSlice';
+import statisticsSlice from './slices/statisticsSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   utilities: utilitiesReducer,
   customers: customersSlice,
   orders: ordersSlice,
-  stock:stockSlice
+  stock:stockSlice,
+  statistics:statisticsSlice,
 });
 
 const persistConfig = {

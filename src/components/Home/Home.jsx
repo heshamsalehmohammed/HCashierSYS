@@ -5,6 +5,7 @@ import Customers from "./Customers/Customers";
 import Stock from "./Stock/Stock";
 import Order from "./Order/Order";
 import Orders from "./Orders/Orders";
+import Stat from "./Stat/Stat";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -47,6 +48,14 @@ const Home = () => {
           element={
             <BodyContentWrapper>
               <Orders />
+            </BodyContentWrapper>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <BodyContentWrapper>
+              <Stat />
             </BodyContentWrapper>
           }
         />

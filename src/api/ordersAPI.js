@@ -20,6 +20,14 @@ export const fetchOrdersAPI = async (criteria) => {
   return result;
 };
 
+
+
+export const fetchOrdersItemsPreperationsAPI = async () => {
+  const result = await http.get(`${process.env.REACT_APP_API_ENDPOINT_PREFIX}orders/itemsPreperations`);
+  return result;
+};
+
+
 export const fetchOrderAPI = async (id) => {
   const result = await http.get(
     `${process.env.REACT_APP_API_ENDPOINT_PREFIX}orders/${id}`

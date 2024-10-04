@@ -6,6 +6,7 @@ import {
   editOrderAPI,
   fetchOrderAPI,
   fetchOrdersAPI,
+  fetchOrdersItemsPreperationsAPI,
 } from "../../api/ordersAPI";
 import _ from "lodash";
 import {
@@ -14,6 +15,7 @@ import {
   populateAddStockItemPopup,
 } from "./stockSlice";
 import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
+import { setInitializedOrdersCount } from "./statisticsSlice";
 
 export const addOrder = createAsyncThunk(
   "orders/addOrder",
@@ -144,6 +146,7 @@ export const fetchOrders = createAsyncThunk(
       },
     })
       .then((result) => {
+        thunkAPI.dispatch(setInitializedOrdersCount(result.data.initializedStateOrdersCount))
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
@@ -156,6 +159,30 @@ export const fetchOrder = createAsyncThunk(
   "orders/fetchOrder",
   async (payload, thunkAPI) => {
     return handleHttpRequestPromise(fetchOrderAPI(payload), {
+      type: "openPopup",
+      showForStatuses: "400,401,500,404,501",
+      payload: {
+        type: "Error",
+        title: "Error add Order",
+        message:
+          "An unexpected error occurred, Cannot add Order at thee moment. ",
+        buttonLabel: "OK",
+      },
+    })
+      .then((result) => {
+        return thunkAPI.fulfillWithValue(result.data);
+      })
+      .catch((error) => {
+        return thunkAPI.abort();
+      });
+  }
+);
+
+
+export const fetchOrdersItemsPreperations = createAsyncThunk(
+  "orders/fetchOrdersItemsPreperations",
+  async (payload, thunkAPI) => {
+    return handleHttpRequestPromise(fetchOrdersItemsPreperationsAPI(), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
       payload: {
@@ -265,6 +292,7 @@ export const ComparisonOperators = Object.freeze({
   DATE_AFTER: "dateAfter",
 });
 
+
 // Define initial state
 const initialState = {
   criteria: {
@@ -277,6 +305,7 @@ const initialState = {
     pageNumber: 0,
     pageSize: 5,
   },
+  ordersItemsPreperations: [],
   orderSatuses: [
     { _id: 1, name: "INITIALIZED", label: "Initialized", severity: "info" },
     { _id: 2, name: "PROCESSING", label: "Processing", severity: "warning" },
@@ -285,7 +314,6 @@ const initialState = {
   ],
   orders: [],
   totalRecords: 0,
-  initializedStateOrdersCount:0,
   searchStockItemForOrderPopup: {
     isShown: false,
   },
@@ -445,7 +473,6 @@ const ordersSlice = createSlice({
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.orders = action.payload.orders;
         state.totalRecords = action.payload.totalRecords;
-        state.initializedStateOrdersCount = action.payload.initializedStateOrdersCount;
       })
       .addCase(fetchOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
@@ -455,6 +482,9 @@ const ordersSlice = createSlice({
       })
       .addCase(editOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
+      })
+      .addCase(fetchOrdersItemsPreperations.fulfilled, (state, action) => {
+        state.ordersItemsPreperations = action.payload;
       });
   },
 });
@@ -481,7 +511,8 @@ export const selectSelectStockItemForOrderPopup = (state) =>
   state.orders.selectStockItemForOrderPopup;
 export const selectOrders = (state) => state.orders.orders;
 export const selectOrdersTotalRecords = (state) => state.orders.totalRecords;
-export const selectInitializedStateOrdersCount = (state) => state.orders.initializedStateOrdersCount;
 export const selectOrderStatues = (state) => state.orders.orderSatuses;
+export const selectOrdersItemsPreperations = (state) =>
+  state.orders.ordersItemsPreperations;
 
 export default ordersSlice.reducer;

@@ -5,13 +5,13 @@ import "./SysNavBar.scss";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../../redux/slices/authSlice";
-import { selectInitializedStateOrdersCount } from "../../../redux/slices/ordersSlice";
+import { selectInitializedOrdersCount } from "../../../redux/slices/statisticsSlice";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const initializedStateOrdersCount = useSelector(selectInitializedStateOrdersCount)
+  const initializedStateOrdersCount = useSelector(selectInitializedOrdersCount)
 /*   const user = useSelector((state) => state.auth.user);
  */
   const handleLogout = () => {
