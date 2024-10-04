@@ -3,12 +3,15 @@ import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
 import "./SysNavBar.scss";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../../redux/slices/authSlice";
+import { selectInitializedStateOrdersCount } from "../../../redux/slices/ordersSlice";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const initializedStateOrdersCount = useSelector(selectInitializedStateOrdersCount)
 /*   const user = useSelector((state) => state.auth.user);
  */
   const handleLogout = () => {
@@ -40,7 +43,7 @@ const SysNavBar = () => {
     {
       label: "Orders",
       icon: "pi pi-objects-column",
-      badge: 3,
+      badge: initializedStateOrdersCount=== 0 ? undefined : initializedStateOrdersCount,
       template: itemRenderer,
       command: (event) => {
         navigate("orders");

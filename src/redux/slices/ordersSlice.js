@@ -132,7 +132,7 @@ export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (payload, thunkAPI) => {
     const criteria = thunkAPI.getState().orders.criteria;
-    return handleHttpRequestPromise(fetchOrdersAPI({}), {
+    return handleHttpRequestPromise(fetchOrdersAPI(criteria), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
       payload: {
@@ -285,6 +285,7 @@ const initialState = {
   ],
   orders: [],
   totalRecords: 0,
+  initializedStateOrdersCount:0,
   searchStockItemForOrderPopup: {
     isShown: false,
   },
@@ -442,8 +443,9 @@ const ordersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.orders = action.payload;
-        state.totalRecords = 100;
+        state.orders = action.payload.orders;
+        state.totalRecords = action.payload.totalRecords;
+        state.initializedStateOrdersCount = action.payload.initializedStateOrdersCount;
       })
       .addCase(fetchOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
@@ -479,6 +481,7 @@ export const selectSelectStockItemForOrderPopup = (state) =>
   state.orders.selectStockItemForOrderPopup;
 export const selectOrders = (state) => state.orders.orders;
 export const selectOrdersTotalRecords = (state) => state.orders.totalRecords;
+export const selectInitializedStateOrdersCount = (state) => state.orders.initializedStateOrdersCount;
 export const selectOrderStatues = (state) => state.orders.orderSatuses;
 
 export default ordersSlice.reducer;

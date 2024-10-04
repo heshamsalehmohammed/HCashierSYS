@@ -3,10 +3,20 @@ import generalConfig from "../GeneralConfig.json";
 
 
 export const fetchOrdersAPI = async (criteria) => {
-  const result = await http.get(
-    `${process.env.REACT_APP_API_ENDPOINT_PREFIX}orders`,
-    {params:criteria}
-  );
+  const params = Object.keys(criteria).reduce((acc, key) => {
+    if (criteria[key].value !== null) {
+      acc[key] = criteria[key].value;
+      acc[`${key}FilterMatchMode`] = criteria[key].filterMatchMode;
+    }
+    return acc;
+  }, {});
+
+  params.pageNumber = criteria.pageNumber;
+  params.pageSize = criteria.pageSize;
+
+  const result = await http.get(`${process.env.REACT_APP_API_ENDPOINT_PREFIX}orders`, {
+    params,
+  });
   return result;
 };
 
