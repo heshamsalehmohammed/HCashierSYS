@@ -11,31 +11,37 @@ import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { addStockItem } from "../../../redux/slices/stockSlice";
 import { Dropdown } from "primereact/dropdown";
+import {
+  addStockItemToCurrentOrder,
+  prepareAndCloseSelectStockItemForOrderPopup,
+  selectSelectStockItemForOrderPopup,
+  setSelectStockItemForOrderPopupAmount,
+  setStockItemCustomizationsSelectedOption,
+} from "../../../redux/slices/ordersSlice";
+import { Divider } from "primereact/divider";
 
-const SelectStockItemForOrderPopup = () => {
+const StockItemForOrderPopup = () => {
   const dispatch = useDispatch();
 
-  const addStockItemPopup = useSelector(selectAddStockItemPopup);
+  const stockItemState = useSelector(selectAddStockItemPopup);
+  const stockItemForOrderPopupState = useSelector(
+    selectSelectStockItemForOrderPopup
+  );
 
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
-      <span className="font-bold white-space-nowrap">Select Stock Item: {addStockItemPopup.name}</span>
+      <span className="font-bold white-space-nowrap">
+        {stockItemForOrderPopupState.itemIndexInOrder == null ?'Select':'Edit'} Stock Item: {stockItemState.name}
+      </span>
     </div>
   );
 
   const footerContent = (
     <div>
       <Button
-        label={'Add To Current Order'}
+        label={stockItemForOrderPopupState.itemIndexInOrder == null?"Add Item To Current Order":'Edit Item In Current Order'}
         icon="pi pi-check"
-        onClick={() => {
-          if(addStockItemPopup._id){
-            dispatch(editStockItem());
-          }else{
-
-            dispatch(addStockItem());
-          }
-        }}
+        onClick={() => dispatch(addStockItemToCurrentOrder())}
         autoFocus
       />
     </div>
@@ -43,47 +49,76 @@ const SelectStockItemForOrderPopup = () => {
 
   return (
     <Dialog
-      visible={addStockItemPopup.isShown}
+      visible={stockItemForOrderPopupState.isShown}
       modal
       header={headerElement}
       footer={footerContent}
       style={{ width: "50rem" }}
       onHide={() => {
-        if (!addStockItemPopup.isShown) return;
-        dispatch(closeSelectStockItemForOrderPopup());
+        if (!stockItemForOrderPopupState.isShown) return;
+        dispatch(prepareAndCloseSelectStockItemForOrderPopup());
       }}
     >
-      <div className=" card flex justify-content-center align-items-center mt-5 flex-column">
-        <FloatLabel className="w-12 w-12 md:w-8 mb-4">
+      <div className="m-2 text-lg">
+        <span className="font-bold">Base Price: </span>{" "}
+        <span>{stockItemForOrderPopupState.stockItemPrice} EGP</span>
+      </div>
+      <div className=" card flex justify-content-center align-items-center m-1 flex-column">
+        <FloatLabel className="w-12 mt-5">
           <label htmlFor="itemamount">Amount</label>
           <InputText
             className="w-12"
             id="itemamount"
-            value={addStockItemPopup.amount}
+            value={stockItemForOrderPopupState.amount}
             onChange={(e) =>
-              dispatch(setAddStockItemPopupAmount(e.target.value))
+              dispatch(setSelectStockItemForOrderPopupAmount(e.target.value))
             }
             keyfilter="pnum"
           />
         </FloatLabel>
-      </div>
-      <div className=" card flex justify-content-center align-items-center m-1 flex-column">
-        {addStockItemPopup.customizations.map((customization, index) => {
+        {stockItemState.customizations.map((customization, index) => {
+          const customizationOptions = customization.options.map((o) => {
+            if (o.additionalPrice)
+              return {
+                ...o,
+                name: `${o.name} - ${o.additionalPrice}EGP`,
+              };
+            else return { ...o, name: `${o.name}` };
+          });
+          const currentStockItemCustomizationsSelectedOption =
+            stockItemForOrderPopupState.stockItemCustomizationsSelectedOptions.find(
+              (o) => o.stockItemCustomizationId === customization._id
+            );
+
+          const currentSelectedCustomizationOption = customizationOptions?.find(
+            (o) =>
+              o._id ===
+              currentStockItemCustomizationsSelectedOption?.stockItemCustomizationSelectedOptionId??0
+          )??undefined;
+
           return (
             <div
               key={`stockItemCustomization-${index}`}
-              className="pt-4 w-full flex align-items-center justify-content-center"
+              className="mt-5 w-12 flex align-items-center justify-content-center"
             >
-              <FloatLabel className="w-10 m-1">
+              <FloatLabel className="w-12">
                 <Dropdown
                   inputId={`dd-stockItemCustomization-${index}`}
-                  options={customization.options.map((o) => {
-                    if (o.additionalPrice)
-                      return { name: `${o.name} - ${o.additionalPrice}EGP` };
-                    else return { name: `${o.name}` };
-                  })}
+                  options={customizationOptions}
                   optionLabel="name"
                   className="w-full"
+                  value={currentSelectedCustomizationOption}
+                  onChange={(e) => {
+                    dispatch(
+                      setStockItemCustomizationsSelectedOption({
+                        stockItemCustomizationId: customization._id,
+                        stockItemCustomizationSelectedOptionId: e.value._id,
+                        stockItemCustomizationSelectedOptionName: e.value.name,
+                        stockItemCustomizationSelectedOptionAdditionalPrice:
+                          e.value.additionalPrice,
+                      })
+                    );
+                  }}
                 />
                 <label htmlFor={`dd-stockItemCustomization-${index}`}>
                   Select {customization.name}
@@ -93,8 +128,13 @@ const SelectStockItemForOrderPopup = () => {
           );
         })}
       </div>
+      <Divider type="solid" />
+      <div className="m-2 text-lg">
+        <span className="font-bold">Total Price: </span>{" "}
+        <span>{stockItemForOrderPopupState.price} EGP</span>
+      </div>
     </Dialog>
   );
 };
 
-export default SelectStockItemForOrderPopup;
+export default StockItemForOrderPopup;

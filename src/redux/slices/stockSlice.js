@@ -164,18 +164,10 @@ export const prepareAndopenAddStockItemPopup = createAsyncThunk(
     if (payload) {
       const stockItem = await thunkAPI.dispatch(fetchStockItem(payload));
       thunkAPI.dispatch(populateAddStockItemPopup(stockItem.payload));
-    } else {
-      thunkAPI.dispatch(openAddStockItemPopup());
     }
+    thunkAPI.dispatch(openAddStockItemPopup());
   }
 );
-
-/* 
-addStockItemCustomizationPopup options
-{
-  name:"",
-  additionalPrice:""
-} */
 
 // Define initial state
 const initialState = {
@@ -241,7 +233,6 @@ const stockSlice = createSlice({
       state.addStockItemPopup.price = Number(action.payload);
     },
     populateAddStockItemPopup: (state, action) => {
-      state.addStockItemPopup.isShown = true;
       state.addStockItemPopup._id = action.payload._id;
       state.addStockItemPopup.amount = action.payload.amount;
       state.addStockItemPopup.name = action.payload.name;

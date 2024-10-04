@@ -7,7 +7,6 @@ import { InputText } from "primereact/inputtext";
 import {
   deleteStockItem,
   fetchStockItems,
-  openAddStockItemPopup,
   prepareAndopenAddStockItemPopup,
   selectStockItems,
   selectStockSearchTerm,
@@ -17,6 +16,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import _ from "lodash";
 import CreateStockItemPopup from "./CreateStockItemPopup";
+import { prepareAndOpenSelectStockItemForOrderPopup } from "../../../redux/slices/ordersSlice";
 
 const Stock = (props) => {
   const { fromOrder = false } = props;
@@ -92,12 +92,13 @@ const Stock = (props) => {
 
 
   const handleSelectItemForOrder = (item)=>{
-
+     dispatch(prepareAndOpenSelectStockItemForOrderPopup({id:item._id}))
   }
 
   return (
     <div className="">
       <CreateStockItemPopup />
+      
       <div className={`surface-ground flex align-items-center justify-content-center flex-column ${fromOrder? "":" px-4 pb-8 pt-4 md:px-6 lg:px-8 "}`}>
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
           {!fromOrder && (
