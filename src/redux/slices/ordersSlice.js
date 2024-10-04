@@ -18,8 +18,24 @@ export const addOrder = createAsyncThunk(
   "orders/addOrder",
   async (payload, thunkAPI) => {
     const newOrder = _.cloneDeep(thunkAPI.getState().orders.currentOrder);
-    delete newOrder.isShown;
     delete newOrder._id;
+    delete newOrder.customer;
+    delete newOrder.orderStatus;
+    delete newOrder.date;
+    delete newOrder.statusChangeDate;
+    delete newOrder.updatedDate;
+
+    newOrder.items.forEach((item) => {
+      delete item._id;
+      delete item.stockItemName;
+      delete item.itemIndexInOrder
+      item.stockItemCustomizationsSelectedOptions.forEach((option) => {
+        delete option._id;
+        delete option.stockItemCustomizationName;
+        delete option.stockItemCustomizationSelectedOptionName;
+      });
+    });
+
     return handleHttpRequestPromise(addOrderAPI(newOrder), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
@@ -45,8 +61,22 @@ export const editOrder = createAsyncThunk(
   async (payload, thunkAPI) => {
     let newOrder = _.cloneDeep(thunkAPI.getState().orders.currentOrder);
     const id = newOrder._id;
-    delete newOrder.isShown;
     delete newOrder._id;
+    delete newOrder.customer;
+    delete newOrder.orderStatus;
+    delete newOrder.date;
+    delete newOrder.statusChangeDate;
+    delete newOrder.updatedDate;
+    newOrder.items.forEach((item) => {
+      delete item._id;
+      delete item.stockItemName;
+      delete item.itemIndexInOrder
+      item.stockItemCustomizationsSelectedOptions.forEach((option) => {
+        delete option._id;
+        delete option.stockItemCustomizationName;
+        delete option.stockItemCustomizationSelectedOptionName;
+      });
+    });
     if(payload){
       newOrder = {
         ...newOrder,
@@ -206,35 +236,6 @@ const _closeSelectStockItemForOrderPopup = (state) => {
   };
 };
 
-/*
-
-order => items => item => stockItemCustomizationsSelectedOption
-
-{
-  stockItemCustomizationId: 0,
-  stockItemCustomizationName: '',
-  stockItemCustomizationSelectedOptionId: 0,
-  stockItemCustomizationSelectedOptionName: '',
-  stockItemCustomizationSelectedOptionAdditionalPrice: 0,
-}
-
-order => items => item 
-{
-  _id: '',
-  stockItemId: 0,
-  stockItemCustomizationsSelectedOption: [],
-  amount: 0,
-  price: 100
-}
-
-order => customer
-{
-    name: "",
-    phone: "",
-    address: "",
-}
-
-*/
 
 export const OrderStatusEnum = Object.freeze({
   INITIALIZED: 1,
@@ -242,6 +243,28 @@ export const OrderStatusEnum = Object.freeze({
   DELIVERED: 3,
   CANCELED: 4,
 });
+
+
+/* 
+
+{
+  stockItemId: '66fe8ce652f8599d1d78cf5f',
+  stockItemName: 'fra5',
+  stockItemPrice: 55,
+  stockItemCustomizationsSelectedOptions: [
+    {
+      stockItemCustomizationId: '66fe9b9052f8599d1d78cfeb',
+      stockItemCustomizationName: 'no3 el fra5',
+      stockItemCustomizationSelectedOptionId: '66fe9b9052f8599d1d78cfec',
+      stockItemCustomizationSelectedOptionName: 'balady',
+      stockItemCustomizationSelectedOptionAdditionalPrice: 20
+    }
+  ],
+  amount: 1,
+  price: 75
+}
+
+*/
 
 // Define initial state
 const initialState = {
@@ -270,6 +293,7 @@ const initialState = {
     _id: "",
     date: new Date(),
     statusChangeDate: null,
+    updatedDate: null,
     customerId: 0,
     customer: {},
     items: [],
@@ -296,6 +320,8 @@ const ordersSlice = createSlice({
         state.currentOrder = {
           _id: "",
           date: new Date(),
+          statusChangeDate: null,
+          updatedDate: null,
           customerId: 0,
           customer: {},
           items: [],
