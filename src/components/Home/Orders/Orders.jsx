@@ -13,6 +13,8 @@ import {
   selectOrdersSearchTerm,
   setOrdersSearchTerm,
 } from "../../../redux/slices/ordersSlice";
+import { Tag } from "primereact/tag";
+import { formatDate } from "../../../services/utilities";
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -52,21 +54,12 @@ const Orders = () => {
             onClick={() => handleEdit(rowData)}
             tooltip="Edit"
           />
-
-          <Button
-            icon="pi pi-trash"
-            className="p-button-rounded p-button-danger"
-            onClick={() => handleCancel(rowData)}
-            tooltip="Cancel"
-          />
         </>
       </div>
     );
   };
 
   const handleEdit = (item) => {};
-
-  const handleCancel = (item) => {};
 
   return (
     <div className="">
@@ -105,6 +98,20 @@ const Orders = () => {
           ></Column>
 
           <Column
+            field="customerphone"
+            header="Customer Phone"
+            headerStyle={headerStyles}
+            headerClassName="text-center "
+            body={(rowData) => {
+              return (
+                <div className="flex justify-content-start">
+                  {rowData.customer.phone}
+                </div>
+              );
+            }}
+          ></Column>
+
+          <Column
             field="totalprice"
             header="Total Price"
             headerStyle={headerStyles}
@@ -126,7 +133,7 @@ const Orders = () => {
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.date}
+                  {formatDate(rowData.date)}
                 </div>
               );
             }}
@@ -139,7 +146,13 @@ const Orders = () => {
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.orderStatus}
+                  <div className="m-2">
+                    <Tag
+                      value={rowData.orderStatus.label}
+                      severity={rowData.orderStatus.severity}
+                      className="text-sm"
+                    />
+                  </div>
                 </div>
               );
             }}
@@ -152,7 +165,9 @@ const Orders = () => {
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.statusChangeDate}
+                  {rowData.statusChangeDate
+                    ? formatDate(rowData.statusChangeDate)
+                    : ""}
                 </div>
               );
             }}

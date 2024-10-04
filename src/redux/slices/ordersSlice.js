@@ -130,9 +130,6 @@ export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (payload, thunkAPI) => {
     const searchTerm = thunkAPI.getState().orders.searchTerm;
-    if (!searchTerm) {
-      return thunkAPI.fulfillWithValue([]);
-    }
     return handleHttpRequestPromise(fetchOrdersAPI({ searchTerm }), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
@@ -433,13 +430,10 @@ const ordersSlice = createSlice({
         state.orders = action.payload;
       })
       .addCase(addOrder.fulfilled, (state, action) => {
-        state.currentOrder._id = action.payload._id;
+        state.currentOrder = action.payload;
       })
       .addCase(editOrder.fulfilled, (state, action) => {
-        state.currentOrder = {
-          ..._.cloneDeep(state.currentOrder),
-          ...action.payload
-        }
+        state.currentOrder = action.payload;
       });
   },
 });

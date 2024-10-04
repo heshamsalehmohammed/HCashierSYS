@@ -121,10 +121,10 @@ const Order = () => {
                     key={`stockItemCustomizationsSelectedOptions-${currentOrderItemIndex}-${ind}`}
                     label={`${
                       op.stockItemCustomizationName
-                    } --- ${op.stockItemCustomizationSelectedOptionName.replace(
+                    } --- ${op.stockItemCustomizationSelectedOptionName.includes('-')?op.stockItemCustomizationSelectedOptionName.replace(
                       "EGP",
                       " EGP"
-                    )}`}
+                    ):op.stockItemCustomizationSelectedOptionName + ' - ' + op.stockItemCustomizationSelectedOptionAdditionalPrice + ' EGP'}`}
                     className="m-1 mr-2"
                   />
                 ))}
@@ -185,7 +185,7 @@ const Order = () => {
                   <span className="font-bold">Order Status: </span>
                   <div className="ml-2">
                     <Tag
-                      value={"PRocessing"}
+                      value={currentOrder.orderStatus.label}
                       severity={currentOrder.orderStatus.severity}
                       className="text-sm"
                     />
