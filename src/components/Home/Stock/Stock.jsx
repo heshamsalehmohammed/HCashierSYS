@@ -44,8 +44,7 @@ const Stock = (props) => {
   );
 
   useEffect(() => {
-    if(!fromOrder){
-
+    if (!fromOrder) {
       dispatch(fetchStockItems());
     }
   }, []);
@@ -55,12 +54,13 @@ const Stock = (props) => {
       <div className="flex justify-content-start">
         {fromOrder ? (
           <>
-          <Button
+            <Button
               icon="pi pi-plus"
               className="p-button-success mr-2"
               onClick={() => handleSelectItemForOrder(rowData)}
               label="Select Item"
-            /></>
+            />
+          </>
         ) : (
           <>
             <Button
@@ -90,16 +90,19 @@ const Stock = (props) => {
     dispatch(deleteStockItem(item._id));
   };
 
-
-  const handleSelectItemForOrder = (item)=>{
-     dispatch(prepareAndOpenSelectStockItemForOrderPopup({id:item._id}))
-  }
+  const handleSelectItemForOrder = (item) => {
+    dispatch(prepareAndOpenSelectStockItemForOrderPopup({ id: item._id }));
+  };
 
   return (
     <div className="">
       <CreateStockItemPopup />
-      
-      <div className={`surface-ground flex align-items-center justify-content-center flex-column ${fromOrder? "":" px-4 pb-8 pt-4 md:px-6 lg:px-8 "}`}>
+
+      <div
+        className={`surface-ground flex align-items-center justify-content-center flex-column ${
+          fromOrder ? "" : " px-4 pb-8 pt-4 md:px-6 lg:px-8 "
+        }`}
+      >
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
           {!fromOrder && (
             <Button
@@ -139,14 +142,27 @@ const Stock = (props) => {
             headerStyle={headerStyles}
             headerClassName="text-center "
           ></Column>
-          {!fromOrder && (
+          {
             <Column
               field="amount"
               header="Available Amount In Stock By Kilo"
               headerStyle={headerStyles}
               headerClassName="text-center "
             ></Column>
-          )}
+          }
+          <Column
+            field="price"
+            header="Base Price"
+            headerStyle={headerStyles}
+            headerClassName="text-center "
+            body={(rowData) => {
+              return (
+                <div className="flex justify-content-start">
+                  {rowData.price} EGP
+                </div>
+              );
+            }}
+          ></Column>
           <Column
             field="actions"
             header="Actions"

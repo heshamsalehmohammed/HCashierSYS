@@ -56,7 +56,7 @@ const SysNavBar = () => {
   ];
 
   const start = (
-    <img alt="logo" src="/HCashierSYS.png" height="40" className="mr-2"></img>
+    <img alt="logo" src="/HCashierSYS.png" height="40" className="mr-2 cursor-pointer" onClick={()=> navigate("/home")}></img>
   );
   const end = (
     <div className="flex align-items-center gap-2">

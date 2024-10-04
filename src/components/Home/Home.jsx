@@ -4,6 +4,7 @@ import "./Home.scss";
 import Customers from "./Customers/Customers";
 import Stock from "./Stock/Stock";
 import Order from "./Order/Order";
+import Orders from "./Orders/Orders";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -25,7 +26,6 @@ const Home = () => {
             </BodyContentWrapper>
           }
         />
-
         <Route
           path="/stock/*"
           element={
@@ -41,15 +41,15 @@ const Home = () => {
               <Order />
             </BodyContentWrapper>
           }
-        />
-{/*         <Route
+        />{" "}
+        <Route
           path="/orders/*"
           element={
             <BodyContentWrapper>
               <Orders />
             </BodyContentWrapper>
           }
-        /> */}
+        />
       </Routes>
     </div>
   );

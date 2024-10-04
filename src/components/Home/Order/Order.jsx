@@ -1,11 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Fieldset } from "primereact/fieldset";
 import {
+  OrderStatusEnum,
+  addOrder,
   closeSearchStockItemForOrderPopup,
+  editOrder,
   openSearchStockItemForOrderPopup,
   prepareAndOpenSelectStockItemForOrderPopup,
   removeStockItemFromCurrentOrder,
   selectCurrentOrder,
+  selectOrderStatues,
   selectSearchStockItemForOrderPopup,
 } from "../../../redux/slices/ordersSlice";
 import { Avatar } from "primereact/avatar";
@@ -18,10 +22,15 @@ import { useState } from "react";
 import Stock from "../Stock/Stock";
 import { Chip } from "primereact/chip";
 import StockItemForOrderPopup from "./SelectStockItemForOrderPopup";
+import { Tag } from "primereact/tag";
+import { Message } from "primereact/message";
+import { FloatLabel } from "primereact/floatlabel";
+import { Dropdown } from "primereact/dropdown";
 
 const Order = () => {
   const dispatch = useDispatch();
   const currentOrder = useSelector(selectCurrentOrder);
+  const orderStatues = useSelector(selectOrderStatues);
   const searchStockItemForOrderPopup = useSelector(
     selectSearchStockItemForOrderPopup
   );
@@ -30,6 +39,30 @@ const Order = () => {
     <div className="">
       <StockItemForOrderPopup />
       <div className="surface-ground px-4 pb-4 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+        {currentOrder.orderStatusId !== 0 && (
+          <FloatLabel className="w-3 m-1 -mt-6" style={{ minWidth: "276px" }}>
+            <Dropdown
+              inputId={`dd-orderstatues`}
+              options={orderStatues}
+              optionLabel="name"
+              className="w-full"
+              value={orderStatues.find(
+                (o) => o._id === currentOrder.orderStatusId
+              )}
+              onChange={(e) => {
+                dispatch(
+                  editOrder({
+                    orderStatusId: e.value._id,
+                    orderStatus: e.value,
+                  })
+                );
+              }}
+            />
+            <label htmlFor={`dd-orderstatues`}>
+              Show Options For Order Status
+            </label>
+          </FloatLabel>
+        )}
         <Fieldset
           legend={
             <div className="flex align-items-center">
@@ -56,11 +89,14 @@ const Order = () => {
           legend={
             <div className="flex align-items-center">
               <span className="font-bold mr-2">Order Details</span>
-              <Button
-                label="Add Item"
-                icon="pi pi-plus"
-                onClick={() => dispatch(openSearchStockItemForOrderPopup())}
-              />
+              {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+                currentOrder.orderStatusId === 0) && (
+                <Button
+                  label="Add Item"
+                  icon="pi pi-plus"
+                  onClick={() => dispatch(openSearchStockItemForOrderPopup())}
+                />
+              )}
             </div>
           }
           className="mt-2 w-full custom-fieldset"
@@ -132,12 +168,53 @@ const Order = () => {
             <span>{currentOrder.totalPrice} EGP</span>
           </div>
         </Fieldset>
-        <Button
-          label="Submit Order"
-          icon="pi pi-plus"
-          className="mt-4 align-self-end"
-          onClick={() => {}}
-        />
+        <div
+          className={`flex lg:justify-content-between justify-content-center  align-items-center w-full mt-3 flex-wrap`}
+        >
+          {currentOrder.orderStatusId != 0 && (
+            <Message
+              style={{
+                border: "solid #696cff",
+                borderWidth: "0 0 0 6px",
+                color: "#696cff",
+              }}
+              className="border-primary w-10 justify-content-start"
+              severity="info"
+              content={
+                <div className="flex align-items-center">
+                  <span className="font-bold">Order Status: </span>
+                  <div className="ml-2">
+                    <Tag
+                      value={"PRocessing"}
+                      severity={currentOrder.orderStatus.severity}
+                      className="text-sm"
+                    />
+                  </div>
+                </div>
+              }
+            />
+          )}
+
+          {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+            currentOrder.orderStatusId === 0) && (
+            <Button
+              label={`${
+                currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED
+                  ? "Edit"
+                  : "Submit"
+              } Order`}
+              icon="pi pi-plus"
+              className="mt-2 lg:mt-0"
+              onClick={() => {
+                if (currentOrder.orderStatusId != 0 && currentOrder._id) {
+                  dispatch(editOrder());
+                } else {
+                  dispatch(addOrder());
+                }
+              }}
+            />
+          )}
+        </div>
       </div>
       <Sidebar
         visible={searchStockItemForOrderPopup.isShown}

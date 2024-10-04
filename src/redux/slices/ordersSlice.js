@@ -43,10 +43,16 @@ export const addOrder = createAsyncThunk(
 export const editOrder = createAsyncThunk(
   "orders/editOrder",
   async (payload, thunkAPI) => {
-    const newOrder = _.cloneDeep(thunkAPI.getState().orders.currentOrder);
+    let newOrder = _.cloneDeep(thunkAPI.getState().orders.currentOrder);
     const id = newOrder._id;
     delete newOrder.isShown;
     delete newOrder._id;
+    if(payload){
+      newOrder = {
+        ...newOrder,
+        ...payload
+      }
+    }
     return handleHttpRequestPromise(editOrderAPI(id, newOrder), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
@@ -230,16 +236,22 @@ order => customer
 
 */
 
-const OrderStatus = Object.freeze({
-  PROCESSING: 1,
-  DELIVERED: 2,
-  CANCELED: 3,
+export const OrderStatusEnum = Object.freeze({
+  INITIALIZED: 1,
+  PROCESSING: 2,
+  DELIVERED: 3,
+  CANCELED: 4,
 });
 
 // Define initial state
 const initialState = {
   searchTerm: "",
-  orderSatuses: [],
+  orderSatuses: [
+    { _id: 1, name: "INITIALIZED", label: "Initialized"  ,severity: "info"},
+    { _id: 2, name: "PROCESSING", label: "Processing" , severity: "warning"},
+    { _id: 3, name: "DELIVERED", label: "Delivered", severity: "success" },
+    { _id: 4, name: "CANCELED", label: "Canceled", severity: "danger" },
+  ],
   orders: [],
   searchStockItemForOrderPopup: {
     isShown: false,
@@ -257,11 +269,18 @@ const initialState = {
   currentOrder: {
     _id: "",
     date: new Date(),
+    statusChangeDate: null,
     customerId: 0,
     customer: {},
     items: [],
     totalPrice: 0,
-    orderStatus: 0,
+    orderStatusId: 0,
+    orderStatus: {
+      _id: 0,
+      name: "",
+      label: "",
+      severity: ''
+    },
   },
 };
 
@@ -273,7 +292,7 @@ const ordersSlice = createSlice({
       state.searchTerm = action.payload;
     },
     setOrderCustomer: (state, action) => {
-      if(action.payload.resetCurrentOrder){
+      if (action.payload.resetCurrentOrder) {
         state.currentOrder = {
           _id: "",
           date: new Date(),
@@ -281,8 +300,14 @@ const ordersSlice = createSlice({
           customer: {},
           items: [],
           totalPrice: 0,
-          orderStatus: 0,
-        }
+          orderStatusId: 0,
+          orderStatus: {
+            id: 0,
+            name: "",
+            label: "",
+            severity: ''
+          },
+        };
       }
       state.currentOrder.customerId = action.payload.customer._id;
       state.currentOrder.customer.name = action.payload.customer.name;
@@ -383,6 +408,12 @@ const ordersSlice = createSlice({
       })
       .addCase(addOrder.fulfilled, (state, action) => {
         state.currentOrder._id = action.payload._id;
+      })
+      .addCase(editOrder.fulfilled, (state, action) => {
+        state.currentOrder = {
+          ..._.cloneDeep(state.currentOrder),
+          ...action.payload
+        }
       });
   },
 });
@@ -408,5 +439,6 @@ export const selectSearchStockItemForOrderPopup = (state) =>
 export const selectSelectStockItemForOrderPopup = (state) =>
   state.orders.selectStockItemForOrderPopup;
 export const selectOrders = (state) => state.orders.orders;
+export const selectOrderStatues = (state) => state.orders.orderSatuses;
 
 export default ordersSlice.reducer;

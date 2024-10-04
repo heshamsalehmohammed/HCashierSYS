@@ -103,6 +103,7 @@ const PopupMessage = ({
                             marginTop: '8px',
                             marginBottom: '8px'
                         }}
+                        className='text-sm'
                     >
                         {message}
                     </h6>
