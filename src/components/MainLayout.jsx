@@ -29,7 +29,7 @@ const MainLayout = (props) => {
 
   return (
     <>
-      {loading ? ReactDOM.createPortal(<Spinner />, container) : <></>}
+      {loading ? (container?ReactDOM.createPortal(<Spinner />, container):<Spinner />) : <></>}
 
       {popup.isDisplayed ? (
         ReactDOM.createPortal(

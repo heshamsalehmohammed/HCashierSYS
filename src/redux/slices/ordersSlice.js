@@ -15,13 +15,14 @@ import {
   populateAddStockItemPopup,
 } from "./stockSlice";
 import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
-import { setInitializedOrdersCount } from "./statisticsSlice";
+import { fetchStats, setInitializedOrdersCount } from "./statisticsSlice";
 
 export const addOrder = createAsyncThunk(
   "orders/addOrder",
   async (payload, thunkAPI) => {
     const newOrder = _.cloneDeep(thunkAPI.getState().orders.currentOrder);
     delete newOrder._id;
+    delete newOrder.__v;
     delete newOrder.customer;
     delete newOrder.orderStatus;
     delete newOrder.date;
@@ -30,10 +31,12 @@ export const addOrder = createAsyncThunk(
 
     newOrder.items.forEach((item) => {
       delete item._id;
+      delete item.__v;
       delete item.stockItemName;
       delete item.itemIndexInOrder;
       item.stockItemCustomizationsSelectedOptions.forEach((option) => {
         delete option._id;
+        delete option.__v;
         delete option.stockItemCustomizationName;
         delete option.stockItemCustomizationSelectedOptionName;
       });
@@ -51,6 +54,7 @@ export const addOrder = createAsyncThunk(
       },
     })
       .then((result) => {
+        thunkAPI.dispatch(fetchStats())
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
@@ -71,6 +75,7 @@ export const editOrder = createAsyncThunk(
       };
     }
     delete newOrder._id;
+    delete newOrder.__v;
     delete newOrder.customer;
     delete newOrder.orderStatus;
     delete newOrder.date;
@@ -78,10 +83,12 @@ export const editOrder = createAsyncThunk(
     delete newOrder.updatedDate;
     newOrder.items.forEach((item) => {
       delete item._id;
+      delete item.__v;
       delete item.stockItemName;
       delete item.itemIndexInOrder;
       item.stockItemCustomizationsSelectedOptions.forEach((option) => {
         delete option._id;
+        delete option.__v;
         delete option.stockItemCustomizationName;
         delete option.stockItemCustomizationSelectedOptionName;
       });

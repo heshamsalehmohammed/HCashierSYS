@@ -18,14 +18,17 @@ export const addStockItem = createAsyncThunk(
     );
     delete newStockItem.isShown;
     delete newStockItem._id;
+    delete newStockItem.__v;
     delete newStockItem.addStockItemCustomizationPopup;
     
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
+      delete customization.__v;
       delete customization.isShown;
       delete customization.indexOfCustomization;
       customization.options.forEach((option) => {
         delete option._id;
+        delete option.__v;
       });
     });
     return handleHttpRequestPromise(addStockItemAPI(newStockItem), {
@@ -60,13 +63,16 @@ export const editStockItem = createAsyncThunk(
     const id = newStockItem._id;
     delete newStockItem.isShown;
     delete newStockItem._id;
+    delete newStockItem.__v;
     delete newStockItem.addStockItemCustomizationPopup;
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
+      delete customization.__v;
       delete customization.isShown;
       delete customization.indexOfCustomization;
       customization.options.forEach((option) => {
         delete option._id;
+        delete option.__v;
       });
     });
     return handleHttpRequestPromise(editStockItemAPI(id, newStockItem), {

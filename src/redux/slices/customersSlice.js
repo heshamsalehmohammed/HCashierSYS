@@ -19,6 +19,7 @@ export const addCustomer = createAsyncThunk(
     );
     delete newCustomer.isShown;
     delete newCustomer._id;
+    delete newCustomer.__v;
     return handleHttpRequestPromise(addCustomerAPI(newCustomer), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",
@@ -49,6 +50,8 @@ export const editCustomer = createAsyncThunk(
     const id = newCustomer._id;
     delete newCustomer.isShown;
     delete newCustomer._id;
+    delete newCustomer.__v;
+
     return handleHttpRequestPromise(editCustomerAPI(id, newCustomer), {
       type: "openPopup",
       showForStatuses: "400,401,500,404,501",

@@ -14,7 +14,7 @@ const SysNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const initializedStateOrdersCount = useSelector(selectInitializedOrdersCount);
+  const initializedOrdersCount = useSelector(selectInitializedOrdersCount);
   const currentLanguage = useSelector(selectLanguage);  // Select language from Redux
 
 
@@ -71,9 +71,9 @@ const SysNavBar = () => {
       label: t("orders"),
       icon: "pi pi-objects-column",
       badge:
-        initializedStateOrdersCount === 0
+        /* initializedOrdersCount === 0
           ? undefined
-          : initializedStateOrdersCount,
+          : initializedOrdersCount */ undefined,
       template: itemRenderer,
       command: (event) => {
         navigate("orders");
