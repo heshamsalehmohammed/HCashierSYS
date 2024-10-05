@@ -223,7 +223,7 @@ const Orders = () => {
 
   const onPage = async (event) => {
     await handleFilterChange({
-      pageNumber: event.page + 1, // Convert 0-based index to 1-based for backend
+      pageNumber: event.page, // Convert 0-based index to 1-based for backend
       pageSize: event.rows, // Keep the page size
     });
   };
