@@ -5,14 +5,17 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchOrdersItemsPreperations, selectOrdersItemsPreperations } from "../../../redux/slices/ordersSlice";
+import {
+  fetchOrdersItemsPreperations,
+  selectOrdersItemsPreperations,
+} from "../../../redux/slices/ordersSlice";
+import { prepareAndopenAddStockItemPopup } from "../../../redux/slices/stockSlice";
 
 const OrdersItemsPreparationCard = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const tableCardRef = useRef(null);
   const ordersItemsPreperations = useSelector(selectOrdersItemsPreperations);
   const dispatch = useDispatch();
-
 
   const toggleFullScreen = () => {
     const elem = tableCardRef.current;
@@ -42,12 +45,18 @@ const OrdersItemsPreparationCard = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchOrdersItemsPreperations())
+    dispatch(fetchOrdersItemsPreperations());
   }, []);
+
+  const handleEdit = (item) => {
+    dispatch(prepareAndopenAddStockItemPopup(item._id));
+  };
 
   return (
     <Card
-      className={`p-relative orders-items-prep shadow-8 ${isFullScreen ? "h-full" : ""}`}
+      className={`p-relative orders-items-prep shadow-8 ${
+        isFullScreen ? "h-full" : ""
+      }`}
       ref={tableCardRef}
       header={() => (
         <div className="p-card-title p-4 pb-0 flex justify-content-between">
@@ -64,6 +73,22 @@ const OrdersItemsPreparationCard = () => {
         <Column field="stockItemName" header="Item Name" />
         <Column field="stockItemQuantity" header="In Stock" />
         <Column field="requiredQuantity" header="Need to Buy" />
+        <Column
+          field="actions"
+          header=""
+          body={(rowData) => {
+            return (
+              <div className="flex justify-content-start">
+                <Button
+                  icon="pi pi-pencil"
+                  className="p-button-rounded p-button-success mr-2"
+                  onClick={() => handleEdit(rowData)}
+                  tooltip="Edit"
+                />
+              </div>
+            );
+          }}
+        />
       </DataTable>
     </Card>
   );
