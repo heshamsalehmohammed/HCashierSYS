@@ -8,6 +8,7 @@ import {
   fetchStockItemsAPI,
 } from "../../api/stockAPI";
 import _ from "lodash";
+import { fetchOrdersItemsPreperations } from "./ordersSlice";
 
 export const addStockItem = createAsyncThunk(
   "stock/addStockItem",
@@ -82,6 +83,7 @@ export const editStockItem = createAsyncThunk(
       .then((result) => {
         thunkAPI.dispatch(closeAddStockItemPopup());
         thunkAPI.dispatch(fetchStockItems());
+        thunkAPI.dispatch(fetchOrdersItemsPreperations());
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
