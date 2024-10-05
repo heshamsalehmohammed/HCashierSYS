@@ -217,4 +217,9 @@ html[dir="rtl"] {
         /* Ensure no extra margin on the right in RTL */
     }
 
+    .p-datatable .p-datatable-tbody > tr > td {
+        text-align: right; /* Align text to the right in RTL */
+        border-width: 0 0 1px 0; /* Bottom border stays the same */
+        padding: 1rem 1rem; /* Same padding for RTL */
+    }
 }
