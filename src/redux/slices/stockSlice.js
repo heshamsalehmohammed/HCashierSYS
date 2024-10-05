@@ -70,9 +70,9 @@ export const editStockItem = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add StockItem",
+        title: "Error edit StockItem",
         message:
-          "An unexpected error occurred, Cannot add StockItem at thee moment. ",
+          "An unexpected error occurred, Cannot edit StockItem at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -97,7 +97,7 @@ export const deleteStockItem = createAsyncThunk(
         type: "Error",
         title: "Error delete StockItem",
         message:
-          "An unexpected error occurred, Cannot add StockItem at thee moment. ",
+          "An unexpected error occurred, Cannot delete StockItem at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -120,9 +120,9 @@ export const fetchStockItems = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add StockItem",
+        title: "Error fetch StockItems",
         message:
-          "An unexpected error occurred, Cannot add StockItem at thee moment. ",
+          "An unexpected error occurred, Cannot fetch StockItems at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -143,9 +143,9 @@ export const fetchStockItem = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add StockItem",
+        title: "Error fetch StockItem",
         message:
-          "An unexpected error occurred, Cannot add StockItem at thee moment. ",
+          "An unexpected error occurred, Cannot fetch StockItem at thee moment. ",
         buttonLabel: "OK",
       },
     })

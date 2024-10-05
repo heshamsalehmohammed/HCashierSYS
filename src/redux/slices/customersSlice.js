@@ -54,9 +54,9 @@ export const editCustomer = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Customer",
+        title: "Error edit Customer",
         message:
-          "An unexpected error occurred, Cannot add Customer at thee moment. ",
+          "An unexpected error occurred, Cannot edit Customer at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -81,7 +81,7 @@ export const deleteCustomer = createAsyncThunk(
         type: "Error",
         title: "Error delete Customer",
         message:
-          "An unexpected error occurred, Cannot add Customer at thee moment. ",
+          "An unexpected error occurred, Cannot delete Customer at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -107,9 +107,9 @@ export const fetchCustomers = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Customer",
+        title: "Error fetch customers",
         message:
-          "An unexpected error occurred, Cannot add Customer at thee moment. ",
+          "An unexpected error occurred, Cannot fetch customers at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -130,9 +130,9 @@ export const fetchCustomer = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Customer",
+        title: "Error fetch Customer",
         message:
-          "An unexpected error occurred, Cannot add Customer at thee moment. ",
+          "An unexpected error occurred, Cannot fetch Customer at thee moment. ",
         buttonLabel: "OK",
       },
     })

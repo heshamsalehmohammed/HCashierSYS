@@ -5,19 +5,23 @@ import "./Login.scss";
 import { useNavigate } from "react-router";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useTranslation } from "react-i18next";  // Import the hook
+import { useTranslation } from "react-i18next"; // Import the hook
+import { Message } from "primereact/message";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const Login = () => {
-  const { t } = useTranslation();  // Initialize the translation hook
+  const { t } = useTranslation(); // Initialize the translation hook
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { error } = useSelector((state) => state.auth);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    dispatch(loginUser({ username, password })).then(() => {
+    dispatch(loginUser({ emailOrName: username, password })).then(unwrapResult).then(() => {
       navigate("/home");
+    }).catch((error) => {
+      console.error("Logout error:", error);  // Log the error for debugging
     });
   };
 
@@ -27,18 +31,17 @@ const Login = () => {
         <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
           <div className="text-center mb-5">
             <div className="text-900 text-3xl font-medium mb-3">
-              {t('welcomeBack')}  
+              {t("welcomeBack")}
             </div>
           </div>
-
           <div>
             <label htmlFor="email" className="block text-900 font-medium mb-2">
-              {t('usernameLabel')}  
+              {t("usernameLabel")}
             </label>
             <InputText
               id="email"
               type="text"
-              placeholder={t('emailPlaceholder')}  
+              placeholder={t("emailPlaceholder")}
               className="w-full mb-3"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -48,22 +51,28 @@ const Login = () => {
               htmlFor="password"
               className="block text-900 font-medium mb-2"
             >
-              {t('passwordLabel')}  
+              {t("passwordLabel")}
             </label>
             <InputText
               type="password"
-              placeholder={t('passwordLabel')}  
+              placeholder={t("passwordLabel")}
               className="w-full mb-3"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {error && (
+              <Message
+                severity="error"
+                className="mb-2 w-full"
+                text={error}
+              />
+            )}
 
             <Button
-              label={t('signInButton')}  
+              label={t("signInButton")}
               icon="pi pi-user"
-              className="w-full"
+              className="w-full "
               onClick={handleLogin}
-              disabled={loading}
             />
           </div>
         </div>

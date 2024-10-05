@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { ToggleButton } from "primereact/togglebutton";
 import { useEffect, useState } from "react";
 import PrimeReact from "primereact/api";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
@@ -56,8 +57,10 @@ const SysNavBar = () => {
   }, [i18n.language]);
 
   const handleLogout = () => {
-    dispatch(logoutUser()).then(() => {
+    dispatch(logoutUser()).then(unwrapResult).then(() => {
       navigate("/login");
+    }).catch((error) => {
+      console.error("Logout error:", error);  // Log the error for debugging
     });
   };
 

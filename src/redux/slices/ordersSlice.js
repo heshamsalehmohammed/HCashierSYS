@@ -139,9 +139,9 @@ export const fetchOrders = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Order",
+        title: "Error fetch Orders",
         message:
-          "An unexpected error occurred, Cannot add Order at thee moment. ",
+          "An unexpected error occurred, Cannot fetch Orders at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -163,9 +163,9 @@ export const fetchOrder = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Order",
+        title: "Error fetch Order",
         message:
-          "An unexpected error occurred, Cannot add Order at thee moment. ",
+          "An unexpected error occurred, Cannot fetch Order at thee moment. ",
         buttonLabel: "OK",
       },
     })
@@ -187,9 +187,9 @@ export const fetchOrdersItemsPreperations = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Order",
+        title: "Error fetch stats",
         message:
-          "An unexpected error occurred, Cannot add Order at thee moment. ",
+          "An unexpected error occurred, Cannot fetch stats at thee moment. ",
         buttonLabel: "OK",
       },
     })
