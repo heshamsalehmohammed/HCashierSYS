@@ -8,20 +8,52 @@ import { logoutUser } from "../../../redux/slices/authSlice";
 import { selectInitializedOrdersCount } from "../../../redux/slices/statisticsSlice";
 import { useTranslation } from "react-i18next";
 import { ToggleButton } from "primereact/togglebutton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PrimeReact from "primereact/api";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const initializedStateOrdersCount = useSelector(selectInitializedOrdersCount);
+
   const [checked, setChecked] = useState(false);
 
+  // Function to change language and store the preference in localStorage
   const changeLanguage = (isChecked) => {
     const lang = isChecked ? "ar" : "en";
     i18n.changeLanguage(lang);
+    localStorage.setItem("appLanguage", lang);
+    localStorage.setItem("languageChecked", isChecked ? "true" : "false");
+    updateDirection(lang);  // Apply direction change on language change
   };
 
-  const initializedStateOrdersCount = useSelector(selectInitializedOrdersCount);
+  // Function to update the page direction based on language
+  const updateDirection = (language) => {
+    const isRTL = language === "ar";
+    const direction = isRTL ? "rtl" : "ltr";
+
+    PrimeReact.rtl = isRTL; // Enable or disable RTL in PrimeReact
+
+    // Set the direction on document and body
+    document.documentElement.setAttribute("dir", direction);
+    document.body.style.direction = direction; 
+  };
+
+  // Initialize the language and direction based on localStorage
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("appLanguage") || "en";
+    const savedChecked = localStorage.getItem("languageChecked") === "true";
+    
+    i18n.changeLanguage(savedLanguage);  // Set language
+    setChecked(savedChecked);  // Sync the toggle state
+    updateDirection(savedLanguage);  // Set the direction on load
+  }, [i18n]);
+
+  useEffect(() => {
+    // Update the page direction whenever the language changes
+    updateDirection(i18n.language);
+  }, [i18n.language]);
 
   const handleLogout = () => {
     dispatch(logoutUser()).then(() => {
@@ -51,7 +83,7 @@ const SysNavBar = () => {
         setChecked(e.value);
         changeLanguage(e.value);
       }}
-      className="p-menuitem-link "
+      className="p-menuitem-link"
       onLabel={t("langAr")}
       offLabel={t("langEng")}
     />

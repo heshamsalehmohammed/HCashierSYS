@@ -1,4 +1,5 @@
 import "./App.scss"; // Import SCSS file
+import "./PrimeFlexDirectionEnhancement.scss";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home/Home";
 import NotFound from "./components/Notfound";
