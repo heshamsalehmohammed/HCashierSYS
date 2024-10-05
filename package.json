@@ -29,8 +29,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node --max-old-space-size=1024 node_modules/.bin/react-scripts start",
-    "build": "ESLINT_NO_DEV_ERRORS=true echo $REACT_APP_API_ENDPOINT_PREFIX && CI=false react-scripts build",
+    "start": "GENERATE_SOURCEMAP=false node --max-old-space-size=2048 node_modules/.bin/react-scripts start",
+    "build": "ESLINT_NO_DEV_ERRORS=true echo $REACT_APP_API_ENDPOINT_PREFIX && CI=false GENERATE_SOURCEMAP=false node --max-old-space-size=2048 node_modules/.bin/react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
