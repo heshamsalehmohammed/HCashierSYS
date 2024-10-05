@@ -1,18 +1,27 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { fetchStats, setSelectedMostSoldStockItemOption, setSelectedNewlyAddedUsersCountOption } from '../slices/statisticsSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
+// Add listener for setSelectedMostSoldStockItemOption action
 listenerMiddleware.startListening({
-  matcher: (action) => action.type ,
-  effect: (action, listenerApi) => {
-    // Access the state before dispatching actionX
-    const state = listenerApi.getState();
+  actionCreator: setSelectedMostSoldStockItemOption,
+  effect: async (action, { dispatch, getState }) => {
+    const state = getState();
 
-    // Assuming you want to access some part of the state, e.g., state.sliceA
-    // const valueFromSliceA = state.sliceA.value;  // Example: accessing the updated state from sliceA
+    // Dispatch the fetchStats action with the updated state
+    dispatch(fetchStats());
+  },
+});
 
-    // Dispatch actionX with a payload from the state
-    // listenerApi.dispatch(actionX({ updatedValue: valueFromSliceA }));
+// Add listener for setSelectedNewlyAddedUsersCountOption action
+listenerMiddleware.startListening({
+  actionCreator: setSelectedNewlyAddedUsersCountOption,
+  effect: async (action, { dispatch, getState }) => {
+    const state = getState();
+
+    // Dispatch the fetchStats action with the updated state
+    dispatch(fetchStats());
   },
 });
 

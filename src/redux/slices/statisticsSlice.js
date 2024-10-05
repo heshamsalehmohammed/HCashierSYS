@@ -56,9 +56,6 @@ const statisticsSlice = createSlice({
   name: "statistics",
   initialState,
   reducers: {
-    setSelectedInitializedOrdersCountOption: (state, action) => {
-      state.selectedInitializedOrdersCountOption = action.payload;
-    },
     setSelectedMostSoldStockItemOption: (state, action) => {
       state.selectedMostSoldStockItemOption = action.payload;
     },
