@@ -201,4 +201,9 @@ html[dir="rtl"] {
         left:auto !important;
         right: -1.5rem !important;
     }
+
+    .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-icon {
+        margin-right: 0; // Reset margin-right in RTL
+        margin-left: 0.5rem; // Add margin to the left in RTL
+    }
 }
