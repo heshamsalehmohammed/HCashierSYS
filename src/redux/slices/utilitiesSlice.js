@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Define initial state
 const initialState = {
     loading: 0,
+    lang: localStorage.getItem('appLanguage') || 'en',
     popup: {
         isDisplayed: false,
         type: '',
@@ -82,7 +83,12 @@ const utilitiesSlice = createSlice({
         },
         closeConfirmationPopup: state => {
             state.confirmationPopup.isDisplayed = false;
-        }
+        },
+        changeLanguage: (state, action) => {
+            const newLang = action.payload;
+            state.lang = newLang;
+            localStorage.setItem('appLanguage', newLang);  // Persist language to localStorage
+          },
     }
 });
 
@@ -94,7 +100,11 @@ export const {
     openErrorPopup,
     closeErrorPopup,
     openConfirmationPopup,
-    closeConfirmationPopup
+    closeConfirmationPopup,
+    changeLanguage
 } = utilitiesSlice.actions;
+
+
+export const selectLanguage = (state) => state.utilities.lang;
 
 export default utilitiesSlice.reducer;
