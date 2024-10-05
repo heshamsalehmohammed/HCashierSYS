@@ -10,6 +10,7 @@ import {
 } from "../../../redux/slices/ordersSlice";
 import { prepareAndopenAddStockItemPopup } from "../../../redux/slices/stockSlice";
 import { useTranslation } from "react-i18next";
+import CreateStockItemPopup from "../Stock/CreateStockItemPopup";
 
 const OrdersItemsPreparationCard = () => {
   const { t } = useTranslation();
@@ -50,48 +51,55 @@ const OrdersItemsPreparationCard = () => {
   }, []);
 
   const handleEdit = (item) => {
-    dispatch(prepareAndopenAddStockItemPopup(item._id));
+    dispatch(prepareAndopenAddStockItemPopup(item.stockItemId));
   };
 
   return (
-    <Card
-      className={`p-relative orders-items-prep shadow-8 ${
-        isFullScreen ? "h-full" : ""
-      }`}
-      ref={tableCardRef}
-      header={() => (
-        <div className="p-card-title p-4 pb-0 flex justify-content-between">
-          <div>{t("ordersItemsPreparation")}</div>
-          <Button
-            icon={isFullScreen ? "pi pi-times" : "pi pi-arrows-alt"}
-            className="p-button-rounded p-button-info p-absolute p-topright"
-            onClick={toggleFullScreen}
+    <>
+      <CreateStockItemPopup />
+      <Card
+        className={`p-relative orders-items-prep shadow-8 ${
+          isFullScreen ? "h-full" : ""
+        }`}
+        ref={tableCardRef}
+        id={isFullScreen ? "FullScreenContainer" : ""}
+        header={() => (
+          <div className="p-card-title p-4 pb-0 flex justify-content-between">
+            <div>{t("ordersItemsPreparation")}</div>
+            <Button
+              icon={isFullScreen ? "pi pi-times" : "pi pi-arrows-alt"}
+              className="p-button-rounded p-button-info p-absolute p-topright"
+              onClick={toggleFullScreen}
+            />
+          </div>
+        )}
+      >
+        <DataTable
+          value={ordersItemsPreperations}
+          emptyMessage={t("noAvailableRecords")}
+        >
+          <Column field="stockItemName" header={t("itemName")} />
+          <Column field="stockItemQuantity" header={t("inStock")} />
+          <Column field="requiredQuantity" header={t("needToBuy")} />
+          <Column
+            field="actions"
+            header=""
+            body={(rowData) => {
+              return (
+                <div className="flex justify-content-start">
+                  <Button
+                    icon="pi pi-pencil"
+                    className="p-button-rounded p-button-success mr-2"
+                    onClick={() => handleEdit(rowData)}
+                    tooltip={t("edit")}
+                  />
+                </div>
+              );
+            }}
           />
-        </div>
-      )}
-    >
-      <DataTable value={ordersItemsPreperations} emptyMessage={t("noAvailableRecords")}>
-        <Column field="stockItemName" header={t("itemName")} />
-        <Column field="stockItemQuantity" header={t("inStock")} />
-        <Column field="requiredQuantity" header={t("needToBuy")} />
-        <Column
-          field="actions"
-          header=""
-          body={(rowData) => {
-            return (
-              <div className="flex justify-content-start">
-                <Button
-                  icon="pi pi-pencil"
-                  className="p-button-rounded p-button-success mr-2"
-                  onClick={() => handleEdit(rowData)}
-                  tooltip={t("edit")}
-                />
-              </div>
-            );
-          }}
-        />
-      </DataTable>
-    </Card>
+        </DataTable>
+      </Card>
+    </>
   );
 };
 

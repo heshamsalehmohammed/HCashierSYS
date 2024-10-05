@@ -17,6 +17,7 @@ import { addStockItem } from "../../../redux/slices/stockSlice";
 import CreateStockItemCustomizationPopup from "./CreateStockItemCustomizationPopup";
 import { Dropdown } from "primereact/dropdown";
 import { useTranslation } from "react-i18next";
+import { useAppendToContainer } from "../../../hooks/useAppendToContainer";
 
 const CreateStockItemPopup = () => {
   const { t } = useTranslation();
@@ -49,6 +50,8 @@ const CreateStockItemPopup = () => {
     </div>
   );
 
+  const container = useAppendToContainer()
+
   return (
     <Dialog
       visible={addStockItemPopup.isShown}
@@ -60,6 +63,7 @@ const CreateStockItemPopup = () => {
         if (!addStockItemPopup.isShown) return;
         dispatch(closeAddStockItemPopup());
       }}
+      appendTo={container}
     >
       <CreateStockItemCustomizationPopup />
       <div className=" card flex justify-content-center align-items-center mt-5 flex-column">
@@ -127,6 +131,7 @@ const CreateStockItemPopup = () => {
                   })}
                   optionLabel="name"
                   className="w-full"
+                  appendTo={container}
                 />
                 <label htmlFor={`dd-stockItemCustomization-${index}`}>
                   {t("showOptionsFor")} {customization.name}

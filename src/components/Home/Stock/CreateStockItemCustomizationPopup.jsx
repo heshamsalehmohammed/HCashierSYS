@@ -15,6 +15,7 @@ import {
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { useTranslation } from "react-i18next";
+import { useAppendToContainer } from "../../../hooks/useAppendToContainer";
 
 const CreateStockItemCustomizationPopup = () => {
   const { t } = useTranslation();
@@ -50,6 +51,8 @@ const CreateStockItemCustomizationPopup = () => {
     </div>
   );
 
+  const container = useAppendToContainer();
+
   return (
     <Dialog
       visible={addStockItemCustomizationPopup.isShown}
@@ -61,6 +64,7 @@ const CreateStockItemCustomizationPopup = () => {
         if (!addStockItemCustomizationPopup.isShown) return;
         dispatch(closeAddStockItemCustomizationPopup());
       }}
+      appendTo={container}
     >
       <div className=" card flex justify-content-center align-items-center mt-4 flex-column">
         <FloatLabel className="w-12 w-12 md:w-8 mb-4">

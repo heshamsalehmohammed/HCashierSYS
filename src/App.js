@@ -41,7 +41,7 @@ function App() {
   return (
     <Router>
       <MainLayout>
-        <div className="App">
+        <div className="App" id="App">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Navigate to="/home" />} />
