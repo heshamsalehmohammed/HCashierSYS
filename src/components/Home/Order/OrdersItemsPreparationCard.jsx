@@ -1,4 +1,3 @@
-// OrdersItemsPreparationCard.js
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -10,8 +9,10 @@ import {
   selectOrdersItemsPreperations,
 } from "../../../redux/slices/ordersSlice";
 import { prepareAndopenAddStockItemPopup } from "../../../redux/slices/stockSlice";
+import { useTranslation } from "react-i18next";
 
 const OrdersItemsPreparationCard = () => {
+  const { t } = useTranslation();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const tableCardRef = useRef(null);
   const ordersItemsPreperations = useSelector(selectOrdersItemsPreperations);
@@ -60,7 +61,7 @@ const OrdersItemsPreparationCard = () => {
       ref={tableCardRef}
       header={() => (
         <div className="p-card-title p-4 pb-0 flex justify-content-between">
-          <div>Orders Items Preparation</div>
+          <div>{t("ordersItemsPreparation")}</div>
           <Button
             icon={isFullScreen ? "pi pi-times" : "pi pi-arrows-alt"}
             className="p-button-rounded p-button-info p-absolute p-topright"
@@ -69,10 +70,10 @@ const OrdersItemsPreparationCard = () => {
         </div>
       )}
     >
-      <DataTable value={ordersItemsPreperations}>
-        <Column field="stockItemName" header="Item Name" />
-        <Column field="stockItemQuantity" header="In Stock" />
-        <Column field="requiredQuantity" header="Need to Buy" />
+      <DataTable value={ordersItemsPreperations} emptyMessage={t("noAvailableRecords")}>
+        <Column field="stockItemName" header={t("itemName")} />
+        <Column field="stockItemQuantity" header={t("inStock")} />
+        <Column field="requiredQuantity" header={t("needToBuy")} />
         <Column
           field="actions"
           header=""
@@ -83,7 +84,7 @@ const OrdersItemsPreparationCard = () => {
                   icon="pi pi-pencil"
                   className="p-button-rounded p-button-success mr-2"
                   onClick={() => handleEdit(rowData)}
-                  tooltip="Edit"
+                  tooltip={t("edit")}
                 />
               </div>
             );

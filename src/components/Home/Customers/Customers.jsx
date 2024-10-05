@@ -17,21 +17,22 @@ import CreateCustomerPopup from "./CreateCustomerPopup";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 
 const Customers = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const customers = useSelector(selectCustomers);
-
   const serachTermValue = useSelector(selectCustomersSearchTerm);
 
   const tableStyles = {
-    backgroundColor: "#333", // Dark background
-    color: "#fff", // White text
+    backgroundColor: "#333",
+    color: "#fff",
   };
 
   const headerStyles = {
-    backgroundColor: "#444", // Darker header background
+    backgroundColor: "#444",
     color: "#fff",
   };
 
@@ -47,23 +48,22 @@ const Customers = () => {
       <div className="flex justify-content-start">
         <Button
           icon="pi pi-plus"
-          label="New Order"
+          label={t("newOrder")}
           className=" p-button-success mr-2"
           onClick={() => handleNewOrder(rowData)}
-          tooltip="New Order"
+          tooltip={t("newOrder")}
         />
         <Button
           icon="pi pi-pencil"
           className="p-button-rounded p-button-success mr-2"
           onClick={() => handleEdit(rowData)}
-          tooltip="Edit"
+          tooltip={t("edit")}
         />
-
         <Button
           icon="pi pi-trash"
           className="p-button-rounded p-button-danger"
           onClick={() => handleDelete(rowData)}
-          tooltip="Delete"
+          tooltip={t("delete")}
         />
       </div>
     );
@@ -78,7 +78,7 @@ const Customers = () => {
   };
 
   const handleNewOrder = (item) => {
-    dispatch(handleNewOrderForCustomerButtonClick({customer:item}));
+    dispatch(handleNewOrderForCustomerButtonClick({ customer: item }));
   };
 
   return (
@@ -87,7 +87,7 @@ const Customers = () => {
       <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <Button
           type="button"
-          label="Add New Customer"
+          label={t("addNewCustomer")}
           icon="pi pi-customers"
           outlined
           badgeClassName="p-badge-danger"
@@ -97,11 +97,11 @@ const Customers = () => {
           }}
         />
 
-        <div className="m-1">Or search for existing customer</div>
+        <div className="m-1">{t("searchForExistingCustomer")}</div>
         <IconField iconPosition="left" className="mt-0 m-3">
           <InputIcon className="pi pi-search"> </InputIcon>
           <InputText
-            placeholder="Search by number or name"
+            placeholder={t("searchByNumberOrName")}
             onChange={(e) => {
               dispatch(setCustomersSearchTerm(e.target.value));
               debouncedFetch();
@@ -115,22 +115,23 @@ const Customers = () => {
         stripedRows
         className="w-12 md:w-8 m-auto -mt-5 shadow-7"
         style={tableStyles}
+        emptyMessage={t("noAvailableRecords")}
       >
         <Column
           field="phone"
-          header="Phone"
+          header={t("phone")}
           headerStyle={headerStyles}
           headerClassName="text-center "
         ></Column>
         <Column
           field="name"
-          header="Name"
+          header={t("name")}
           headerStyle={headerStyles}
           headerClassName="text-center "
         ></Column>
         <Column
           field="actions"
-          header="Actions"
+          header={t("actions")}
           headerStyle={headerStyles}
           headerClassName="text-center "
           body={actionsTemplate}

@@ -4,10 +4,11 @@ import { loginUser } from "../../redux/slices/authSlice";
 import "./Login.scss";
 import { useNavigate } from "react-router";
 import { InputText } from "primereact/inputtext";
-import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
+import { useTranslation } from "react-i18next";  // Import the hook
 
 const Login = () => {
+  const { t } = useTranslation();  // Initialize the translation hook
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
@@ -26,18 +27,18 @@ const Login = () => {
         <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
           <div className="text-center mb-5">
             <div className="text-900 text-3xl font-medium mb-3">
-              Welcome Back
+              {t('welcomeBack')}  
             </div>
           </div>
 
           <div>
             <label htmlFor="email" className="block text-900 font-medium mb-2">
-              Username
+              {t('usernameLabel')}  
             </label>
             <InputText
               id="email"
               type="text"
-              placeholder="Email address"
+              placeholder={t('emailPlaceholder')}  
               className="w-full mb-3"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -47,18 +48,18 @@ const Login = () => {
               htmlFor="password"
               className="block text-900 font-medium mb-2"
             >
-              Password
+              {t('passwordLabel')}  
             </label>
             <InputText
               type="password"
-              placeholder="Password"
+              placeholder={t('passwordLabel')}  
               className="w-full mb-3"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
 
             <Button
-              label="Sign In"
+              label={t('signInButton')}  
               icon="pi pi-user"
               className="w-full"
               onClick={handleLogin}

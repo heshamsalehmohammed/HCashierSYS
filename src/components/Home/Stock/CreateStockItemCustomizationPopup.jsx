@@ -14,8 +14,10 @@ import {
 } from "../../../redux/slices/stockSlice";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
+import { useTranslation } from "react-i18next";
 
 const CreateStockItemCustomizationPopup = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const addStockItemPopup = useSelector(selectAddStockItemPopup);
@@ -26,7 +28,7 @@ const CreateStockItemCustomizationPopup = () => {
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
       <span className="font-bold white-space-nowrap">
-        Add New Customization For {addStockItemPopup.name}
+        {t("addNewCustomizationFor")} {addStockItemPopup.name}
       </span>
     </div>
   );
@@ -34,7 +36,11 @@ const CreateStockItemCustomizationPopup = () => {
   const footerContent = (
     <div>
       <Button
-        label={addStockItemCustomizationPopup._id?"Edit Customization":"Add Customization"}
+        label={
+          addStockItemCustomizationPopup._id
+            ? t("editCustomization")
+            : t("addCustomization")
+        }
         icon="pi pi-check"
         onClick={() => {
           dispatch(addStockItemCustomization());
@@ -58,17 +64,19 @@ const CreateStockItemCustomizationPopup = () => {
     >
       <div className=" card flex justify-content-center align-items-center mt-4 flex-column">
         <FloatLabel className="w-12 w-12 md:w-8 mb-4">
-          <label htmlFor="customizationname">Customization Name</label>
+          <label htmlFor="customizationname">{t("customizationName")}</label>
           <InputText
             className="w-12"
             id="customizationname"
             value={addStockItemCustomizationPopup.name}
-            onChange={(e) => dispatch(addStockItemCustomizationName(e.target.value))}
+            onChange={(e) =>
+              dispatch(addStockItemCustomizationName(e.target.value))
+            }
           />
         </FloatLabel>
       </div>
       <Button
-        label="Add Option"
+        label={t("addOption")}
         icon="pi pi-plus"
         onClick={() => {
           dispatch(addStockItemCustomizationOption());
@@ -82,7 +90,7 @@ const CreateStockItemCustomizationPopup = () => {
           >
             <FloatLabel className="w-4 m-1">
               <label htmlFor={`stockItemCustomizationOptionName-${index}`}>
-                Option Name
+                {t("optionName")}
               </label>
               <InputText
                 className="w-12"
@@ -102,7 +110,7 @@ const CreateStockItemCustomizationPopup = () => {
               <label
                 htmlFor={`stockItemCustomizationOptionAdditionalPrice-${index}`}
               >
-                Option Additional Price
+                {t("optionAdditionalPrice")}
               </label>
               <InputText
                 className="w-12"
@@ -122,7 +130,7 @@ const CreateStockItemCustomizationPopup = () => {
             <Button
               icon="pi pi-times"
               severity="danger"
-              aria-label="Cancel"
+              aria-label={t("cancel")}
               onClick={() => {
                 dispatch(removeStockItemCustomizationOption(index));
               }}

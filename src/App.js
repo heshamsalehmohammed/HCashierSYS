@@ -7,6 +7,7 @@ import ReduxDispatchSingleton from "./services/reduxDispatchSingleton";
 import MainLayout from "./components/MainLayout";
 import Login from "./components/Login/Login";
 import PrivateRoute from "./components/utilities/PrivateRoute";
+import './i18n'; // Import i18n configuration
 
 function App() {
   const dispatch = useDispatch();

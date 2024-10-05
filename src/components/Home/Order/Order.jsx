@@ -12,23 +12,22 @@ import {
   selectOrderStatues,
   selectSearchStockItemForOrderPopup,
 } from "../../../redux/slices/ordersSlice";
-import { Avatar } from "primereact/avatar";
-import { Divider } from "primereact/divider";
-import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
-
 import "./Order.scss";
-import { useState } from "react";
-import Stock from "../Stock/Stock";
-import { Chip } from "primereact/chip";
 import StockItemForOrderPopup from "./SelectStockItemForOrderPopup";
 import { Tag } from "primereact/tag";
-import { Message } from "primereact/message";
+import { Divider } from "primereact/divider";
+import { Chip } from "primereact/chip";
 import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
 import { formatDate } from "../../../services/utilities";
+import { useTranslation } from "react-i18next";
+import { Message } from "primereact/message";
+import { Sidebar } from "primereact/sidebar";
+import Stock from "../Stock/Stock";
 
 const Order = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentOrder = useSelector(selectCurrentOrder);
   const orderStatues = useSelector(selectOrderStatues);
@@ -40,7 +39,8 @@ const Order = () => {
     <div className="">
       <StockItemForOrderPopup />
       <div className="surface-ground px-4 pb-4 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
-        {(currentOrder.orderStatusId !== 0 && currentOrder.orderStatusId !== OrderStatusEnum.DELIVERED) && (
+        {(currentOrder.orderStatusId !== 0 &&
+          currentOrder.orderStatusId !== OrderStatusEnum.DELIVERED) && (
           <FloatLabel className="w-3 m-1 -mt-6" style={{ minWidth: "276px" }}>
             <Dropdown
               inputId={`dd-orderstatues`}
@@ -59,29 +59,26 @@ const Order = () => {
                 );
               }}
             />
-            {/* <label className="shadow-8" htmlFor={`dd-orderstatues`}>
-              Show Options For Order Status
-            </label> */}
           </FloatLabel>
         )}
         <Fieldset
           legend={
             <div className="flex align-items-center">
-              <span className="font-bold">Customer Details</span>
+              <span className="font-bold">{t("customerDetails")}</span>
             </div>
           }
           className="w-full custom-fieldset"
         >
           <div className="m-2 text-lg">
-            <span className="font-bold">Name: </span>{" "}
+            <span className="font-bold">{t("name")}: </span>{" "}
             <span>{currentOrder.customer.name}</span>
           </div>
           <div className="m-2 text-lg">
-            <span className="font-bold">Phone: </span>{" "}
+            <span className="font-bold">{t("phone")}: </span>{" "}
             <span>{currentOrder.customer.phone}</span>
           </div>
           <div className="m-2 text-lg">
-            <span className="font-bold">Address: </span>{" "}
+            <span className="font-bold">{t("address")}: </span>{" "}
             <span>{currentOrder.customer.address}</span>
           </div>
         </Fieldset>
@@ -89,11 +86,11 @@ const Order = () => {
         <Fieldset
           legend={
             <div className="flex align-items-center">
-              <span className="font-bold mr-2">Order Details</span>
+              <span className="font-bold mr-2">{t("orderDetails")}</span>
               {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
                 currentOrder.orderStatusId === 0) && (
                 <Button
-                  label="Add Item"
+                  label={t("addItem")}
                   icon="pi pi-plus"
                   onClick={() => dispatch(openSearchStockItemForOrderPopup())}
                 />
@@ -114,7 +111,7 @@ const Order = () => {
                 />
 
                 <Chip
-                  label={`${item.amount} kilos ${item.stockItemName} --- ${item.stockItemPrice} EGP`}
+                  label={`${item.amount} ${t("kilos")} ${item.stockItemName} --- ${item.stockItemPrice} ${t("currency")}`}
                   className="m-1 mr-2"
                 />
                 {item.stockItemCustomizationsSelectedOptions.map((op, ind) => (
@@ -124,18 +121,18 @@ const Order = () => {
                       op.stockItemCustomizationSelectedOptionName.includes("-")
                         ? op.stockItemCustomizationSelectedOptionName.replace(
                             "EGP",
-                            " EGP"
+                            " " + t("currency")
                           )
                         : op.stockItemCustomizationSelectedOptionName +
                           " - " +
                           op.stockItemCustomizationSelectedOptionAdditionalPrice +
-                          " EGP"
+                          " " + t("currency")
                     }`}
                     className="m-1 mr-2"
                   />
                 ))}
                 <Chip
-                  label={`Total Item Price ${item.price} EGP`}
+                  label={`${t("totalItemPrice")} ${item.price} ${t("currency")}`}
                   className="m-1 mr-2"
                 />
                 {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
@@ -153,7 +150,7 @@ const Order = () => {
                       })
                     )
                   }
-                  tooltip="Edit"
+                  tooltip={t("edit")}
                 />
 
                 <Button
@@ -164,32 +161,32 @@ const Order = () => {
                       removeStockItemFromCurrentOrder(currentOrderItemIndex)
                     )
                   }
-                  tooltip="Delete"
+                  tooltip={t("delete")}
                 /></>}
               </div>
             );
           })}
           <Divider type="solid" />
           <div className="m-2 text-lg">
-            <span className="font-bold">Initialization Date: </span>{" "}
+            <span className="font-bold">{t("initializationDate")}: </span>{" "}
             <span>{formatDate(currentOrder.date)}</span>
           </div>
           {currentOrder.statusChangeDate && (
             <div className="m-2 text-lg">
-              <span className="font-bold">Status Change Date: </span>{" "}
+              <span className="font-bold">{t("statusChangeDate")}: </span>{" "}
               <span>{formatDate(currentOrder.statusChangeDate)}</span>
             </div>
           )}
           {currentOrder.updatedDate && (
             <div className="m-2 text-lg">
-              <span className="font-bold">Update Date: </span>{" "}
+              <span className="font-bold">{t("updateDate")}: </span>{" "}
               <span>{formatDate(currentOrder.updatedDate)}</span>
             </div>
           )}
           <Divider type="solid" />
           <div className="m-2 text-lg">
-            <span className="font-bold">Total Price: </span>
-            <span>{currentOrder.totalPrice} EGP</span>
+            <span className="font-bold">{t("totalPrice")}: </span>
+            <span>{currentOrder.totalPrice} {t("currency")}</span>
           </div>
         </Fieldset>
         <div
@@ -207,7 +204,7 @@ const Order = () => {
               severity="info"
               content={
                 <div className="flex align-items-center">
-                  <span className="font-bold">Order Status: </span>
+                  <span className="font-bold">{t("orderStatus")}: </span>
                   <div className="ml-2">
                     <Tag
                       value={currentOrder.orderStatus.label}
@@ -225,9 +222,9 @@ const Order = () => {
             <Button
               label={`${
                 currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED
-                  ? "Edit"
-                  : "Submit"
-              } Order`}
+                  ? t("editOrder")
+                  : t("submitOrder")
+              }`}
               icon="pi pi-plus"
               className="mt-2 lg:mt-0"
               onClick={() => {

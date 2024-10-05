@@ -15,8 +15,10 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputTextarea } from "primereact/inputtextarea";
 import { addCustomer } from "../../../redux/slices/customersSlice";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 
 const CreateCustomerPopup = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const addCustomerPopup = useSelector(selectAddCustomerPopup);
@@ -24,7 +26,7 @@ const CreateCustomerPopup = () => {
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
       <span className="font-bold white-space-nowrap">
-        {addCustomerPopup._id ? "Edit" : "Add New"} Customer
+        {addCustomerPopup._id ? t("edit") : t("addNew")} {t("customer")}
       </span>
     </div>
   );
@@ -32,7 +34,7 @@ const CreateCustomerPopup = () => {
   const footerContent = (
     <div>
       <Button
-        label={addCustomerPopup._id ? "Edit" : "Create"}
+        label={addCustomerPopup._id ? t("edit") : t("create")}
         icon="pi pi-check"
         onClick={() => {
           if (addCustomerPopup._id) {
@@ -46,7 +48,7 @@ const CreateCustomerPopup = () => {
       {addCustomerPopup._id && (
         <Button
           icon="pi pi-plus"
-          label="New Order"
+          label={t("newOrder")}
           className=" p-button-success mr-2"
           onClick={() => {
             const customer = _.cloneDeep(addCustomerPopup);
@@ -57,7 +59,7 @@ const CreateCustomerPopup = () => {
               })
             );
           }}
-          tooltip="New Order"
+          tooltip={t("newOrder")}
         />
       )}
     </div>
@@ -77,7 +79,7 @@ const CreateCustomerPopup = () => {
     >
       <div className=" card flex justify-content-center align-items-center mt-5 mb-5 flex-column">
         <FloatLabel className="w-12 w-12 md:w-8 mb-4">
-          <label htmlFor="customername">Customer Name</label>
+          <label htmlFor="customername">{t("customerName")}</label>
           <InputText
             className="w-12"
             id="customername"
@@ -87,7 +89,7 @@ const CreateCustomerPopup = () => {
         </FloatLabel>
 
         <FloatLabel className="  w-12 w-12 md:w-8 mb-4">
-          <label htmlFor="phone">Phone</label>
+          <label htmlFor="phone">{t("phone")}</label>
           <InputText
             className="w-12"
             id="phone"
@@ -107,7 +109,7 @@ const CreateCustomerPopup = () => {
             rows={5}
             cols={25}
           />
-          <label htmlFor="Address">Address</label>
+          <label htmlFor="Address">{t("address")}</label>
         </FloatLabel>
       </div>
     </Dialog>

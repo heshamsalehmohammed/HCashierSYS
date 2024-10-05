@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
-import "primeflex/primeflex.css"; // Ensure PrimeFlex is imported
+import "primeflex/primeflex.css";
 import {
   selectInitializedOrdersCount,
   selectMostSoldStockItem,
@@ -14,57 +14,46 @@ import {
   selectSelectedNewlyAddedUsersCountOption,
   setSelectedNewlyAddedUsersCountOption,
   fetchStats,
-} from "../../../redux/slices/statisticsSlice"; // Redux slice imports
+} from "../../../redux/slices/statisticsSlice";
 import "./Stat.scss";
 import OrdersItemsPreparationCard from "../Order/OrdersItemsPreparationCard";
+import { useTranslation } from "react-i18next";
 
 const Stat = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  // Fetch Redux state data using selectors
   const initializedOrdersCount = useSelector(selectInitializedOrdersCount);
-
-
-
   const mostSoldStockItem = useSelector(selectMostSoldStockItem);
-  const selectedMostSoldStockItemOption = useSelector(selectSelectedMostSoldStockItemOption)
+  const selectedMostSoldStockItemOption = useSelector(selectSelectedMostSoldStockItemOption);
+  const newlyAddedUsersCount = useSelector(selectNewlyAddedUsersCount);
+  const newlyAddedUsersCountPercent = useSelector(selectNewlyAddedUsersCountPercent);
+  const selectedNewlyAddedUsersCountOption = useSelector(selectSelectedNewlyAddedUsersCountOption);
+  const daysOptions = useSelector(selectDaysOptions);
+
+  useEffect(() => {
+    dispatch(fetchStats());
+  }, []);
+
   const handleMostSoldStockItemOChange = (e) => {
     dispatch(setSelectedMostSoldStockItemOption(e.value));
   };
 
-
-
-
-  const newlyAddedUsersCount = useSelector(selectNewlyAddedUsersCount);
-  const newlyAddedUsersCountPercent = useSelector(
-    selectNewlyAddedUsersCountPercent
-  );
-  const selectedNewlyAddedUsersCountOption = useSelector(selectSelectedNewlyAddedUsersCountOption)
   const handleNewlyAddedUsersCountChange = (e) => {
     dispatch(setSelectedNewlyAddedUsersCountOption(e.value));
   };
-
-
-
-  const daysOptions = useSelector(selectDaysOptions);
-
-
-  useEffect(() => {
-    dispatch(fetchStats())
-  }, []);
 
   return (
     <div className="flex flex-column h-full">
       <div className="grid">
         <div className="col-12 md:col-7 lg:col-4">
-          <Card title="Initialized Orders" className="shadow-7 stat-card">
-            
+          <Card title={t("initializedOrders")} className="shadow-7 stat-card">
             <div className="flex justify-content-between align-items-start mt-3 p-2">
               <div className="w-6">
                 <span className="text-4xl font-bold text-900">
                   +{initializedOrdersCount}
-                </span><i className="pi pi-arrow-up text-xs ml-2"></i>
-               
+                </span>
+                <i className="pi pi-arrow-up text-xs ml-2"></i>
               </div>
               <div className="w-6">
                 <svg
@@ -84,15 +73,14 @@ const Stat = () => {
           </Card>
         </div>
         <div className="col-12 md:col-7 lg:col-4">
-          <Card title="Most Sold Stock Item" className="shadow-7 stat-card">
+          <Card title={t("mostSoldStockItem")} className="shadow-7 stat-card">
             <Dropdown
               value={selectedMostSoldStockItemOption}
               options={daysOptions}
               onChange={handleMostSoldStockItemOChange}
-              placeholder="Select Days"
+              placeholder={t("selectDays")}
               className="p-mb-2"
             />
-
             <div className="flex justify-content-between align-items-start mt-3 p-2">
               <div className="w-7 flex">
                 <div className="flex">
@@ -125,12 +113,12 @@ const Stat = () => {
           </Card>
         </div>
         <div className="col-12 md:col-7 lg:col-4">
-          <Card title="Newly Added Users" className="shadow-7 stat-card">
+          <Card title={t("newlyAddedUsers")} className="shadow-7 stat-card">
             <Dropdown
               value={selectedNewlyAddedUsersCountOption}
               options={daysOptions}
               onChange={handleNewlyAddedUsersCountChange}
-              placeholder="Select Days"
+              placeholder={t("selectDays")}
               className="p-mb-2"
             />
             <div className="flex justify-content-between align-items-start mt-3 p-2">
@@ -166,7 +154,7 @@ const Stat = () => {
 
       <div className="grid">
         <div className="col" style={{ flexGrow: 1 }}>
-        <OrdersItemsPreparationCard />
+          <OrdersItemsPreparationCard />
         </div>
       </div>
     </div>

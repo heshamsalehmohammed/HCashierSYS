@@ -17,22 +17,23 @@ import { Column } from "primereact/column";
 import _ from "lodash";
 import CreateStockItemPopup from "./CreateStockItemPopup";
 import { prepareAndOpenSelectStockItemForOrderPopup } from "../../../redux/slices/ordersSlice";
+import { useTranslation } from "react-i18next";
 
 const Stock = (props) => {
   const { fromOrder = false } = props;
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const stockItems = useSelector(selectStockItems);
-
   const serachTermValue = useSelector(selectStockSearchTerm);
 
   const tableStyles = {
-    backgroundColor: "#333", // Dark background
-    color: "#fff", // White text
+    backgroundColor: "#333",
+    color: "#fff",
   };
 
   const headerStyles = {
-    backgroundColor: "#444", // Darker header background
+    backgroundColor: "#444",
     color: "#fff",
   };
 
@@ -58,7 +59,7 @@ const Stock = (props) => {
               icon="pi pi-plus"
               className="p-button-success mr-2"
               onClick={() => handleSelectItemForOrder(rowData)}
-              label="Select Item"
+              label={t("selectItem")}
             />
           </>
         ) : (
@@ -67,14 +68,13 @@ const Stock = (props) => {
               icon="pi pi-pencil"
               className="p-button-rounded p-button-success mr-2"
               onClick={() => handleEdit(rowData)}
-              tooltip="Edit"
+              tooltip={t("edit")}
             />
-
             <Button
               icon="pi pi-trash"
               className="p-button-rounded p-button-danger"
               onClick={() => handleDelete(rowData)}
-              tooltip="Delete"
+              tooltip={t("delete")}
             />
           </>
         )}
@@ -97,7 +97,6 @@ const Stock = (props) => {
   return (
     <div className="">
       <CreateStockItemPopup />
-
       <div
         className={`surface-ground flex align-items-center justify-content-center flex-column ${
           fromOrder ? "" : " px-4 pb-8 pt-4 md:px-6 lg:px-8 "
@@ -107,7 +106,7 @@ const Stock = (props) => {
           {!fromOrder && (
             <Button
               type="button"
-              label="Add New Item"
+              label={t("addNewItem")}
               icon="pi pi-stockItems"
               outlined
               badgeClassName="p-badge-danger"
@@ -121,7 +120,7 @@ const Stock = (props) => {
           <IconField iconPosition="left" className="mb-1">
             <InputIcon className="pi pi-search"> </InputIcon>
             <InputText
-              placeholder="Search by name"
+              placeholder={t("searchByName")}
               onChange={(e) => {
                 dispatch(setStockSearchTerm(e.target.value));
                 debouncedFetch();
@@ -135,37 +134,36 @@ const Stock = (props) => {
           stripedRows
           className="w-12 m-auto shadow-7"
           style={tableStyles}
+          emptyMessage={t("noAvailableRecords")}
         >
           <Column
             field="name"
-            header="Name"
+            header={t("name")}
             headerStyle={headerStyles}
             headerClassName="text-center "
           ></Column>
-          {
-            <Column
-              field="amount"
-              header="Available Amount In Stock By Kilo"
-              headerStyle={headerStyles}
-              headerClassName="text-center "
-            ></Column>
-          }
+          <Column
+            field="amount"
+            header={t("availableAmountInStockByKilo")}
+            headerStyle={headerStyles}
+            headerClassName="text-center "
+          ></Column>
           <Column
             field="price"
-            header="Base Price"
+            header={t("basePrice")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.price} EGP
+                  {rowData.price} {t("currency")}
                 </div>
               );
             }}
           ></Column>
           <Column
             field="actions"
-            header="Actions"
+            header={t("actions")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={actionsTemplate}

@@ -17,12 +17,12 @@ import {
 import { Tag } from "primereact/tag";
 import { formatDate } from "../../../services/utilities";
 import { Dropdown } from "primereact/dropdown";
-import { IconField } from "primereact/iconfield";
 import { InputText } from "primereact/inputtext";
-import { InputIcon } from "primereact/inputicon";
 import { Calendar } from "primereact/calendar";
+import { useTranslation } from "react-i18next";
 
 const Orders = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const orders = useSelector(selectOrders);
@@ -31,12 +31,12 @@ const Orders = () => {
   const orderStatues = useSelector(selectOrderStatues);
 
   const tableStyles = {
-    backgroundColor: "#333", // Dark background
-    color: "#fff", // White text
+    backgroundColor: "#333",
+    color: "#fff",
   };
 
   const headerStyles = {
-    backgroundColor: "#444", // Darker header background
+    backgroundColor: "#444",
     color: "#fff",
   };
 
@@ -59,7 +59,7 @@ const Orders = () => {
             icon="pi pi-pencil"
             className="p-button-rounded p-button-success mr-2"
             onClick={() => dispatch(prepareAndOpenOrderPage(rowData._id))}
-            tooltip="Edit"
+            tooltip={t("edit")}
           />
         </>
       </div>
@@ -113,10 +113,14 @@ const Orders = () => {
         value={selectedOption}
         options={orderStatues}
         onChange={async (e) =>
-          await handleFilterChange("orderStatusId", e.value?._id ?? null,ComparisonOperators.EQUALS)
+          await handleFilterChange(
+            "orderStatusId",
+            e.value?._id ?? null,
+            ComparisonOperators.EQUALS
+          )
         }
         itemTemplate={statusItemTemplate}
-        placeholder="Select One"
+        placeholder={t("selectOne")}
         className="p-column-filter"
         showClear
         style={{ minWidth: "8rem" }}
@@ -127,10 +131,10 @@ const Orders = () => {
   const customerNameRowFilterTemplate = (options) => {
     return (
       <InputText
-        placeholder="Search"
+        placeholder={t("search")}
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
-        value={ordersFilters.customerName.value??undefined}
+        value={ordersFilters.customerName.value ?? undefined}
         onChange={async (e) =>
           await handleFilterChange(
             "customerName",
@@ -145,10 +149,10 @@ const Orders = () => {
   const customerPhoneRowFilterTemplate = (options) => {
     return (
       <InputText
-        placeholder="Search"
+        placeholder={t("search")}
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
-        value={ordersFilters.customerPhone.value??undefined}
+        value={ordersFilters.customerPhone.value ?? undefined}
         onChange={async (e) =>
           await handleFilterChange(
             "customerPhone",
@@ -160,15 +164,14 @@ const Orders = () => {
     );
   };
 
-
   const totalPriceRowFilterTemplate = (options) => {
     return (
       <InputText
-        placeholder="Search"
+        placeholder={t("search")}
         keyfilter="pnum"
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
-        value={ordersFilters.totalPrice.value??undefined}
+        value={ordersFilters.totalPrice.value ?? undefined}
         onChange={async (e) =>
           await handleFilterChange(
             "totalPrice",
@@ -182,7 +185,11 @@ const Orders = () => {
 
   const dateRowFilterTemplate = (options) => {
     return (
-      <Calendar showTime hourFormat="12"   className="p-column-filter"style={{ minWidth: "4rem" }}
+      <Calendar
+        showTime
+        hourFormat="12"
+        className="p-column-filter"
+        style={{ minWidth: "4rem" }}
         value={ordersFilters.date.value}
         onChange={async (e) =>
           await handleFilterChange(
@@ -190,14 +197,18 @@ const Orders = () => {
             e.target.value ?? null,
             options.filterModel.matchMode
           )
-        }/>
-    
+        }
+      />
     );
   };
 
   const statusChangeDateRowFilterTemplate = (options) => {
     return (
-      <Calendar showTime hourFormat="12"   className="p-column-filter"style={{ minWidth: "4rem" }}
+      <Calendar
+        showTime
+        hourFormat="12"
+        className="p-column-filter"
+        style={{ minWidth: "4rem" }}
         value={ordersFilters.statusChangeDate.value}
         onChange={async (e) =>
           await handleFilterChange(
@@ -205,8 +216,8 @@ const Orders = () => {
             e.target.value ?? null,
             options.filterModel.matchMode
           )
-        }/>
-    
+        }
+      />
     );
   };
 
@@ -231,10 +242,11 @@ const Orders = () => {
           onPage={onPage}
           rowsPerPageOptions={[5, 10, 15, 25, 50]}
           filterDisplay="row"
+          emptyMessage={t("noAvailableRecords")}
         >
           <Column
             field="customername"
-            header="Customer Name"
+            header={t("customerName")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={(rowData) => {
@@ -251,7 +263,7 @@ const Orders = () => {
 
           <Column
             field="customerphone"
-            header="Customer Phone"
+            header={t("customerPhone")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={(rowData) => {
@@ -268,13 +280,13 @@ const Orders = () => {
 
           <Column
             field="totalprice"
-            header="Total Price"
+            header={t("totalPrice")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.totalPrice} EGP
+                  {rowData.totalPrice} {t("currency")}
                 </div>
               );
             }}
@@ -285,7 +297,7 @@ const Orders = () => {
 
           <Column
             field="date"
-            header="Order Date"
+            header={t("orderDate")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={(rowData) => {
@@ -301,7 +313,7 @@ const Orders = () => {
           ></Column>
           <Column
             field="status"
-            header="Status"
+            header={t("status")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             showFilterMenu={false}
@@ -313,7 +325,7 @@ const Orders = () => {
           ></Column>
           <Column
             field="statuschangedate"
-            header="Status Change Date"
+            header={t("statusChangeDate")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={(rowData) => {
@@ -329,7 +341,7 @@ const Orders = () => {
           ></Column>
           <Column
             field="actions"
-            header="Actions"
+            header={t("actions")}
             headerStyle={headerStyles}
             headerClassName="text-center "
             body={actionsTemplate}

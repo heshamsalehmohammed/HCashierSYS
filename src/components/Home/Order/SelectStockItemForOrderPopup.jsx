@@ -1,15 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import {
-  closeSelectStockItemForOrderPopup,
-  editStockItem,
-  selectAddStockItemPopup,
-  setAddStockItemPopupAmount,
-} from "../../../redux/slices/stockSlice";
+import { selectAddStockItemPopup } from "../../../redux/slices/stockSlice";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
-import { addStockItem } from "../../../redux/slices/stockSlice";
 import { Dropdown } from "primereact/dropdown";
 import {
   addStockItemToCurrentOrder,
@@ -19,8 +13,10 @@ import {
   setStockItemCustomizationsSelectedOption,
 } from "../../../redux/slices/ordersSlice";
 import { Divider } from "primereact/divider";
+import { useTranslation } from "react-i18next";
 
 const StockItemForOrderPopup = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const stockItemState = useSelector(selectAddStockItemPopup);
@@ -31,7 +27,10 @@ const StockItemForOrderPopup = () => {
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
       <span className="font-bold white-space-nowrap">
-        {stockItemForOrderPopupState.itemIndexInOrder == null ?'Select':'Edit'} Stock Item: {stockItemState.name}
+        {stockItemForOrderPopupState.itemIndexInOrder == null
+          ? t("select")
+          : t("edit")}{" "}
+        {t("stockItem")}: {stockItemState.name}
       </span>
     </div>
   );
@@ -39,7 +38,11 @@ const StockItemForOrderPopup = () => {
   const footerContent = (
     <div>
       <Button
-        label={stockItemForOrderPopupState.itemIndexInOrder == null?"Add Item To Current Order":'Edit Item In Current Order'}
+        label={
+          stockItemForOrderPopupState.itemIndexInOrder == null
+            ? t("addItemToCurrentOrder")
+            : t("editItemInCurrentOrder")
+        }
         icon="pi pi-check"
         onClick={() => dispatch(addStockItemToCurrentOrder())}
         autoFocus
@@ -60,12 +63,12 @@ const StockItemForOrderPopup = () => {
       }}
     >
       <div className="m-2 text-lg">
-        <span className="font-bold">Base Price: </span>{" "}
-        <span>{stockItemForOrderPopupState.stockItemPrice} EGP</span>
+        <span className="font-bold">{t("basePrice")}: </span>{" "}
+        <span>{stockItemForOrderPopupState.stockItemPrice} {t("currency")}</span>
       </div>
       <div className=" card flex justify-content-center align-items-center m-1 flex-column">
         <FloatLabel className="w-12 mt-5">
-          <label htmlFor="itemamount">Amount</label>
+          <label htmlFor="itemamount">{t("amount")}</label>
           <InputText
             className="w-12"
             id="itemamount"
@@ -81,7 +84,7 @@ const StockItemForOrderPopup = () => {
             if (o.additionalPrice)
               return {
                 ...o,
-                name: `${o.name} - ${o.additionalPrice}EGP`,
+                name: `${o.name} - ${o.additionalPrice} ${t("currency")}`,
               };
             else return { ...o, name: `${o.name}` };
           });
@@ -90,11 +93,12 @@ const StockItemForOrderPopup = () => {
               (o) => o.stockItemCustomizationId === customization._id
             );
 
-          const currentSelectedCustomizationOption = customizationOptions?.find(
-            (o) =>
-              o._id ===
-              currentStockItemCustomizationsSelectedOption?.stockItemCustomizationSelectedOptionId??0
-          )??undefined;
+          const currentSelectedCustomizationOption =
+            customizationOptions?.find(
+              (o) =>
+                o._id ===
+                currentStockItemCustomizationsSelectedOption?.stockItemCustomizationSelectedOptionId ?? 0
+            ) ?? undefined;
 
           return (
             <div
@@ -121,7 +125,7 @@ const StockItemForOrderPopup = () => {
                   }}
                 />
                 <label htmlFor={`dd-stockItemCustomization-${index}`}>
-                  Select {customization.name}
+                  {t("select")} {customization.name}
                 </label>
               </FloatLabel>
             </div>
@@ -130,8 +134,8 @@ const StockItemForOrderPopup = () => {
       </div>
       <Divider type="solid" />
       <div className="m-2 text-lg">
-        <span className="font-bold">Total Price: </span>{" "}
-        <span>{stockItemForOrderPopupState.price} EGP</span>
+        <span className="font-bold">{t("totalPrice")}: </span>{" "}
+        <span>{stockItemForOrderPopupState.price} {t("currency")}</span>
       </div>
     </Dialog>
   );
