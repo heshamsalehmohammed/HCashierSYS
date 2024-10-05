@@ -47,11 +47,11 @@ const Stat = () => {
     <div className="flex flex-column h-full">
       <div className="grid">
         <div className="col-12 md:col-7 lg:col-4">
-          <Card title={t("initializedOrders")} className="shadow-7 stat-card">
+          <Card title={t("initializedOrders")} className="shadow-7 stat-card" style={{minHeight:'240px',height:'240px'}}>
             <div className="flex justify-content-between align-items-start mt-3 p-2">
               <div className="w-6">
                 <span className="text-4xl font-bold text-900">
-                  +{initializedOrdersCount}
+                  + {initializedOrdersCount}
                 </span>
                 <i className="pi pi-arrow-up text-xs ml-2"></i>
               </div>
@@ -73,7 +73,7 @@ const Stat = () => {
           </Card>
         </div>
         <div className="col-12 md:col-7 lg:col-4">
-          <Card title={t("mostSoldStockItem")} className="shadow-7 stat-card">
+          <Card title={t("mostSoldStockItem")} className="shadow-7 stat-card" style={{minHeight:'240px',height:'240px'}}>
             <Dropdown
               value={selectedMostSoldStockItemOption}
               options={daysOptions}
@@ -95,7 +95,7 @@ const Stat = () => {
                   <i className="pi pi-shopping-cart text-blue-500 text-xl"></i>
                 </div>
               </div>
-              <div className="w-6">
+              <div className="w-6 -mt-4">
                 <svg
                   width="100%"
                   viewBox="0 0 258 96"
@@ -113,7 +113,7 @@ const Stat = () => {
           </Card>
         </div>
         <div className="col-12 md:col-7 lg:col-4">
-          <Card title={t("newlyAddedUsers")} className="shadow-7 stat-card">
+          <Card title={t("newlyAddedUsers")} className="shadow-7 stat-card" style={{minHeight:'240px',height:'240px'}}>
             <Dropdown
               value={selectedNewlyAddedUsersCountOption}
               options={daysOptions}
@@ -128,12 +128,12 @@ const Stat = () => {
                 </span>
                 <div className="text-green-500">
                   <span className="font-medium">
-                    +{newlyAddedUsersCountPercent}%
+                    + {newlyAddedUsersCountPercent} %
                   </span>
                   <i className="pi pi-arrow-up text-xs ml-2"></i>
                 </div>
               </div>
-              <div className="w-6">
+              <div className="w-6 -mt-4">
                 <svg
                   width="100%"
                   viewBox="0 0 258 96"
