@@ -18,9 +18,11 @@ export const addStockItem = createAsyncThunk(
     delete newStockItem.isShown;
     delete newStockItem._id;
     delete newStockItem.addStockItemCustomizationPopup;
+    
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
       delete customization.isShown;
+      delete customization.indexOfCustomization;
       customization.options.forEach((option) => {
         delete option._id;
       });
@@ -61,6 +63,7 @@ export const editStockItem = createAsyncThunk(
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
       delete customization.isShown;
+      delete customization.indexOfCustomization;
       customization.options.forEach((option) => {
         delete option._id;
       });
@@ -185,6 +188,7 @@ const initialState = {
       _id: "",
       name: "",
       options: [],
+      indexOfCustomization: null
     },
   },
 };
@@ -194,7 +198,9 @@ const _closeAddStockItemCustomizationPopup = (state) => {
   state.addStockItemPopup.addStockItemCustomizationPopup = {
     isShown: false,
     _id: "",
+    name: '',
     options: [],
+    indexOfCustomization:null
   };
 };
 
@@ -212,6 +218,7 @@ const _closeAddStockItemPopup = (state) => {
       _id: "",
       name: "",
       options: [],
+      indexOfCustomization: null,
     },
   };
 };
@@ -249,6 +256,7 @@ const stockSlice = createSlice({
     openAddStockItemCustomizationPopup: (state, action) => {
       state.addStockItemPopup.addStockItemCustomizationPopup.isShown = true;
       if (action.payload >= 0) {
+        state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization = action.payload
         state.addStockItemPopup.addStockItemCustomizationPopup.options =
           state.addStockItemPopup.customizations[action.payload].options;
         state.addStockItemPopup.addStockItemCustomizationPopup.name =
@@ -296,13 +304,8 @@ const stockSlice = createSlice({
         state.addStockItemPopup.addStockItemCustomizationPopup
       );
 
-      const existingCustomizationIndex =
-        state.addStockItemPopup.customizations.findIndex(
-          (customization) => customization._id === newCustomization._id
-        );
-
-      if (existingCustomizationIndex >= 0) {
-        state.addStockItemPopup.customizations[existingCustomizationIndex] =
+      if (newCustomization.indexOfCustomization != null) {
+        state.addStockItemPopup.customizations[newCustomization.indexOfCustomization] =
           newCustomization;
       } else {
         state.addStockItemPopup.customizations.push(newCustomization);
