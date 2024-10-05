@@ -40,12 +40,6 @@ const Orders = () => {
     color: "#fff",
   };
 
-  const debouncedFetch = useCallback(
-    _.debounce(() => {
-      dispatch(fetchOrders());
-    }, 300),
-    [dispatch]
-  );
 
   useEffect(() => {
     dispatch(fetchOrders());
@@ -66,18 +60,17 @@ const Orders = () => {
     );
   };
 
-  const handleFilterChange = async (key, value, filterMatchMode) => {
+  const handleFilterChange =  (key, value, filterMatchMode) => {
     if (typeof key === "object") {
-      await dispatch(setOrdersFilterCriteria(key));
+       dispatch(setOrdersFilterCriteria(key));
     } else {
-      await dispatch(
+       dispatch(
         setOrdersFilterCriteria({
           [key]: { value, filterMatchMode },
         })
       );
     }
 
-    debouncedFetch();
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -112,8 +105,8 @@ const Orders = () => {
       <Dropdown
         value={selectedOption}
         options={orderStatues}
-        onChange={async (e) =>
-          await handleFilterChange(
+        onChange={ (e) =>
+           handleFilterChange(
             "orderStatusId",
             e.value?._id ?? null,
             ComparisonOperators.EQUALS
@@ -134,9 +127,9 @@ const Orders = () => {
         placeholder={t("search")}
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
-        value={ordersFilters.customerName.value ?? undefined}
-        onChange={async (e) =>
-          await handleFilterChange(
+        value={ordersFilters.customerName.value ?? ''}
+        onChange={ (e) =>
+           handleFilterChange(
             "customerName",
             e.target.value ?? null,
             ComparisonOperators.CONTAINS
@@ -152,9 +145,9 @@ const Orders = () => {
         placeholder={t("search")}
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
-        value={ordersFilters.customerPhone.value ?? undefined}
-        onChange={async (e) =>
-          await handleFilterChange(
+        value={ordersFilters.customerPhone.value ?? ''}
+        onChange={ (e) =>
+           handleFilterChange(
             "customerPhone",
             e.target.value ?? null,
             ComparisonOperators.CONTAINS
@@ -164,24 +157,24 @@ const Orders = () => {
     );
   };
 
-  const totalPriceRowFilterTemplate = (options) => {
+  const totalPriceRowFilterTemplate = useCallback((options) => {
     return (
       <InputText
         placeholder={t("search")}
         keyfilter="pnum"
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
-        value={ordersFilters.totalPrice.value ?? undefined}
-        onChange={async (e) =>
-          await handleFilterChange(
+        value={ordersFilters.totalPrice.value ?? ''}
+        onChange={ (e) =>
+           handleFilterChange(
             "totalPrice",
             e.target.value ?? null,
-            options.filterModel.matchMode
+            options?.filterModel?.matchMode??null
           )
         }
       />
     );
-  };
+  },[ordersFilters]);
 
   const dateRowFilterTemplate = (options) => {
     return (
@@ -191,11 +184,11 @@ const Orders = () => {
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
         value={ordersFilters.date.value}
-        onChange={async (e) =>
-          await handleFilterChange(
+        onChange={ (e) =>
+           handleFilterChange(
             "date",
             e.target.value ?? null,
-            options.filterModel.matchMode
+            options?.filterModel?.matchMode??null
           )
         }
       />
@@ -210,19 +203,19 @@ const Orders = () => {
         className="p-column-filter"
         style={{ minWidth: "4rem" }}
         value={ordersFilters.statusChangeDate.value}
-        onChange={async (e) =>
-          await handleFilterChange(
+        onChange={ (e) =>
+           handleFilterChange(
             "statusChangeDate",
             e.target.value ?? null,
-            options.filterModel.matchMode
+            options?.filterModel?.matchMode??null
           )
         }
       />
     );
   };
 
-  const onPage = async (event) => {
-    await handleFilterChange({
+  const onPage =  (event) => {
+     handleFilterChange({
       pageNumber: event.page, // Convert 0-based index to 1-based for backend
       pageSize: event.rows, // Keep the page size
     });
@@ -243,6 +236,9 @@ const Orders = () => {
           rowsPerPageOptions={[5, 10, 15, 25, 50]}
           filterDisplay="row"
           emptyMessage={t("noAvailableRecords")}
+          filters={{
+            totalprice: { value: null, matchMode: null },
+        }}
         >
           <Column
             field="customername"
@@ -293,6 +289,18 @@ const Orders = () => {
             filter
             filterElement={totalPriceRowFilterTemplate}
             dataType="numeric"
+            onFilterMatchModeChange={(param)=> handleFilterChange(
+              "totalPrice",
+              ordersFilters.totalPrice.value,
+              param.matchMode
+            )}
+            onFilterClear={()=>
+               handleFilterChange(
+                "totalPrice",
+                 null,
+                null
+              )
+            }
           ></Column>
 
           <Column
@@ -310,6 +318,18 @@ const Orders = () => {
             filter
             filterElement={dateRowFilterTemplate}
             dataType="date"
+            onFilterMatchModeChange={(param)=> handleFilterChange(
+              "date",
+              ordersFilters.date.value,
+              param.matchMode
+            )}
+            onFilterClear={()=>
+               handleFilterChange(
+                "date",
+                 null,
+                null
+              )
+            }
           ></Column>
           <Column
             field="status"
@@ -338,6 +358,18 @@ const Orders = () => {
             filter
             filterElement={statusChangeDateRowFilterTemplate}
             dataType="date"
+            onFilterMatchModeChange={(param)=> handleFilterChange(
+              "statusChangeDate",
+              ordersFilters.statusChangeDate.value,
+              param.matchMode
+            )}
+            onFilterClear={()=>
+               handleFilterChange(
+                "statusChangeDate",
+                 null,
+                null
+              )
+            }
           ></Column>
           <Column
             field="actions"

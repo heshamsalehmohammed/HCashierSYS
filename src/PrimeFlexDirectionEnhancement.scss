@@ -1,3 +1,13 @@
+html[dir="ltr"] {
+
+    .p-dropdown-clear-icon {
+        right:auto !important;
+        left: -1.5rem !important;
+    }
+}
+
+
+
 html[dir="rtl"] {
 
     /* Padding */
@@ -185,5 +195,10 @@ html[dir="rtl"] {
 
     .p-inline-message.p-inline-message-info{
         border-width: 0px 6px 0px 0px !important;
+    }
+
+    .p-dropdown-clear-icon {
+        left:auto !important;
+        right: -1.5rem !important;
     }
 }

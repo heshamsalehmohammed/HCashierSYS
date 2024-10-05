@@ -1,5 +1,6 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { fetchStats, setSelectedMostSoldStockItemOption, setSelectedNewlyAddedUsersCountOption } from '../slices/statisticsSlice';
+import { fetchOrders, setOrdersFilterCriteria } from '../slices/ordersSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -22,6 +23,17 @@ listenerMiddleware.startListening({
 
     // Dispatch the fetchStats action with the updated state
     dispatch(fetchStats());
+  },
+});
+
+
+listenerMiddleware.startListening({
+  actionCreator: setOrdersFilterCriteria,
+  effect: async (action, { dispatch, getState }) => {
+    const state = getState();
+
+    // Dispatch the fetchStats action with the updated state
+    dispatch(fetchOrders());
   },
 });
 
