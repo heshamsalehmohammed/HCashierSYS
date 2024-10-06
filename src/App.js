@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import "./App.scss"; // Import SCSS file
 import "./PrimeFlexDirectionEnhancement.scss";
 import {
@@ -15,7 +15,7 @@ import MainLayout from "./components/MainLayout";
 import Login from "./components/Login/Login";
 import PrivateRoute from "./components/utilities/PrivateRoute";
 import "./i18n"; // Import i18n configuration
-import { initializeSession, selectLanguage } from "./redux/slices/utilitiesSlice";
+import { initWebSocket, selectLanguage } from "./redux/slices/utilitiesSlice";
 import PrimeReact from "primereact/api";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -40,9 +40,6 @@ function App() {
     updateDirection(currentLanguage);
   }, [currentLanguage, i18n]);
 
-  useEffect(() => {
-    dispatch(initializeSession());
-}, [dispatch]);
 
   return (
     <Router>

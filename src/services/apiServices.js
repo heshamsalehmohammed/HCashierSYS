@@ -4,7 +4,7 @@ const axiosInstance = axios.create({
   // baseURL: 'your_base_url_here', // Uncomment and set your base URL if needed
   headers: {
     'Content-Type': 'application/json',
-  },
+  }
 });
 
 // Request interceptor to attach token

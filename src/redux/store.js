@@ -1,3 +1,5 @@
+// store.js
+
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -5,29 +7,44 @@ import storage from 'redux-persist/lib/storage';
 import authReducer from './slices/authSlice';
 import utilitiesReducer from './slices/utilitiesSlice';
 import customersSlice from './slices/customersSlice';
-import  listenerMiddleware  from './middlewares/listenerMiddleware';
+import listenerMiddleware from './middlewares/listenerMiddleware';
 import stockSlice from './slices/stockSlice';
 import ordersSlice from './slices/ordersSlice';
 import statisticsSlice from './slices/statisticsSlice';
 
-const rootReducer = combineReducers({
-  auth: authReducer,
-  utilities: utilitiesReducer,
-  customers: customersSlice,
-  orders: ordersSlice,
-  stock:stockSlice,
-  statistics:statisticsSlice,
-});
+// Persist Configs for Individual Slices
 
-const persistConfig = {
-  key: 'root',
+// Utilities Persist Config - Exclude 'socket'
+const utilitiesPersistConfig = {
+  key: 'utilities',
   storage,
+  blacklist: ['socket','socketInitialized'], // Exclude 'socket' from being persisted
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// Auth Persist Config - Persist 'user' data
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['user'], // Persist 'user' data to maintain authentication state
+};
 
+// Apply persistReducer to individual slices
+const persistedUtilitiesReducer = persistReducer(utilitiesPersistConfig, utilitiesReducer);
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+
+// Combine Reducers
+const rootReducer = combineReducers({
+  auth: persistedAuthReducer,         // Persisted auth reducer
+  utilities: persistedUtilitiesReducer, // Persisted utilities reducer
+  customers: customersSlice,          // Non-persisted reducers
+  orders: ordersSlice,
+  stock: stockSlice,
+  statistics: statisticsSlice,
+});
+
+// Configure Store
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

@@ -6,6 +6,9 @@ import Stock from "./Stock/Stock";
 import Order from "./Order/Order";
 import Orders from "./Orders/Orders";
 import Stat from "./Stat/Stat";
+import { useDispatch, useSelector } from "react-redux";
+import { initWebSocket } from "../../redux/slices/utilitiesSlice";
+import { useEffect } from "react";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -14,6 +17,26 @@ const BodyContentWrapper = ({ children }) => {
 };
 
 const Home = () => {
+
+const dispatch = useDispatch();
+  // Get authentication state and socket from Redux
+  const user = useSelector((state) => state.auth.user);
+  const socketInitialized = useSelector((state) => state.utilities.socketInitialized);
+
+  useEffect(() => {
+    if (user && !socketInitialized) {
+      dispatch(initWebSocket({ maxRetries: 1, retryDelay: 2000 }));
+    }
+  }, [dispatch, user, socketInitialized]);
+
+  if (!socketInitialized) {
+    // Show a loading indicator until the WebSocket is initialized
+    return null;
+  }
+
+
+
+
   return (
     <div className="">
       <SysNavBar />
