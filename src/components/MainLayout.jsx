@@ -8,6 +8,7 @@ import ErrorPopup from "./utilities/ErrorPopup/ErrorPopup";
 import { useNavigate } from "react-router";
 import RouterNavigationSingleton from "../services/routerNavigationSingleton";
 import { useAppendToContainer } from "../hooks/useAppendToContainer";
+import AppToastContainer from './utilities/ToastContainer/AppToastContainer';
 
 const MainLayout = (props) => {
   const { children } = props;
@@ -29,6 +30,7 @@ const MainLayout = (props) => {
 
   return (
     <>
+    <AppToastContainer/>
       {loading ? (container?ReactDOM.createPortal(<Spinner />, container):<Spinner />) : <></>}
 
       {popup.isDisplayed ? (

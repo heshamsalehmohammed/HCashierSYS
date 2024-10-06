@@ -24,7 +24,13 @@ export const initWebSocket = createAsyncThunk(
             sessionId,
             dispatch,
             onMessage: (data) => {
-              // Handle incoming messages if needed
+              if (data.type === 'action') {
+                // Handle action messages
+                const { reduxActionToBeDispatched, reduxActionPayloadToBeSent } = data;
+        
+                // Check if the action is allowed
+                dispatch({ type: reduxActionToBeDispatched, payload: reduxActionPayloadToBeSent });
+              }
             },
           });
           dispatch(socketInitialized());
@@ -86,6 +92,11 @@ const initialState = {
     closable: false,
     confirmationButtonProps: {},
   },
+  toast:{
+    toastMessage: null,
+    toastSeverity: 'info',
+    toastSummary: 'Info',
+  },
   socketInitialized: false,
 };
 
@@ -98,6 +109,17 @@ const utilitiesSlice = createSlice({
     },
     stopLoading: (state) => {
       state.loading = Math.max(0, state.loading - 1);
+    },
+    showToast: (state, action) => {
+      const { message, severity, summary } = action.payload;
+      state.toast.toastMessage = message;
+      state.toast.toastSeverity = severity || 'info'; // Default to 'info'
+      state.toast.toastSummary = summary || 'Info';  // Default to 'Info'
+    },
+    clearToastMessage: (state) => {
+      state.toast.toastMessage = null;
+      state.toast.toastSeverity = 'info';
+      state.toast.toastSummary = 'Info';
     },
     openPopup: (state, action) => {
       const payload = action.payload;
@@ -168,6 +190,8 @@ export const {
   changeLanguage,
   socketInitialized,
   socketClosed,
+  showToast,
+  clearToastMessage
 } = utilitiesSlice.actions;
 
 export const selectLanguage = (state) => state.utilities.lang;

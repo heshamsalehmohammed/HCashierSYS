@@ -8,7 +8,7 @@ import { selectInitializedOrdersCount } from "../../../redux/slices/statisticsSl
 import { useTranslation } from "react-i18next";
 import { ToggleButton } from "primereact/togglebutton";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { changeLanguage, selectLanguage } from "../../../redux/slices/utilitiesSlice";
+import { changeLanguage, selectLanguage, showToast } from "../../../redux/slices/utilitiesSlice";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();

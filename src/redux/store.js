@@ -18,7 +18,7 @@ import statisticsSlice from './slices/statisticsSlice';
 const utilitiesPersistConfig = {
   key: 'utilities',
   storage,
-  blacklist: ['socket','socketInitialized'], // Exclude 'socket' from being persisted
+  blacklist: ['socket','socketInitialized','loading'], // Exclude 'socket' from being persisted
 };
 
 // Auth Persist Config - Persist 'user' data
