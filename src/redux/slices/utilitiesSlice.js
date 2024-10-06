@@ -1,75 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { handleHttpRequestPromise } from "../../services/HTTPRequestHandler";
+import { closeWebSocket, initWebSocketConnection } from "../../services/webSocketManager";
 
 export const initWebSocket = createAsyncThunk(
   'utilities/initWebSocket',
   async ({ maxRetries = 5, retryDelay = 1000 }, { dispatch }) => {
     let attempts = 0;
-    let sessionId = sessionStorage.getItem('sessionId'); // Use sessionStorage instead of localStorage
+    let sessionId = sessionStorage.getItem('sessionId');
 
-    // Dispatch startLoading before attempting connection
     dispatch(startLoading());
 
-    const connectSocket = () => {
-      return new Promise((resolve, reject) => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('No token found. Cannot initialize WebSocket connection.');
-          dispatch(stopLoading()); // Stop loading since we cannot proceed
-          return reject('No token found');
-        }
-
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-
-        // Use the protocol and host to construct the WebSocket URL
-        const wsUrl = `${protocol}//${process.env.REACT_APP_WEBSOCKET_HOST}?token=${token}${
-          sessionId ? `&sessionId=${sessionId}` : ''
-        }`;
-
-        const socket = new WebSocket(wsUrl);
-
-        socket.onopen = () => {
-          console.log('WebSocket connection opened.');
-          dispatch(openSocket(socket));
-          dispatch(stopLoading()); // Stop loading on successful connection
-          resolve(socket);
-        };
-
-        socket.onmessage = function (event) {
-          const data = JSON.parse(event.data);
-          if (data.type === 'sessionId') {
-            // Store the sessionId sent from the server
-            sessionId = data.sessionId;
-            sessionStorage.setItem('sessionId', sessionId);
-          } else {
-            // Handle other messages
-            console.log('Received message:', data);
-          }
-        };
-
-        socket.onerror = function (error) {
-          console.error('WebSocket connection error', error);
-          // Not stopping loading here because we may retry
-        };
-
-        socket.onclose = function (event) {
-          if (event.wasClean) {
-            console.log(
-              `WebSocket closed cleanly, code=${event.code}, reason=${event.reason}`
-            );
-          } else {
-            console.error('WebSocket connection died');
-          }
-          // Do not dispatch stopLoading() here, because we may retry
-          reject();
-        };
-      });
-    };
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found. Cannot initialize WebSocket connection.');
+      dispatch(stopLoading()); // Stop loading since we cannot proceed
+      return Promise.reject('No token found');
+    }
 
     const attemptConnection = async () => {
       while (attempts < maxRetries) {
         try {
-          await connectSocket();
+          await initWebSocketConnection({
+            token,
+            sessionId,
+            dispatch,
+            onMessage: (data) => {
+              // Handle incoming messages if needed
+            },
+          });
+          dispatch(socketInitialized());
+          dispatch(stopLoading());
           break; // Connection successful, break the loop
         } catch (error) {
           attempts++;
@@ -92,41 +51,46 @@ export const initWebSocket = createAsyncThunk(
   }
 );
 
+// Thunk action to close the WebSocket
+export const closeSocket = () => (dispatch) => {
+  closeWebSocket(); // Close the WebSocket connection
+  dispatch(socketClosed()); // Update the state
+};
+
 // Define initial state
 const initialState = {
   loading: 0,
-  lang: localStorage.getItem("appLanguage") || "en",
+  lang: localStorage.getItem('appLanguage') || 'en',
   popup: {
     isDisplayed: false,
-    type: "",
-    title: "",
-    message: "",
+    type: '',
+    title: '',
+    message: '',
     multiMessages: [],
     headers: [],
-    buttonLabel: "",
+    buttonLabel: '',
   },
   errorPopup: {
     isDisplayed: false,
-    title: "",
-    body: "",
+    title: '',
+    body: '',
   },
   confirmationPopup: {
     isDisplayed: false,
-    actionName: "",
-    actionMessage: "",
+    actionName: '',
+    actionMessage: '',
     confirmCallback: null,
     declineCallback: null,
-    confirmationButtonText: "",
-    cancelText: "",
+    confirmationButtonText: '',
+    cancelText: '',
     closable: false,
     confirmationButtonProps: {},
   },
-  socket: null, // Initialize socket in state
-  socketInitialized: false
+  socketInitialized: false,
 };
 
 const utilitiesSlice = createSlice({
-  name: "utilities",
+  name: 'utilities',
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -181,17 +145,12 @@ const utilitiesSlice = createSlice({
     changeLanguage: (state, action) => {
       const newLang = action.payload;
       state.lang = newLang;
-      localStorage.setItem("appLanguage", newLang); // Persist language to localStorage
+      localStorage.setItem('appLanguage', newLang); // Persist language to localStorage
     },
-    openSocket: (state, action) => {
-      state.socket = action.payload;
+    socketInitialized: (state) => {
       state.socketInitialized = true;
     },
-    closeSocket: (state) => {
-      if (state.socket) {
-        state.socket.close();
-        state.socket = null;
-      }
+    socketClosed: (state) => {
       state.socketInitialized = false;
     },
   },
@@ -207,8 +166,8 @@ export const {
   openConfirmationPopup,
   closeConfirmationPopup,
   changeLanguage,
-  openSocket,
-  closeSocket,
+  socketInitialized,
+  socketClosed,
 } = utilitiesSlice.actions;
 
 export const selectLanguage = (state) => state.utilities.lang;

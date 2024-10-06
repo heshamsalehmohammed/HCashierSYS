@@ -1,3 +1,5 @@
+// authSlice.js
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { loginAPI, logoutAPI, registerAPI } from '../../api/authAPI';
 import { handleHttpRequestPromise } from '../../services/HTTPRequestHandler';
@@ -31,7 +33,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk(
-  'auth/logout',
+  'auth/logoutUser',
   async (_, thunkAPI) => {
     return handleHttpRequestPromise(logoutAPI(), {
       type: 'openPopup',
@@ -44,11 +46,18 @@ export const logoutUser = createAsyncThunk(
       },
     })
       .then(async (result) => {
-        await thunkAPI.dispatch(closeSocket());
+        // Remove token and sessionId
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('sessionId');
+        // Dispatch logout action to update the state
+        thunkAPI.dispatch(logout());
+        // Close the WebSocket connection
+        thunkAPI.dispatch(closeSocket());
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
-        return thunkAPI.rejectWithValue(error.response.data);
+        const errorMessage = error.response?.data || error.message || 'Unknown error';
+        return thunkAPI.rejectWithValue(errorMessage);
       });
   }
 );
@@ -89,6 +98,9 @@ const authSlice = createSlice({
     clearAuthError(state) {
       state.error = null;
     },
+    logout(state) {
+      state.user = null; // Clear user data
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -97,15 +109,6 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;
-      })
-      .addCase(logoutUser.fulfilled, (state, action) => {
-        localStorage.removeItem('token'); // Remove JWT token on logout
-        sessionStorage.removeItem('sessionId'); // Remove sessionId on logout
-        state.user = null; // Clear user data
-        
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        // Optional handling for rejected logout
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         const { token, user } = action.payload;
@@ -118,6 +121,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError } = authSlice.actions;
+export const { clearAuthError, logout } = authSlice.actions;
 
 export default authSlice.reducer;

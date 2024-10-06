@@ -20,7 +20,7 @@ const SysNavBar = () => {
 
 
   const handleLogout = () => {
-    dispatch(logoutUser()).then(unwrapResult).then(() => {
+    dispatch(logoutUser()).unwrap().then(() => {
       navigate("/login");
     }).catch((error) => {
       console.error("Logout error:", error);  // Log the error for debugging
