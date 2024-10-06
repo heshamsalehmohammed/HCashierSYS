@@ -18,9 +18,14 @@ export const initWebSocket = createAsyncThunk(
           dispatch(stopLoading()); // Stop loading since we cannot proceed
           return reject('No token found');
         }
-        const wsUrl = `${process.env.REACT_APP_API_ENDPOINT_WEBSOCKET_PREFIX}?token=${token}${
+
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+
+        // Use the protocol and host to construct the WebSocket URL
+        const wsUrl = `${protocol}//${process.env.REACT_APP_WEBSOCKET_HOST}?token=${token}${
           sessionId ? `&sessionId=${sessionId}` : ''
         }`;
+
         const socket = new WebSocket(wsUrl);
 
         socket.onopen = () => {
