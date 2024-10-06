@@ -442,6 +442,10 @@ const ordersSlice = createSlice({
     addStockItemToCurrentOrder: (state, action) => {
       const stockItem = _.cloneDeep(state.selectStockItemForOrderPopup);
       delete stockItem.isShown;
+
+      stockItem.stockItemCustomizationsSelectedOptions = stockItem.stockItemCustomizationsSelectedOptions.filter(si=> si.stockItemCustomizationSelectedOptionId != 0)
+
+
       if (stockItem.itemIndexInOrder == null) {
         state.currentOrder.items.push(stockItem);
       } else {
