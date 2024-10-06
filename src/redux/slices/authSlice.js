@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { loginAPI, logoutAPI, registerAPI } from '../../api/authAPI';
 import { handleHttpRequestPromise } from '../../services/HTTPRequestHandler';
 import { closeSocket } from './utilitiesSlice';
+import RouterNavigationSingleton from '../../services/routerNavigationSingleton';
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -46,13 +47,7 @@ export const logoutUser = createAsyncThunk(
       },
     })
       .then(async (result) => {
-        // Remove token and sessionId
-        localStorage.removeItem('token');
-        sessionStorage.removeItem('sessionId');
-        // Dispatch logout action to update the state
-        thunkAPI.dispatch(logout());
-        // Close the WebSocket connection
-        thunkAPI.dispatch(closeSocket());
+        coreClean(thunkAPI.dispatch)
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
@@ -61,6 +56,18 @@ export const logoutUser = createAsyncThunk(
       });
   }
 );
+
+
+export const coreClean = (dispatch)=>{
+  localStorage.removeItem('token');
+  sessionStorage.removeItem('sessionId');
+  // Dispatch logout action to update the state
+  dispatch(logout());
+  // Close the WebSocket connection
+  dispatch(closeSocket());
+  const navigate = RouterNavigationSingleton.getNavigation();
+  navigate("/login");
+}
 
 export const registerUser = createAsyncThunk(
   'auth/register',

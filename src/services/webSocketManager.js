@@ -1,5 +1,6 @@
 // webSocketManager.js
 
+import { coreClean, logoutUser } from "../redux/slices/authSlice";
 import { socketClosed } from "../redux/slices/utilitiesSlice";
 
 let socket = null;
@@ -52,6 +53,7 @@ export const initWebSocketConnection = ({ token, sessionId, dispatch, onMessage 
         );
       } else {
         console.error('WebSocket connection died');
+        coreClean(dispatch)
       }
       socket = null;
       if (dispatch) {

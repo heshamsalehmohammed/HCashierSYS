@@ -20,11 +20,7 @@ const SysNavBar = () => {
 
 
   const handleLogout = () => {
-    dispatch(logoutUser()).unwrap().then(() => {
-      navigate("/login");
-    }).catch((error) => {
-      console.error("Logout error:", error);  // Log the error for debugging
-    });
+    dispatch(logoutUser());
   };
 
   const itemRenderer = (item) => (
