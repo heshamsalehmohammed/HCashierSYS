@@ -32,7 +32,7 @@ const MainLayout = (props) => {
       {loading ? (container?ReactDOM.createPortal(<Spinner />, container):<Spinner />) : <></>}
 
       {popup.isDisplayed ? (
-        ReactDOM.createPortal(
+        (container?ReactDOM.createPortal(
           <PopupMessage
             title={popup.title}
             message={popup.message}
@@ -42,7 +42,14 @@ const MainLayout = (props) => {
             buttonLabel={popup.buttonLabel}
           />,
           container
-        )
+        ):<PopupMessage
+        title={popup.title}
+        message={popup.message}
+        type={popup.type}
+        multiMessages={popup.multiMessages}
+        headers={popup.headers}
+        buttonLabel={popup.buttonLabel}
+      />)
       ) : (
         <></>
       )}

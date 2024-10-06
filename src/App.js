@@ -1,3 +1,4 @@
+import React from 'react'
 import "./App.scss"; // Import SCSS file
 import "./PrimeFlexDirectionEnhancement.scss";
 import {
@@ -14,7 +15,7 @@ import MainLayout from "./components/MainLayout";
 import Login from "./components/Login/Login";
 import PrivateRoute from "./components/utilities/PrivateRoute";
 import "./i18n"; // Import i18n configuration
-import { selectLanguage } from "./redux/slices/utilitiesSlice";
+import { initializeSession, selectLanguage } from "./redux/slices/utilitiesSlice";
 import PrimeReact from "primereact/api";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -22,7 +23,7 @@ import { useEffect } from "react";
 function App() {
   const dispatch = useDispatch();
   const currentLanguage = useSelector(selectLanguage); // Select language from Redux
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   ReduxDispatchSingleton.setDispatch(dispatch);
 
   // Update PrimeReact RTL and direction based on the language
@@ -38,6 +39,11 @@ function App() {
     i18n.changeLanguage(currentLanguage);
     updateDirection(currentLanguage);
   }, [currentLanguage, i18n]);
+
+  useEffect(() => {
+    dispatch(initializeSession());
+}, [dispatch]);
+
   return (
     <Router>
       <MainLayout>

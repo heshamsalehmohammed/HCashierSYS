@@ -26,6 +26,7 @@
     "redux-persist": "^6.0.0",
     "redux-state-sync": "^3.1.4",
     "sass": "^1.76.0",
+    "tms": "file:",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

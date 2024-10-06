@@ -1,9 +1,38 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { handleHttpRequestPromise } from '../../services/HTTPRequestHandler';
+import { fetchSessionAPI } from '../../api/utilitiesAPI';
+
+
+export const initializeSession = createAsyncThunk(
+    "utilities/initializeSession",
+    async (payload, thunkAPI) => {
+      
+      return handleHttpRequestPromise(fetchSessionAPI(), {
+        type: "openPopup",
+        showForStatuses: "400,401,500,404,501",
+        payload: {
+          type: "Error",
+          title: "Error fetch Stats",
+          message:
+            "An unexpected error occurred, Cannot fetch Stats at thee moment. ",
+          buttonLabel: "OK",
+        },
+      })
+        .then((result) => {
+          return thunkAPI.fulfillWithValue(result.data);
+        })
+        .catch((error) => {
+          return thunkAPI.abort();
+        });
+    }
+  );
 
 // Define initial state
 const initialState = {
     loading: 0,
     lang: localStorage.getItem('appLanguage') || 'en',
+    tabSessionId: null,
+    sessionStatus:'idle',
     popup: {
         isDisplayed: false,
         type: '',
@@ -89,6 +118,19 @@ const utilitiesSlice = createSlice({
             state.lang = newLang;
             localStorage.setItem('appLanguage', newLang);  // Persist language to localStorage
           },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(initializeSession.pending, (state) => {
+                state.sessionStatus = 'loading';
+            })
+            .addCase(initializeSession.fulfilled, (state, action) => {
+                state.tabSessionId = action.payload.tabSessionId;
+                state.sessionStatus = 'succeeded';
+            })
+            .addCase(initializeSession.rejected, (state) => {
+                state.sessionStatus = 'failed';
+            })
     }
 });
 
