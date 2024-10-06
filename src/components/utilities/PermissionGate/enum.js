@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-useless-computed-key */
+
 
 export const PermissionCombinationIdentifier = {
 	HAS_ANY: 'HAS_ANY',
@@ -8,6 +7,8 @@ export const PermissionCombinationIdentifier = {
 	DOES_NOT_HAVE_ALL: 'DOES_NOT_HAVE_ALL',
 };
 
-export const UserRoleNameEnum = {};
-
-export const UserPermissionNameEnum = {};
+export const UserRoleNameEnum = {
+  MASTER:'master',
+  ADMIN:'admin',
+  USER:'user',
+};

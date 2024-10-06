@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+
 import React from "react";
 import { PermissionCombinationIdentifier } from "./enum";
 import { useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 
 const getUserPermissions = (user) => {
   if (!user) return [];
-  return [`Per-${perm}`];
+  return [`Per-${user.role}`];
 };
 
 const getConcatenatedProvidedPermissions = (Permissions) => {

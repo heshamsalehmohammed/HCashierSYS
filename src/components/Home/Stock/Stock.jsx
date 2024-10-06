@@ -18,6 +18,8 @@ import _ from "lodash";
 import CreateStockItemPopup from "./CreateStockItemPopup";
 import { prepareAndOpenSelectStockItemForOrderPopup } from "../../../redux/slices/ordersSlice";
 import { useTranslation } from "react-i18next";
+import { PermissionGate } from "../../utilities/PermissionGate/PermissionGate";
+import { PermissionCombinationIdentifier, UserRoleNameEnum } from "../../utilities/PermissionGate/enum";
 
 const Stock = (props) => {
   const { fromOrder = false } = props;
@@ -70,12 +72,18 @@ const Stock = (props) => {
               onClick={() => handleEdit(rowData)}
               tooltip={t("edit")}
             />
-            <Button
+            <PermissionGate
+            Permissions={[UserRoleNameEnum.ADMIN,UserRoleNameEnum.MASTER]}
+            allowIf={PermissionCombinationIdentifier.HAS_ANY}
+            >
+              <Button
               icon="pi pi-trash"
               className="p-button-rounded p-button-danger"
               onClick={() => handleDelete(rowData)}
               tooltip={t("delete")}
             />
+            </PermissionGate>
+            
           </>
         )}
       </div>
