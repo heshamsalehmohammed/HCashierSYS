@@ -7,8 +7,6 @@ export const fetchStats = createAsyncThunk(
   async (payload, thunkAPI) => {
     const storedStats = thunkAPI.getState().statistics;
     const criteria = {
-      selectedInitializedOrdersCountOption:
-        storedStats.selectedInitializedOrdersCountOption,
       selectedMostSoldStockItemOption:
         storedStats.selectedMostSoldStockItemOption,
       selectedNewlyAddedUsersCountOption:
@@ -36,11 +34,10 @@ export const fetchStats = createAsyncThunk(
 
 const initialState = {
   initializedOrdersCount: 0,
+  initializedOrdersCountPercent:0,
   mostSoldStockItem: "",
   newlyAddedUsersCount: 0,
   newlyAddedUsersCountPercent: 0,
-
-  selectedInitializedOrdersCountOption: 7,
   selectedMostSoldStockItemOption: 7,
   selectedNewlyAddedUsersCountOption: 7,
 
@@ -65,16 +62,14 @@ const statisticsSlice = createSlice({
     setInitializedOrdersCount: (state, action) => {
       state.initializedOrdersCount = action.payload;
     },
-    setMostSoldStockItem: (state, action) => {
-      state.mostSoldStockItem = action.payload;
-    },
-    setNewlyAddedUsersCount: (state, action) => {
-      state.newlyAddedUsersCount = action.payload;
+    increaseInitializedOrdersCountBy: (state, action) => {
+      state.initializedOrdersCount += Number(action.payload);
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStats.fulfilled, (state, action) => {
       state.initializedOrdersCount = action.payload.initializedOrdersCount;
+      state.initializedOrdersCountPercent = action.payload.initializedOrdersCountPercent;
       state.mostSoldStockItem = action.payload.mostSoldStockItem;
       state.newlyAddedUsersCount = action.payload.newlyAddedUsersCount;
       state.newlyAddedUsersCountPercent =
@@ -86,7 +81,7 @@ const statisticsSlice = createSlice({
 // Selectors
 export const selectInitializedOrdersCount = (state) =>
   state.statistics.initializedOrdersCount;
-
+export const selectInitializedOrdersCountPercent = (state)=> state.statistics.initializedOrdersCountPercent; 
 export const selectMostSoldStockItem = (state) =>
   state.statistics.mostSoldStockItem;
 export const selectNewlyAddedUsersCount = (state) =>
@@ -104,9 +99,7 @@ export const selectSelectedNewlyAddedUsersCountOption = (state) =>
 export const {
   setSelectedMostSoldStockItemOption,
   setSelectedNewlyAddedUsersCountOption,
-  setInitializedOrdersCount,
-  setMostSoldStockItem,
-  setNewlyAddedUsersCount,
+  increaseInitializedOrdersCountBy
 } = statisticsSlice.actions;
 
 export default statisticsSlice.reducer;

@@ -5,6 +5,7 @@ import { Dropdown } from "primereact/dropdown";
 import "primeflex/primeflex.css";
 import {
   selectInitializedOrdersCount,
+  selectInitializedOrdersCountPercent,
   selectMostSoldStockItem,
   selectNewlyAddedUsersCount,
   selectDaysOptions,
@@ -24,6 +25,7 @@ const Stat = () => {
   const dispatch = useDispatch();
 
   const initializedOrdersCount = useSelector(selectInitializedOrdersCount);
+  const initializedOrdersCountPercent = useSelector(selectInitializedOrdersCountPercent);
   const mostSoldStockItem = useSelector(selectMostSoldStockItem);
   const selectedMostSoldStockItemOption = useSelector(selectSelectedMostSoldStockItemOption);
   const newlyAddedUsersCount = useSelector(selectNewlyAddedUsersCount);
@@ -51,9 +53,14 @@ const Stat = () => {
             <div className="flex justify-content-between align-items-start mt-3 p-2">
               <div className="w-6">
                 <span className="text-4xl font-bold text-900">
-                  + {initializedOrdersCount}
+                  {initializedOrdersCount}
                 </span>
-                <i className="pi pi-arrow-up text-xs ml-2"></i>
+                <div className="text-green-500">
+                  <span className="font-medium">
+                    + {initializedOrdersCountPercent} %
+                  </span>
+                  <i className="pi pi-arrow-up text-xs ml-2"></i>
+                </div>
               </div>
               <div className="w-6">
                 <svg

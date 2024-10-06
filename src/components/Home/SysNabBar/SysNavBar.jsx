@@ -71,9 +71,9 @@ const SysNavBar = () => {
       label: t("orders"),
       icon: "pi pi-objects-column",
       badge:
-        /* initializedOrdersCount === 0
+        initializedOrdersCount === 0
           ? undefined
-          : initializedOrdersCount */ undefined,
+          : initializedOrdersCount,
       template: itemRenderer,
       command: (event) => {
         navigate("orders");
