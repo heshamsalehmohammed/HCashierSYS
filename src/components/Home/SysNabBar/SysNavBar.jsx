@@ -1,3 +1,6 @@
+// SysNavBar.js
+
+import React, { useEffect } from "react";
 import { Menubar } from "primereact/menubar";
 import { Badge } from "primereact/badge";
 import "./SysNavBar.scss";
@@ -8,17 +11,15 @@ import { selectInitializedOrdersCount } from "../../../redux/slices/statisticsSl
 import { useTranslation } from "react-i18next";
 import { ToggleButton } from "primereact/togglebutton";
 import { changeLanguage, selectLanguage } from "../../../redux/slices/utilitiesSlice";
-import { usePermissionGate } from "../../utilities/PermissionGate/usePermissionGate";
-import { PermissionCombinationIdentifier, UserRoleNameEnum } from "../../utilities/PermissionGate/enum";
+import { UserRoleNameEnum } from "../../utilities/PermissionGate/enum";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const initializedOrdersCount = useSelector(selectInitializedOrdersCount);
-  const currentLanguage = useSelector(selectLanguage);  // Select language from Redux
-
-
+  const currentLanguage = useSelector(selectLanguage); // Select language from Redux
+  const currentUserRole = useSelector((state) => state.auth.user.role);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -39,52 +40,38 @@ const SysNavBar = () => {
     </a>
   );
 
-
   const handleLanguageChange = (isChecked) => {
-    const newLang = isChecked ? 'ar' : 'en';
-    dispatch(changeLanguage(newLang));  // Dispatch action to update language in Redux
+    const newLang = isChecked ? "ar" : "en";
+    dispatch(changeLanguage(newLang)); // Dispatch action to update language in Redux
   };
 
   const languageChangeRenderer = (item) => (
     <ToggleButton
-      checked={currentLanguage === 'ar'}  // Render toggle button based on the language in Redux
+      checked={currentLanguage === "ar"} // Render toggle button based on the language in Redux
       onChange={(e) => handleLanguageChange(e.value)}
       className="p-menuitem-link"
-      onLabel={t('langAr')}
-      offLabel={t('langEng')}
+      onLabel={t("langAr")}
+      offLabel={t("langEng")}
     />
   );
-
-
-  const currentUserRole = useSelector((state) => state.auth.user.role);
-
 
   const items = [
     {
       label: t("customers"),
       icon: "pi pi-user",
-      command: (event) => {
-        navigate("customers");
-      },
+      command: () => navigate("customers"),
     },
     {
       label: t("orders"),
       icon: "pi pi-objects-column",
-      badge:
-        initializedOrdersCount === 0
-          ? undefined
-          : initializedOrdersCount,
+      badge: initializedOrdersCount === 0 ? undefined : initializedOrdersCount,
       template: itemRenderer,
-      command: (event) => {
-        navigate("orders");
-      },
+      command: () => navigate("orders"),
     },
     {
       label: t("stock"),
       icon: "pi pi-shop",
-      command: (event) => {
-        navigate("stock");
-      },
+      command: () => navigate("stock"),
     },
     {
       label: t("lang"),
@@ -92,23 +79,20 @@ const SysNavBar = () => {
     },
   ];
 
-  if(currentUserRole === UserRoleNameEnum.MASTER){
+  if (currentUserRole === UserRoleNameEnum.MASTER) {
     items.splice(3, 0, {
-      label: 'Master',
+      label: "Master",
       icon: "pi pi-spin pi-cog",
-      command: (event) => {
-        navigate("master");
-      },
-    })
+      command: () => navigate("master"),
+    });
   }
-  if(currentUserRole === UserRoleNameEnum.MASTER || currentUserRole === UserRoleNameEnum.ADMIN){
+
+  if (currentUserRole === UserRoleNameEnum.MASTER || currentUserRole === UserRoleNameEnum.ADMIN) {
     items.splice(3, 0, {
-      label: t('Users'),
+      label: t("Users"),
       icon: "pi pi-user",
-      command: (event) => {
-        navigate("users");
-      },
-    })
+      command: () => navigate("users"),
+    });
   }
 
   const start = (
@@ -118,8 +102,9 @@ const SysNavBar = () => {
       height="40"
       className="mr-2 cursor-pointer"
       onClick={() => navigate("/home")}
-    ></img>
+    />
   );
+
   const end = (
     <div className="flex align-items-center gap-2">
       <p className="cursor-pointer" onClick={handleLogout}>
@@ -128,8 +113,25 @@ const SysNavBar = () => {
     </div>
   );
 
+  // Sticky Navbar effect
+  useEffect(() => {
+    const navbar = document.querySelector(".sys-navbar");
+    const headerHeight = document.querySelector(".header")?.offsetHeight || 0;
+
+    const handleScroll = () => {
+      if (window.scrollY > headerHeight) {
+        navbar.classList.add("sticky");
+      } else {
+        navbar.classList.remove("sticky");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="card">
+    <div className="sys-navbar">
       <Menubar model={items} start={start} end={end} />
     </div>
   );

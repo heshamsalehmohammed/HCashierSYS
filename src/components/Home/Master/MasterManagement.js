@@ -107,7 +107,7 @@ const MasterManagement = () => {
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
           <Button
             label={t("sendBroadCast")}
-            className="p-button-success mb-3"
+            className="p-button-success mb-1"
             onClick={() => handleSendBroadCastMessage()}
           />
         </div>

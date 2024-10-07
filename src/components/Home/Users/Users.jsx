@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -50,7 +51,7 @@ const Users = () => {
     <div className="">
       <CreateUserPopup />
 
-      <div className="surface-ground px-4 pb-8 pt-4 md:px-4 lg:px-6 flex align-items-center justify-content-center flex-column">
+      <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
           <Button
             type="button"

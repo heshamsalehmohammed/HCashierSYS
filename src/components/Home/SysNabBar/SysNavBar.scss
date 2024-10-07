@@ -1,0 +1,13 @@
+.sys-navbar {
+    width: 100%;
+    background-color: #ffffff; /* Ensure background matches Menubar */
+    transition: top 0.3s;
+  }
+  
+  .sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensure it stays above other elements */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for a subtle effect */
+  }
