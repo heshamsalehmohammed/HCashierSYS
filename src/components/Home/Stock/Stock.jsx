@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";

@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
@@ -223,7 +224,7 @@ const Orders = () => {
 
   return (
     <div className="">
-      <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+      <div className="surface-ground px-4 pb-1 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <DataTable
           value={orders}
           stripedRows
