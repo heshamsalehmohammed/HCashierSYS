@@ -9,6 +9,7 @@ import Stat from "./Stat/Stat";
 import { useDispatch, useSelector } from "react-redux";
 import { initWebSocket } from "../../redux/slices/utilitiesSlice";
 import { useEffect } from "react";
+import MasterManagement from "./Master/MasterManagement";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -79,6 +80,14 @@ const dispatch = useDispatch();
           element={
             <BodyContentWrapper>
               <Stat />
+            </BodyContentWrapper>
+          }
+        />
+        <Route
+          path="/master/*"
+          element={
+            <BodyContentWrapper>
+              <MasterManagement />
             </BodyContentWrapper>
           }
         />

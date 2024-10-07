@@ -7,8 +7,9 @@ import { logoutUser } from "../../../redux/slices/authSlice";
 import { selectInitializedOrdersCount } from "../../../redux/slices/statisticsSlice";
 import { useTranslation } from "react-i18next";
 import { ToggleButton } from "primereact/togglebutton";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { changeLanguage, selectLanguage, showToast } from "../../../redux/slices/utilitiesSlice";
+import { changeLanguage, selectLanguage } from "../../../redux/slices/utilitiesSlice";
+import { usePermissionGate } from "../../utilities/PermissionGate/usePermissionGate";
+import { PermissionCombinationIdentifier, UserRoleNameEnum } from "../../utilities/PermissionGate/enum";
 
 const SysNavBar = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,9 @@ const SysNavBar = () => {
   );
 
 
+  const [isMasterRole] = usePermissionGate([UserRoleNameEnum.MASTER],PermissionCombinationIdentifier.HAS_ANY);
+
+
   const items = [
     {
       label: t("customers"),
@@ -87,6 +91,16 @@ const SysNavBar = () => {
       template: languageChangeRenderer,
     },
   ];
+
+  if(isMasterRole){
+    items.splice(3, 0, {
+      label: 'Master',
+      icon: "pi pi-spin pi-cog",
+      command: (event) => {
+        navigate("master");
+      },
+    })
+  }
 
   const start = (
     <img

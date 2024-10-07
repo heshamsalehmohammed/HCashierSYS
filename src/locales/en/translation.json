@@ -72,5 +72,14 @@
   "select": "Select",
   "addItemToCurrentOrder": "Add Item To Current Order",
   "editItemInCurrentOrder": "Edit Item In Current Order",
-  "amount": "Amount"
+  "amount": "Amount",
+  "terminateAllUserSessions": "Terminate All User Sessions",
+  "sendMessageToAllUserSessions": "Send Message to All User Sessions",
+  "terminateSession": "Terminate Session",
+  "sendMessageToSession": "Send Message to Session",
+  "enterMessageToSendToAllUserSessions": "Enter message to send to all user sessions:",
+  "enterMessageToSendToSession": "Enter message to send to session:",
+  "sessionId": "Session ID",
+  "connected": "Connected",
+  "disconnected": "Disconnected"
 }
