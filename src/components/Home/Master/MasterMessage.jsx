@@ -19,6 +19,7 @@ import {
   setMasterMessagePopupToastSeverity,
   setMasterMessagePopupToastSummary,
   setMasterMessagePopupToastMessage,
+  sendBroadCast,
 } from '../../../redux/slices/masterUserSlice';
 import { Dropdown } from 'primereact/dropdown';
 
@@ -70,6 +71,8 @@ const MasterMessage = () => {
             dispatch(sendMessageToUserSessions({ userId, message }));
           } else if (sessionId) {
             dispatch(sendMessageToSession({ sessionId, message }));
+          }else{
+            dispatch(sendBroadCast({message}))
           }
           dispatch(closeMasterMessagePopup());
         }}

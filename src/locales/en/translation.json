@@ -81,5 +81,7 @@
   "enterMessageToSendToSession": "Enter message to send to session:",
   "sessionId": "Session ID",
   "connected": "Connected",
-  "disconnected": "Disconnected"
+  "disconnected": "Disconnected",
+  "sendBroadCast":"Send Broadcast",
+  "sendMessage":"Send Message"
 }

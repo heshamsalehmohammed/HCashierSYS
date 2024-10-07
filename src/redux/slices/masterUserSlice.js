@@ -3,6 +3,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   fetchUsersSessionsAPI,
+  sendBroadCastAPI,
   sendMessageToSessionAPI,
   sendMessageToUserSessionsAPI,
   terminateSessionAPI,
@@ -113,6 +114,32 @@ export const terminateUserSessions = createAsyncThunk(
       });
   }
 );
+
+
+export const sendBroadCast = createAsyncThunk(
+  'masterUser/sendMessageToSession',
+  async ({ message }, thunkAPI) => {
+    return handleHttpRequestPromise(sendBroadCastAPI({ message }), {
+      thunkAPI,
+      type: 'openPopup',
+      showForStatuses: '400,401,500,404,501',
+      payload: {
+        type: 'Error',
+        title: 'Error sending message to session',
+        message:
+          'An unexpected error occurred, cannot send message to session at the moment.',
+        buttonLabel: 'OK',
+      },
+    })
+      .then(() => {
+        return thunkAPI.fulfillWithValue({ message });
+      })
+      .catch(() => {
+        return thunkAPI.rejectWithValue();
+      });
+  }
+);
+
 
 // Send message to a session
 export const sendMessageToSession = createAsyncThunk(

@@ -73,6 +73,10 @@ const MasterManagement = () => {
     dispatch(openMasterMessagePopup({ userId: user._id, sessionId: null }));
   };
 
+  const handleSendBroadCastMessage = () => {
+    dispatch(openMasterMessagePopup({ userId: null, sessionId: null }));
+  };
+
   const handleTerminateSession = (sessionId) => {
     dispatch(terminateSession(sessionId));
   };
@@ -100,6 +104,11 @@ const MasterManagement = () => {
   return (
     <div className="">
       <MasterMessage />
+      <Button
+          label={t('sendBroadCast')}
+          className="p-button-success mr-2"
+          onClick={() => handleSendBroadCastMessage()}
+        />
       <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <DataTable
           value={users}

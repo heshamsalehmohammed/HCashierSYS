@@ -14,6 +14,10 @@ export const sendMessageToSessionAPI = async ({ sessionId, message }) => {
   return result;
 };
 
+export const sendBroadCastAPI = async ({ sessionId, message }) => {
+  const result = await http.post(`${process.env.REACT_APP_API_ENDPOINT_PREFIX}masteruser/broadcast`, { message });
+  return result;
+};
 // Send message to all user's sessions
 export const sendMessageToUserSessionsAPI = async ({ userId, message }) => {
   const result = await http.post(`${process.env.REACT_APP_API_ENDPOINT_PREFIX}masteruser/user/${userId}/message`, { message });
