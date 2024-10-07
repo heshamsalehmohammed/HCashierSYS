@@ -83,5 +83,7 @@
   "connected": "Connected",
   "disconnected": "Disconnected",
   "sendBroadCast":"Send Broadcast",
-  "sendMessage":"Send Message"
+  "sendMessage":"Send Message",
+  "addNewUser":"Add New User",
+  "user":"User"
 }

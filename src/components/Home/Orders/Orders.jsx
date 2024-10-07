@@ -239,6 +239,8 @@ const Orders = () => {
           filters={{
             totalprice: { value: null, matchMode: null },
         }}
+        scrollable
+        scrollHeight="70vh"
         >
           <Column
             field="customername"

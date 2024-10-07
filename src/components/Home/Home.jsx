@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { initWebSocket } from "../../redux/slices/utilitiesSlice";
 import { useEffect } from "react";
 import MasterManagement from "./Master/MasterManagement";
+import Users from "./Users/Users";
 
 const BodyContentWrapper = ({ children }) => {
   return (
@@ -88,6 +89,14 @@ const dispatch = useDispatch();
           element={
             <BodyContentWrapper>
               <MasterManagement />
+            </BodyContentWrapper>
+          }
+        />
+        <Route
+          path="/users/*"
+          element={
+            <BodyContentWrapper>
+              <Users />
             </BodyContentWrapper>
           }
         />

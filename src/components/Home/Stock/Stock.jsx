@@ -107,7 +107,7 @@ const Stock = (props) => {
       <CreateStockItemPopup />
       <div
         className={`surface-ground flex align-items-center justify-content-center flex-column ${
-          fromOrder ? "" : " px-4 pb-8 pt-4 md:px-6 lg:px-8 "
+          fromOrder ? "" : " px-4 pb-1 pt-4 md:px-6 lg:px-8 "
         }`}
       >
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
@@ -143,6 +143,8 @@ const Stock = (props) => {
           className="w-12 m-auto shadow-7"
           style={tableStyles}
           emptyMessage={t("noAvailableRecords")}
+          scrollable
+          scrollHeight={fromOrder?"35vh":"70vh"}
         >
           <Column
             field="name"

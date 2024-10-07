@@ -1,19 +1,19 @@
 // components/UserSessions/UserSessions.js
 
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsersSessions,
   selectUsers,
   terminateUserSessions,
   openMasterMessagePopup,
   terminateSession,
-} from '../../../redux/slices/masterUserSlice';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { useTranslation } from 'react-i18next';
-import MasterMessage from './MasterMessage';
+} from "../../../redux/slices/masterUserSlice";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { useTranslation } from "react-i18next";
+import MasterMessage from "./MasterMessage";
 
 const MasterManagement = () => {
   const { t } = useTranslation();
@@ -31,13 +31,13 @@ const MasterManagement = () => {
     return (
       <div className="flex justify-content-start">
         <Button
-          label={t('terminateAllUserSessions')}
+          label={t("terminateAllUserSessions")}
           className="p-button-danger mr-2"
           onClick={() => handleTerminateAllUserSessions(rowData)}
           disabled={!anyConnected}
         />
         <Button
-          label={t('sendMessageToAllUserSessions')}
+          label={t("sendMessageToAllUserSessions")}
           className="p-button-success"
           onClick={() => handleSendMessageToAllUserSessions(rowData)}
           disabled={!anyConnected}
@@ -50,13 +50,13 @@ const MasterManagement = () => {
     return (
       <div className="flex justify-content-start">
         <Button
-          label={t('terminateSession')}
+          label={t("terminateSession")}
           className="p-button-danger mr-2"
           onClick={() => handleTerminateSession(rowData.sessionId)}
           disabled={!rowData.connected}
         />
         <Button
-          label={t('sendMessageToSession')}
+          label={t("sendMessageToSession")}
           className="p-button-success"
           onClick={() => handleSendMessageToSession(rowData.sessionId)}
           disabled={!rowData.connected}
@@ -88,15 +88,13 @@ const MasterManagement = () => {
   const renderSessions = (rowData) => {
     return (
       <DataTable value={rowData.sessions} responsiveLayout="scroll">
-        <Column field="sessionId" header={t('sessionId')}></Column>
+        <Column field="sessionId" header={t("sessionId")}></Column>
         <Column
           field="connected"
-          header={t('connected')}
-          body={(data) =>
-            data.connected ? t('connected') : t('disconnected')
-          }
+          header={t("connected")}
+          body={(data) => (data.connected ? t("connected") : t("disconnected"))}
         ></Column>
-        <Column header={t('actions')} body={sessionActionsTemplate}></Column>
+        <Column header={t("actions")} body={sessionActionsTemplate}></Column>
       </DataTable>
     );
   };
@@ -104,12 +102,15 @@ const MasterManagement = () => {
   return (
     <div className="">
       <MasterMessage />
-      <Button
-          label={t('sendBroadCast')}
-          className="p-button-success mr-2"
-          onClick={() => handleSendBroadCastMessage()}
-        />
+
       <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+        <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
+          <Button
+            label={t("sendBroadCast")}
+            className="p-button-success mb-3"
+            onClick={() => handleSendBroadCastMessage()}
+          />
+        </div>
         <DataTable
           value={users}
           expandedRows={expandedRows}
@@ -117,11 +118,13 @@ const MasterManagement = () => {
           rowExpansionTemplate={renderSessions}
           dataKey="_id"
           className="w-12 m-auto shadow-7"
-          emptyMessage={t('noAvailableRecords')}
+          emptyMessage={t("noAvailableRecords")}
+          scrollable
+          scrollHeight="70vh"
         >
-          <Column expander style={{ width: '3em' }} />
-          <Column field="name" header={t('name')}></Column>
-          <Column header={t('actions')} body={userActionsTemplate}></Column>
+          <Column expander style={{ width: "3em" }} />
+          <Column field="name" header={t("name")}></Column>
+          <Column header={t("actions")} body={userActionsTemplate}></Column>
         </DataTable>
       </div>
     </div>

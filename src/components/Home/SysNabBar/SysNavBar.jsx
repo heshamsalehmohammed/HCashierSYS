@@ -56,7 +56,7 @@ const SysNavBar = () => {
   );
 
 
-  const [isMasterRole] = usePermissionGate([UserRoleNameEnum.MASTER],PermissionCombinationIdentifier.HAS_ANY);
+  const currentUserRole = useSelector((state) => state.auth.user.role);
 
 
   const items = [
@@ -92,12 +92,21 @@ const SysNavBar = () => {
     },
   ];
 
-  if(isMasterRole){
+  if(currentUserRole === UserRoleNameEnum.MASTER){
     items.splice(3, 0, {
       label: 'Master',
       icon: "pi pi-spin pi-cog",
       command: (event) => {
         navigate("master");
+      },
+    })
+  }
+  if(currentUserRole === UserRoleNameEnum.MASTER || currentUserRole === UserRoleNameEnum.ADMIN){
+    items.splice(3, 0, {
+      label: t('Users'),
+      icon: "pi pi-user",
+      command: (event) => {
+        navigate("users");
       },
     })
   }

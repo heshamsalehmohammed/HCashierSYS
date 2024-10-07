@@ -12,6 +12,7 @@ import stockSlice from './slices/stockSlice';
 import ordersSlice from './slices/ordersSlice';
 import statisticsSlice from './slices/statisticsSlice';
 import masterUserSlice from './slices/masterUserSlice';
+import usersSlice from './slices/usersSlice';
 
 // Persist Configs for Individual Slices
 
@@ -41,7 +42,8 @@ const rootReducer = combineReducers({
   orders: ordersSlice,
   stock: stockSlice,
   statistics: statisticsSlice,
-  masterUser: masterUserSlice
+  masterUser: masterUserSlice,
+  users: usersSlice
 });
 
 // Configure Store
