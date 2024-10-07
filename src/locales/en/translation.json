@@ -85,5 +85,6 @@
   "sendBroadCast":"Send Broadcast",
   "sendMessage":"Send Message",
   "addNewUser":"Add New User",
-  "user":"User"
+  "user":"User",
+  "users": "Users"
 }

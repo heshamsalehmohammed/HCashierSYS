@@ -72,5 +72,19 @@
   "select": "اختر",
   "addItemToCurrentOrder": "أضف العنصر إلى الطلب الحالي",
   "editItemInCurrentOrder": "تعديل العنصر في الطلب الحالي",
-  "amount": "الكمية"
+  "amount": "الكمية",
+  "terminateAllUserSessions": "إنهاء جميع جلسات المستخدم",
+  "sendMessageToAllUserSessions": "إرسال رسالة إلى جميع جلسات المستخدم",
+  "terminateSession": "إنهاء الجلسة",
+  "sendMessageToSession": "إرسال رسالة إلى الجلسة",
+  "enterMessageToSendToAllUserSessions": "أدخل الرسالة لإرسالها إلى جميع جلسات المستخدم:",
+  "enterMessageToSendToSession": "أدخل الرسالة لإرسالها إلى الجلسة:",
+  "sessionId": "معرّف الجلسة",
+  "connected": "متصل",
+  "disconnected": "غير متصل",
+  "sendBroadCast": "إرسال بث",
+  "sendMessage": "إرسال رسالة",
+  "addNewUser": "إضافة مستخدم جديد",
+  "user": "مستخدم",
+  "users": "المستخدمون"
 }

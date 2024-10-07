@@ -89,7 +89,7 @@ const SysNavBar = () => {
 
   if (currentUserRole === UserRoleNameEnum.MASTER || currentUserRole === UserRoleNameEnum.ADMIN) {
     items.splice(3, 0, {
-      label: t("Users"),
+      label: t("users"),
       icon: "pi pi-user",
       command: () => navigate("users"),
     });
