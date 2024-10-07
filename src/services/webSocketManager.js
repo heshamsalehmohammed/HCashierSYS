@@ -53,8 +53,9 @@ export const initWebSocketConnection = ({ token, sessionId, dispatch, onMessage 
         );
       } else {
         console.error('WebSocket connection died');
-        coreClean(dispatch)
+        
       }
+      coreClean(dispatch)
       socket = null;
       if (dispatch) {
         dispatch(socketClosed());
