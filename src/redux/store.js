@@ -9,7 +9,7 @@ import utilitiesReducer from './slices/utilitiesSlice';
 import customersSlice from './slices/customersSlice';
 import listenerMiddleware from './middlewares/listenerMiddleware';
 import stockSlice from './slices/stockSlice';
-import ordersSlice from './slices/ordersSlice';
+import ordersReducer from './slices/ordersSlice';
 import statisticsSlice from './slices/statisticsSlice';
 import masterUserSlice from './slices/masterUserSlice';
 import usersSlice from './slices/usersSlice';
@@ -30,16 +30,24 @@ const authPersistConfig = {
   whitelist: ['user'], // Persist 'user' data to maintain authentication state
 };
 
+
+const ordersPersistConfig = {
+  key: 'orders',
+  storage,
+  whitelist: ['currentOrder'], // Persist 'user' data to maintain authentication state
+};
+
 // Apply persistReducer to individual slices
 const persistedUtilitiesReducer = persistReducer(utilitiesPersistConfig, utilitiesReducer);
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedordersReducer = persistReducer(ordersPersistConfig, ordersReducer);
 
 // Combine Reducers
 const rootReducer = combineReducers({
   auth: persistedAuthReducer,         // Persisted auth reducer
   utilities: persistedUtilitiesReducer, // Persisted utilities reducer
   customers: customersSlice,          // Non-persisted reducers
-  orders: ordersSlice,
+  orders: persistedordersReducer,
   stock: stockSlice,
   statistics: statisticsSlice,
   masterUser: masterUserSlice,
