@@ -28,7 +28,7 @@ const parseMessageFromState = (state) => {
       return JSON.stringify({
         type: 'action',
         reduxActionToBeDispatched: state.action.actionName,
-        reduxActionPayloadToBeSent: JSON.parse(state.action.actionPayload),
+        reduxActionPayloadToBeSent: JSON.parse(state.action.actionPayload?state.action.actionPayload: null),
       });
     } else if (state.type === 'toast') {
       return JSON.stringify({
