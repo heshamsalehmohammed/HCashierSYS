@@ -213,7 +213,7 @@ export const prepareAndOpenSelectStockItemForOrderPopup = createAsyncThunk(
   async (payload, thunkAPI) => {
     if (payload) {
       let stockItemPayload = null;
-      const stockItems = thunkAPI.getState().stock.stock;
+      const stockItems = thunkAPI.getState().stock.stockItems;
 
       const stockItemInState = stockItems.find(si => si._id == payload.id) 
       if(stockItemInState){

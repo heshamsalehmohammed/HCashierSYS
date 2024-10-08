@@ -336,7 +336,7 @@ const stockSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStockItems.fulfilled, (state, action) => {
-      state.stock = action.payload;
+      state.stockItems = action.payload;
     });
   },
 });
@@ -364,6 +364,6 @@ export const selectStockSearchTerm = (state) => state.stock.searchTerm;
 export const selectAddStockItemPopup = (state) => state.stock.addStockItemPopup;
 export const selectAddStockItemCustomizationPopup = (state) =>
   state.stock.addStockItemPopup.addStockItemCustomizationPopup;
-export const selectStockItems = (state) => state.stock.stock;
+export const selectStockItems = (state) => state.stock.stockItems;
 
 export default stockSlice.reducer;
