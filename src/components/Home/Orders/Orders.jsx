@@ -8,6 +8,7 @@ import _ from "lodash";
 import {
   ComparisonOperators,
   fetchOrders,
+  getEmptyOrdersFiltersCriteria,
   prepareAndOpenOrderPage,
   selectOrderStatues,
   selectOrders,
@@ -22,6 +23,7 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { useTranslation } from "react-i18next";
 import { Paginator } from "primereact/paginator";
+import './Orders.scss'
 
 const Orders = () => {
   const { t } = useTranslation();
@@ -231,7 +233,7 @@ const Orders = () => {
         <DataTable
           value={orders}
           stripedRows
-          className="w-12 m-auto shadow-7"
+          className="w-12 m-auto shadow-7 orders-table"
           style={tableStyles}
           /* paginator */
           rows={ordersFilters.pageSize}
@@ -243,6 +245,19 @@ const Orders = () => {
         }}
         scrollable
         scrollHeight="70vh"
+        header={
+          <div className="flex flex-wrap align-items-center justify-content-end gap-2" style={{
+            position:'absolute',
+            top:'-50px'
+          }}>
+            <Button icon="pi pi-times" rounded raised tooltip={t("clearAllFilters")} onClick={()=>{
+              dispatch(setOrdersFilterCriteria(getEmptyOrdersFiltersCriteria()));
+            }}/>
+            <Button icon="pi pi-refresh" rounded raised tooltip={t("refresh")}  onClick={()=>{
+              dispatch(fetchOrders());
+            }}/>
+        </div>
+        }
         footer={
           <Paginator first={first} rows={ordersFilters.pageSize} totalRecords={totalRecords} rowsPerPageOptions={[5,10, 20, 30]} onPageChange={onPage} />
         }

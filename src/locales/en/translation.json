@@ -87,5 +87,7 @@
   "sendMessage":"Send Message",
   "addNewUser":"Add New User",
   "user":"User",
-  "users": "Users"
+  "users": "Users",
+  "refresh":"Refresh",
+  "clearAllFilters":"Clear All Filters"
 }

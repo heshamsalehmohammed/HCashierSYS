@@ -217,7 +217,6 @@ export const fetchStockItemBackendAction = createAsyncThunk(
         return thunkAPI.fulfillWithValue(newStockItem);
       })
       .catch((error) => {
-        debugger
         return thunkAPI.abort();
       });
   }

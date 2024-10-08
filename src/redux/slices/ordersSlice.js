@@ -261,6 +261,18 @@ export const prepareAndOpenOrderPage = createAsyncThunk(
   }
 );
 
+export const fetchOrderBackendAction = createAsyncThunk(
+  "orders/fetchOrdersBackendAction",
+  async (payload, thunkAPI) => {
+    const state = thunkAPI.getState();
+    if (state.route.currentRoute == "/home/orders") {
+      //
+    } else if (state.route.currentRoute == "/home/order") {
+      //
+    }
+  }
+);
+
 const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
   const calculatedPrice =
     state.selectStockItemForOrderPopup.amount *
@@ -317,9 +329,8 @@ export const ComparisonOperators = Object.freeze({
   DATE_AFTER: "dateAfter",
 });
 
-// Define initial state
-const initialState = {
-  criteria: {
+export const getEmptyOrdersFiltersCriteria = () => {
+  return {
     customerName: { value: null, filterMatchMode: null },
     customerPhone: { value: null, filterMatchMode: null },
     totalPrice: { value: null, filterMatchMode: null },
@@ -328,7 +339,12 @@ const initialState = {
     orderStatusId: { value: null, filterMatchMode: null },
     pageNumber: 0,
     pageSize: 5,
-  },
+  };
+};
+
+// Define initial state
+const initialState = {
+  criteria: getEmptyOrdersFiltersCriteria(),
   ordersItemsPreperations: [],
   orderSatuses: [
     { _id: 1, name: "INITIALIZED", label: "Initialized", severity: "info" },
