@@ -255,7 +255,7 @@ const Orders = () => {
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.customer.name}
+                  {rowData.customer?.name}
                 </div>
               );
             }}
@@ -272,7 +272,7 @@ const Orders = () => {
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.customer.phone}
+                  {rowData.customer?.phone}
                 </div>
               );
             }}
