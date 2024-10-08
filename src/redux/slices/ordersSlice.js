@@ -16,6 +16,7 @@ import {
 } from "./stockSlice";
 import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
 import { fetchStats } from "./statisticsSlice";
+import { openPopup } from "./utilitiesSlice";
 
 export const addOrder = createAsyncThunk(
   "orders/addOrder",
@@ -54,7 +55,7 @@ export const addOrder = createAsyncThunk(
       },
     })
       .then((result) => {
-        thunkAPI.dispatch(fetchStats())
+        thunkAPI.dispatch(fetchStats());
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
@@ -99,13 +100,24 @@ export const editOrder = createAsyncThunk(
       showForStatuses: "400,401,500,404,501",
       payload: {
         type: "Error",
-        title: "Error add Order",
+        title: "Error Edit Order",
         message:
-          "An unexpected error occurred, Cannot add Order at thee moment. ",
+          "An unexpected error occurred, Cannot edit Order at thee moment. ",
         buttonLabel: "OK",
       },
     })
       .then((result) => {
+        if (result.data.error) {
+          thunkAPI.dispatch(
+            openPopup({
+              type: "Error",
+              title: "Error Edit Order",
+              message: result.data.message,
+              buttonLabel: "OK",
+            })
+          );
+          return thunkAPI.abort();
+        }
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
@@ -184,7 +196,6 @@ export const fetchOrder = createAsyncThunk(
   }
 );
 
-
 export const fetchOrdersItemsPreperations = createAsyncThunk(
   "orders/fetchOrdersItemsPreperations",
   async (payload, thunkAPI) => {
@@ -215,12 +226,12 @@ export const prepareAndOpenSelectStockItemForOrderPopup = createAsyncThunk(
       let stockItemPayload = null;
       const stockItems = thunkAPI.getState().stock.stockItems;
 
-      const stockItemInState = stockItems.find(si => si._id == payload.id) 
-      if(stockItemInState){
+      const stockItemInState = stockItems.find((si) => si._id == payload.id);
+      if (stockItemInState) {
         stockItemPayload = stockItemInState;
-      }else{
-          const stockItem = await thunkAPI.dispatch(fetchStockItem(payload.id));
-          stockItemPayload = stockItem.payload;
+      } else {
+        const stockItem = await thunkAPI.dispatch(fetchStockItem(payload.id));
+        stockItemPayload = stockItem.payload;
       }
 
       thunkAPI.dispatch(populateAddStockItemPopup(stockItemPayload));
@@ -307,7 +318,6 @@ export const ComparisonOperators = Object.freeze({
   DATE_BEFORE: "dateBefore",
   DATE_AFTER: "dateAfter",
 });
-
 
 // Define initial state
 const initialState = {
@@ -443,8 +453,10 @@ const ordersSlice = createSlice({
       const stockItem = _.cloneDeep(state.selectStockItemForOrderPopup);
       delete stockItem.isShown;
 
-      stockItem.stockItemCustomizationsSelectedOptions = stockItem.stockItemCustomizationsSelectedOptions.filter(si=> si.stockItemCustomizationSelectedOptionId != 0)
-
+      stockItem.stockItemCustomizationsSelectedOptions =
+        stockItem.stockItemCustomizationsSelectedOptions.filter(
+          (si) => si.stockItemCustomizationSelectedOptionId != 0
+        );
 
       if (stockItem.itemIndexInOrder == null) {
         state.currentOrder.items.push(stockItem);

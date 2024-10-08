@@ -36,12 +36,40 @@ const Order = () => {
     selectSearchStockItemForOrderPopup
   );
 
+  const canChangeOrderStatus =
+    currentOrder.orderStatusId !== 0 &&
+    currentOrder.orderStatusId !== OrderStatusEnum.DELIVERED && 
+    currentOrder.orderStatusId !== OrderStatusEnum.CANCELED;
+
+  const canAddItemToOrder =
+    currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+    currentOrder.orderStatusId === OrderStatusEnum.PROCESSING ||
+    currentOrder.orderStatusId === 0;
+
+  const canEditOrDeleteItemInOrder =
+    currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+    currentOrder.orderStatusId === OrderStatusEnum.PROCESSING ||
+    currentOrder.orderStatusId === 0;
+
+  const isStatusMessageNotTakingFullWidth =
+    currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+    currentOrder.orderStatusId === OrderStatusEnum.PROCESSING ||
+    currentOrder.orderStatusId === 0;
+
+  const showSubmitOrEditButton =
+    currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+    currentOrder.orderStatusId === OrderStatusEnum.PROCESSING ||
+    currentOrder.orderStatusId === 0;
+
+  const isSubmitOrEditButtonInEdit =
+    currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
+    currentOrder.orderStatusId === OrderStatusEnum.PROCESSING;
+
   return (
     <div className="">
       <StockItemForOrderPopup />
       <div className="surface-ground px-4 pb-4 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
-        {(currentOrder.orderStatusId !== 0 &&
-          currentOrder.orderStatusId !== OrderStatusEnum.DELIVERED) && (
+        {canChangeOrderStatus && (
           <FloatLabel className="w-3 m-1 -mt-6" style={{ minWidth: "276px" }}>
             <Dropdown
               inputId={`dd-orderstatues`}
@@ -88,8 +116,7 @@ const Order = () => {
           legend={
             <div className="flex align-items-center">
               <span className="font-bold mr-2">{t("orderDetails")}</span>
-              {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
-                currentOrder.orderStatusId === 0) && (
+              {canAddItemToOrder && (
                 <Button
                   label={t("addItem")}
                   icon="pi pi-plus"
@@ -112,7 +139,9 @@ const Order = () => {
                 />
 
                 <Chip
-                  label={`${item.amount} ${t("kilos")} ${item.stockItemName} --- ${item.stockItemPrice} ${t("currency")}`}
+                  label={`${item.amount} ${t("kilos")} ${
+                    item.stockItemName
+                  } --- ${item.stockItemPrice} ${t("currency")}`}
                   className="m-1 mr-2"
                 />
                 {item.stockItemCustomizationsSelectedOptions.map((op, ind) => (
@@ -127,43 +156,49 @@ const Order = () => {
                         : op.stockItemCustomizationSelectedOptionName +
                           " - " +
                           op.stockItemCustomizationSelectedOptionAdditionalPrice +
-                          " " + t("currency")
+                          " " +
+                          t("currency")
                     }`}
                     className="m-1 mr-2"
                   />
                 ))}
                 <Chip
-                  label={`${t("totalItemPrice")} ${item.price} ${t("currency")}`}
+                  label={`${t("totalItemPrice")} ${item.price} ${t(
+                    "currency"
+                  )}`}
                   className="m-1 mr-2"
                 />
-                {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
-                currentOrder.orderStatusId === 0) && <><Button
-                  icon="pi pi-pencil"
-                  className="p-button-rounded p-button-success mr-2"
-                  onClick={() =>
-                    dispatch(
-                      prepareAndOpenSelectStockItemForOrderPopup({
-                        id: item.stockItemId,
-                        oerderStockItem: {
-                          ...item,
-                          itemIndexInOrder: currentOrderItemIndex,
-                        },
-                      })
-                    )
-                  }
-                  tooltip={t("edit")}
-                />
+                {canEditOrDeleteItemInOrder && (
+                  <>
+                    <Button
+                      icon="pi pi-pencil"
+                      className="p-button-rounded p-button-success mr-2"
+                      onClick={() =>
+                        dispatch(
+                          prepareAndOpenSelectStockItemForOrderPopup({
+                            id: item.stockItemId,
+                            oerderStockItem: {
+                              ...item,
+                              itemIndexInOrder: currentOrderItemIndex,
+                            },
+                          })
+                        )
+                      }
+                      tooltip={t("edit")}
+                    />
 
-                <Button
-                  icon="pi pi-trash"
-                  className="p-button-rounded p-button-danger"
-                  onClick={() =>
-                    dispatch(
-                      removeStockItemFromCurrentOrder(currentOrderItemIndex)
-                    )
-                  }
-                  tooltip={t("delete")}
-                /></>}
+                    <Button
+                      icon="pi pi-trash"
+                      className="p-button-rounded p-button-danger"
+                      onClick={() =>
+                        dispatch(
+                          removeStockItemFromCurrentOrder(currentOrderItemIndex)
+                        )
+                      }
+                      tooltip={t("delete")}
+                    />
+                  </>
+                )}
               </div>
             );
           })}
@@ -187,7 +222,9 @@ const Order = () => {
           <Divider type="solid" />
           <div className="m-2 text-lg">
             <span className="font-bold">{t("totalPrice")}: </span>
-            <span>{currentOrder.totalPrice} {t("currency")}</span>
+            <span>
+              {currentOrder.totalPrice} {t("currency")}
+            </span>
           </div>
         </Fieldset>
         <div
@@ -200,8 +237,9 @@ const Order = () => {
                 borderWidth: "0 0 0 6px",
                 color: "#696cff",
               }}
-              className={ `border-primary justify-content-start ${(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
-                currentOrder.orderStatusId === 0)?'w-10':'w-full'}`}
+              className={`border-primary justify-content-start ${
+                isStatusMessageNotTakingFullWidth ? "w-10" : "w-full"
+              }`}
               severity="info"
               content={
                 <div className="flex align-items-center">
@@ -218,13 +256,10 @@ const Order = () => {
             />
           )}
 
-          {(currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED ||
-            currentOrder.orderStatusId === 0) && (
+          {showSubmitOrEditButton && (
             <Button
               label={`${
-                currentOrder.orderStatusId === OrderStatusEnum.INITIALIZED
-                  ? t("editOrder")
-                  : t("submitOrder")
+                isSubmitOrEditButtonInEdit ? t("editOrder") : t("submitOrder")
               }`}
               icon="pi pi-plus"
               className="mt-2 lg:mt-0"
