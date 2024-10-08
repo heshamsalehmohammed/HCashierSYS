@@ -87,6 +87,12 @@ const Order = () => {
                   })
                 );
               }}
+              optionDisabled={(option)=>{
+                if(currentOrder.orderStatusId === OrderStatusEnum.PROCESSING && option._id === OrderStatusEnum.INITIALIZED ){
+                  return true;
+                }
+                return false
+              }}
             />
           </FloatLabel>
         )}
