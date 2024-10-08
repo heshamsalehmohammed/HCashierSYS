@@ -30,7 +30,7 @@ const StockItemForOrderPopup = () => {
         {stockItemForOrderPopupState.itemIndexInOrder == null
           ? t("select")
           : t("edit")}{" "}
-        {t("stockItem")}: {stockItemState.name}
+        {t("stockItemInOrder")}: {stockItemState.name}
       </span>
     </div>
   );

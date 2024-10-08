@@ -35,6 +35,7 @@
   "basePrice": "Base Price",
   "currency": "EGP",
   "stockItem": "Stock Item",
+  "stockItemInOrder": "Stock Item In Order",
   "itemName": "Item Name",
   "itemPricePerKilo": "Item Price Per Kilo",
   "itemAmountInStock": "Item Amount In Stock",

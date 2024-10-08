@@ -35,6 +35,7 @@
   "basePrice": "السعر الأساسي",
   "currency": "جنيه",
   "stockItem": "عنصر في المخزون",
+  "stockItemInOrder": "عنصر في الطلب",
   "itemName": "اسم العنصر",
   "itemPricePerKilo": "سعر العنصر لكل كيلو",
   "itemAmountInStock": "كمية العنصر في المخزون",
