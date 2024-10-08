@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -77,6 +78,8 @@ const OrdersItemsPreparationCard = () => {
         <DataTable
           value={ordersItemsPreperations}
           emptyMessage={t("noAvailableRecords")}
+          scrollable={isFullScreen ? false : true}
+          scrollHeight={isFullScreen ? undefined : "50vh"}
         >
           <Column field="stockItemName" header={t("itemName")} />
           <Column field="stockItemQuantity" header={t("inStock")} />
