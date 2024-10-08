@@ -206,4 +206,13 @@ html[dir="rtl"] {
         margin-right: 0; // Reset margin-right in RTL
         margin-left: 0.5rem; // Add margin to the left in RTL
     }
+
+
+    .pi-angle-double-right{
+        transform: rotate(180deg); /* Rotate icon 180 degrees in RTL */
+    }
+
+    .p-paginator-icon{
+        transform: rotate(180deg); /* Rotate icon 180 degrees in RTL */
+    }
 }

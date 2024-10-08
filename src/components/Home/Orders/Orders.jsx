@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
@@ -21,6 +21,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { useTranslation } from "react-i18next";
+import { Paginator } from "primereact/paginator";
 
 const Orders = () => {
   const { t } = useTranslation();
@@ -214,8 +215,10 @@ const Orders = () => {
       />
     );
   };
+  const [first, setFirst] = useState(0);
 
   const onPage =  (event) => {
+    setFirst(event.first);
      handleFilterChange({
       pageNumber: event.page, // Convert 0-based index to 1-based for backend
       pageSize: event.rows, // Keep the page size
@@ -230,11 +233,9 @@ const Orders = () => {
           stripedRows
           className="w-12 m-auto shadow-7"
           style={tableStyles}
-          paginator
+          /* paginator */
           rows={ordersFilters.pageSize}
           totalRecords={totalRecords}
-          onPage={onPage}
-          rowsPerPageOptions={[5, 10, 15, 25, 50]}
           filterDisplay="row"
           emptyMessage={t("noAvailableRecords")}
           filters={{
@@ -242,6 +243,9 @@ const Orders = () => {
         }}
         scrollable
         scrollHeight="70vh"
+        footer={
+          <Paginator first={first} rows={ordersFilters.pageSize} totalRecords={totalRecords} rowsPerPageOptions={[5,10, 20, 30]} onPageChange={onPage} />
+        }
         >
           <Column
             field="customername"
