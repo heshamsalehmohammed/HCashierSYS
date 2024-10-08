@@ -10,7 +10,6 @@ listenerMiddleware.startListening({
   effect: async (action, { dispatch, getState }) => {
     const state = getState();
 
-    // Dispatch the fetchStats action with the updated state
     dispatch(fetchStats());
   },
 });
@@ -21,7 +20,6 @@ listenerMiddleware.startListening({
   effect: async (action, { dispatch, getState }) => {
     const state = getState();
 
-    // Dispatch the fetchStats action with the updated state
     dispatch(fetchStats());
   },
 });
@@ -32,7 +30,6 @@ listenerMiddleware.startListening({
   effect: async (action, { dispatch, getState }) => {
     const state = getState();
 
-    // Dispatch the fetchStats action with the updated state
     dispatch(fetchOrders());
   },
 });

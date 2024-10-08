@@ -19,6 +19,7 @@ import { initWebSocket, selectLanguage } from "./redux/slices/utilitiesSlice";
 import PrimeReact from "primereact/api";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
+import RouteChangeListener from './components/utilities/RouteChangeListener';
 
 function App() {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function App() {
     <Router>
       <MainLayout>
         <div className="App" id="App">
+          <RouteChangeListener/>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Navigate to="/home" />} />

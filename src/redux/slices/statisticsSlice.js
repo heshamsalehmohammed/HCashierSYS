@@ -1,6 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { handleHttpRequestPromise } from "../../services/HTTPRequestHandler";
 import { fetchStatsAPI } from "../../api/statsAPI";
+import { fetchOrdersItemsPreperations } from "./ordersSlice";
+
+
+export const updateHomePage = createAsyncThunk(
+  "statistics/updateHomePage",
+  async (payload, thunkAPI) => {
+    const state = thunkAPI.getState();
+    if(state.route.currentRoute == '/home'){
+      // update home page
+      thunkAPI.dispatch(fetchOrdersItemsPreperations());
+      thunkAPI.dispatch(fetchStats());
+    }
+  }
+);
 
 export const fetchStats = createAsyncThunk(
   "statistics/fetchStats",

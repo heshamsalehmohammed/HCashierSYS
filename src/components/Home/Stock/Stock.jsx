@@ -48,7 +48,7 @@ const Stock = (props) => {
   );
 
   useEffect(() => {
-    if (!fromOrder) {
+    if(stockItems.length === 0){
       dispatch(fetchStockItems());
     }
   }, []);

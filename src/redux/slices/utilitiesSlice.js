@@ -1,19 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { closeWebSocket, initWebSocketConnection } from "../../services/webSocketManager";
+import {
+  closeWebSocket,
+  initWebSocketConnection,
+} from "../../services/webSocketManager";
+import { fetchStockItemBackendAction } from "./stockSlice";
+import { updateHomePage } from "./statisticsSlice";
+
+const getReduxActionsMappings = () => {
+  return {
+    fetchStockItemBackendAction: fetchStockItemBackendAction,
+    updateHomePage: updateHomePage
+  };
+};
 
 export const initWebSocket = createAsyncThunk(
-  'utilities/initWebSocket',
+  "utilities/initWebSocket",
   async ({ maxRetries = 5, retryDelay = 1000 }, { dispatch }) => {
     let attempts = 0;
-    let sessionId = sessionStorage.getItem('sessionId');
+    let sessionId = sessionStorage.getItem("sessionId");
 
     dispatch(startLoading());
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      console.error('No token found. Cannot initialize WebSocket connection.');
+      console.error("No token found. Cannot initialize WebSocket connection.");
       dispatch(stopLoading()); // Stop loading since we cannot proceed
-      return Promise.reject('No token found');
+      return Promise.reject("No token found");
     }
 
     const attemptConnection = async () => {
@@ -24,12 +36,25 @@ export const initWebSocket = createAsyncThunk(
             sessionId,
             dispatch,
             onMessage: (data) => {
-              if (data.type === 'action') {
+              if (data.type === "action") {
                 // Handle action messages
-                const { reduxActionToBeDispatched, reduxActionPayloadToBeSent } = data;
-        
-                // Check if the action is allowed
-                dispatch({ type: reduxActionToBeDispatched, payload: reduxActionPayloadToBeSent });
+                const {
+                  reduxActionToBeDispatched,
+                  reduxActionPayloadToBeSent,
+                } = data;
+
+                const actionFromMapper =
+                  getReduxActionsMappings()[reduxActionToBeDispatched];
+
+                if (actionFromMapper) {
+                  dispatch(actionFromMapper(reduxActionPayloadToBeSent));
+                } else {
+                  // Check if the action is allowed
+                  dispatch({
+                    type: reduxActionToBeDispatched,
+                    payload: reduxActionPayloadToBeSent,
+                  });
+                }
               }
             },
           });
@@ -45,7 +70,7 @@ export const initWebSocket = createAsyncThunk(
             await new Promise((resolve) => setTimeout(resolve, retryDelay));
           } else {
             console.error(
-              'Max retry attempts reached. Could not establish WebSocket connection.'
+              "Max retry attempts reached. Could not establish WebSocket connection."
             );
             dispatch(stopLoading()); // Stop loading if we have failed after max retries
           }
@@ -66,42 +91,42 @@ export const closeSocket = () => (dispatch) => {
 // Define initial state
 const initialState = {
   loading: 0,
-  lang: localStorage.getItem('appLanguage') || 'en',
+  lang: localStorage.getItem("appLanguage") || "en",
   popup: {
     isDisplayed: false,
-    type: '',
-    title: '',
-    message: '',
+    type: "",
+    title: "",
+    message: "",
     multiMessages: [],
     headers: [],
-    buttonLabel: '',
+    buttonLabel: "",
   },
   errorPopup: {
     isDisplayed: false,
-    title: '',
-    body: '',
+    title: "",
+    body: "",
   },
   confirmationPopup: {
     isDisplayed: false,
-    actionName: '',
-    actionMessage: '',
+    actionName: "",
+    actionMessage: "",
     confirmCallback: null,
     declineCallback: null,
-    confirmationButtonText: '',
-    cancelText: '',
+    confirmationButtonText: "",
+    cancelText: "",
     closable: false,
     confirmationButtonProps: {},
   },
-  toast:{
+  toast: {
     toastMessage: null,
-    toastSeverity: 'info',
-    toastSummary: 'Info',
+    toastSeverity: "info",
+    toastSummary: "Info",
   },
   socketInitialized: false,
 };
 
 const utilitiesSlice = createSlice({
-  name: 'utilities',
+  name: "utilities",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -113,13 +138,13 @@ const utilitiesSlice = createSlice({
     showToast: (state, action) => {
       const { message, severity, summary } = action.payload;
       state.toast.toastMessage = message;
-      state.toast.toastSeverity = severity || 'info'; // Default to 'info'
-      state.toast.toastSummary = summary || 'Info';  // Default to 'Info'
+      state.toast.toastSeverity = severity || "info"; // Default to 'info'
+      state.toast.toastSummary = summary || "Info"; // Default to 'Info'
     },
     clearToastMessage: (state) => {
       state.toast.toastMessage = null;
-      state.toast.toastSeverity = 'info';
-      state.toast.toastSummary = 'Info';
+      state.toast.toastSeverity = "info";
+      state.toast.toastSummary = "Info";
     },
     openPopup: (state, action) => {
       const payload = action.payload;
@@ -167,7 +192,7 @@ const utilitiesSlice = createSlice({
     changeLanguage: (state, action) => {
       const newLang = action.payload;
       state.lang = newLang;
-      localStorage.setItem('appLanguage', newLang); // Persist language to localStorage
+      localStorage.setItem("appLanguage", newLang); // Persist language to localStorage
     },
     socketInitialized: (state) => {
       state.socketInitialized = true;
@@ -191,7 +216,7 @@ export const {
   socketInitialized,
   socketClosed,
   showToast,
-  clearToastMessage
+  clearToastMessage,
 } = utilitiesSlice.actions;
 
 export const selectLanguage = (state) => state.utilities.lang;

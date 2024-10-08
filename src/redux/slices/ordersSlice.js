@@ -15,7 +15,6 @@ import {
   populateAddStockItemPopup,
 } from "./stockSlice";
 import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
-import { fetchStats } from "./statisticsSlice";
 import { openPopup } from "./utilitiesSlice";
 
 export const addOrder = createAsyncThunk(
@@ -55,7 +54,6 @@ export const addOrder = createAsyncThunk(
       },
     })
       .then((result) => {
-        thunkAPI.dispatch(fetchStats());
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {

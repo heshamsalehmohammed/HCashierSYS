@@ -8,7 +8,9 @@ import {
   fetchStockItemsAPI,
 } from "../../api/stockAPI";
 import _ from "lodash";
-import { fetchOrdersItemsPreperations } from "./ordersSlice";
+import { populateSelectStockItemForOrderPopup } from "./ordersSlice";
+import { showToast } from "./utilitiesSlice";
+import { updateHomePage } from "./statisticsSlice";
 
 export const addStockItem = createAsyncThunk(
   "stock/addStockItem",
@@ -20,7 +22,7 @@ export const addStockItem = createAsyncThunk(
     delete newStockItem._id;
     delete newStockItem.__v;
     delete newStockItem.addStockItemCustomizationPopup;
-    
+
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
       delete customization.__v;
@@ -88,8 +90,6 @@ export const editStockItem = createAsyncThunk(
     })
       .then((result) => {
         thunkAPI.dispatch(closeAddStockItemPopup());
-        thunkAPI.dispatch(fetchStockItems());
-        thunkAPI.dispatch(fetchOrdersItemsPreperations());
         return thunkAPI.fulfillWithValue(result.data);
       })
       .catch((error) => {
@@ -169,17 +169,70 @@ export const fetchStockItem = createAsyncThunk(
   }
 );
 
+export const fetchStockItemBackendAction = createAsyncThunk(
+  "stock/fetchStockItemBackendAction",
+  async (payload, thunkAPI) => {
+    return handleHttpRequestPromise(fetchStockItemAPI(payload), {
+      type: "openPopup",
+      showForStatuses: "400,401,500,404,501",
+      payload: {
+        type: "Error",
+        title: "Error fetch StockItem",
+        message:
+          "An unexpected error occurred, Cannot fetch StockItem at thee moment. ",
+        buttonLabel: "OK",
+      },
+    })
+      .then((result) => {
+
+
+        const newStockItem = result.data;
+        const state = thunkAPI.getState();
+        if(state.orders.selectStockItemForOrderPopup.isShown){
+          
+          const currentOrder = state.orders.currentOrder;
+          const currentOrderItemIndex = currentOrder.items.findIndex(oi=> oi.stockItemId == newStockItem._id);
+
+
+          thunkAPI.dispatch(populateAddStockItemPopup(newStockItem));
+          thunkAPI.dispatch(
+            populateSelectStockItemForOrderPopup({
+              stockItem: newStockItem,
+              orderStockItem: {
+                ...currentOrder.items[currentOrderItemIndex],
+                itemIndexInOrder: currentOrderItemIndex,
+              },
+            })
+          );
+        }
+
+
+        thunkAPI.dispatch(showToast({
+          message: `Item ${newStockItem.name} has been modified from other session`,
+          severity: 'info',
+          summary: 'Info'
+        }))
+
+        thunkAPI.dispatch(updateHomePage())
+        return thunkAPI.fulfillWithValue(newStockItem);
+      })
+      .catch((error) => {
+        debugger
+        return thunkAPI.abort();
+      });
+  }
+);
+
 export const prepareAndopenAddStockItemPopup = createAsyncThunk(
   "stock/prepareAndopenAddStockItemPopup",
   async (payload, thunkAPI) => {
     if (payload) {
-
       let stockItemPayload = null;
       const stockItems = thunkAPI.getState().stock.stockItems;
-      const stockItemInState = stockItems.find(si => si._id == payload) 
-      if(stockItemInState){
+      const stockItemInState = stockItems.find((si) => si._id == payload);
+      if (stockItemInState) {
         stockItemPayload = stockItemInState;
-      }else{
+      } else {
         const stockItem = await thunkAPI.dispatch(fetchStockItem(payload));
         stockItemPayload = stockItem.payload;
       }
@@ -206,7 +259,7 @@ const initialState = {
       _id: "",
       name: "",
       options: [],
-      indexOfCustomization: null
+      indexOfCustomization: null,
     },
   },
 };
@@ -216,9 +269,9 @@ const _closeAddStockItemCustomizationPopup = (state) => {
   state.addStockItemPopup.addStockItemCustomizationPopup = {
     isShown: false,
     _id: "",
-    name: '',
+    name: "",
     options: [],
-    indexOfCustomization:null
+    indexOfCustomization: null,
   };
 };
 
@@ -273,14 +326,22 @@ const stockSlice = createSlice({
 
     openAddStockItemCustomizationPopup: (state, action) => {
       state.addStockItemPopup.addStockItemCustomizationPopup.isShown = true;
-      if (action.payload >= 0) {
-        state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization = action.payload
+      if (action.payload != null) {
+        state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization =
+          action.payload;
+
         state.addStockItemPopup.addStockItemCustomizationPopup.options =
-          state.addStockItemPopup.customizations[action.payload].options;
+          state.addStockItemPopup.customizations[
+            state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization
+          ].options;
         state.addStockItemPopup.addStockItemCustomizationPopup.name =
-          state.addStockItemPopup.customizations[action.payload].name;
+          state.addStockItemPopup.customizations[
+            state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization
+          ].name;
         state.addStockItemPopup.addStockItemCustomizationPopup._id =
-          state.addStockItemPopup.customizations[action.payload]._id;
+          state.addStockItemPopup.customizations[
+            state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization
+          ]._id;
       }
     },
     closeAddStockItemCustomizationPopup: (state, action) => {
@@ -323,8 +384,9 @@ const stockSlice = createSlice({
       );
 
       if (newCustomization.indexOfCustomization != null) {
-        state.addStockItemPopup.customizations[newCustomization.indexOfCustomization] =
-          newCustomization;
+        state.addStockItemPopup.customizations[
+          newCustomization.indexOfCustomization
+        ] = newCustomization;
       } else {
         state.addStockItemPopup.customizations.push(newCustomization);
       }
@@ -335,9 +397,60 @@ const stockSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchStockItems.fulfilled, (state, action) => {
-      state.stockItems = action.payload;
-    });
+    builder
+      .addCase(fetchStockItems.fulfilled, (state, action) => {
+        state.stockItems = action.payload;
+      })
+      .addCase(editStockItem.fulfilled, (state, action) => {
+        const indexInStockItems = state.stockItems.findIndex(
+          (si) => si._id == action.payload._id
+        );
+        if (indexInStockItems != -1) {
+          state.stockItems[indexInStockItems] = action.payload;
+        }
+      })
+      .addCase(addStockItem.fulfilled, (state, action) => {
+        state.stockItems.push(action.payload);
+      })
+      .addCase(fetchStockItemBackendAction.fulfilled, (state, action) => {
+        // update the item in stockItems
+        const indexInStockItems = state.stockItems.findIndex(
+          (si) => si._id == action.payload._id
+        );
+        if (indexInStockItems != -1) {
+          state.stockItems[indexInStockItems] = action.payload;
+        }
+        // update the item in the addStockItemPopup
+        if (
+          state.addStockItemPopup.isShown &&
+          state.addStockItemPopup._id == action.payload._id
+        ) {
+          state.addStockItemPopup.amount = action.payload.amount;
+          state.addStockItemPopup.name = action.payload.name;
+          state.addStockItemPopup.price = action.payload.price;
+          state.addStockItemPopup.customizations =
+            action.payload.customizations;
+
+          if (
+            state.addStockItemPopup.addStockItemCustomizationPopup.isShown &&
+            state.addStockItemPopup.addStockItemCustomizationPopup
+              .indexOfCustomization != null
+          ) {
+            state.addStockItemPopup.addStockItemCustomizationPopup.options =
+              state.addStockItemPopup.customizations[
+                state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization
+              ].options;
+            state.addStockItemPopup.addStockItemCustomizationPopup.name =
+              state.addStockItemPopup.customizations[
+                state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization
+              ].name;
+            state.addStockItemPopup.addStockItemCustomizationPopup._id =
+              state.addStockItemPopup.customizations[
+                state.addStockItemPopup.addStockItemCustomizationPopup.indexOfCustomization
+              ]._id;
+          }
+        }
+      });
   },
 });
 
