@@ -14,7 +14,7 @@ import Users from "./Users/Users";
 
 const BodyContentWrapper = ({ children }) => {
   return (
-    <div className="body-content container p-3 mt-3 m-auto">{children}</div>
+    <div className="surface-ground body-content container p-3 mt-3 m-auto">{children}</div>
   );
 };
 

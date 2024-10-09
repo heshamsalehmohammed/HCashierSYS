@@ -229,7 +229,7 @@ const Orders = () => {
 
   return (
     <div className="">
-      <div className="surface-ground px-4 pb-1 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+      <div className=" px-4 pb-1 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <DataTable
           value={orders}
           stripedRows

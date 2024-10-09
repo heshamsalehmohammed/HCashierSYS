@@ -85,7 +85,7 @@ const Customers = () => {
   return (
     <div className="">
       <CreateCustomerPopup />
-      <div className="surface-ground px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+      <div className=" px-4 pb-8 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
         <Button
           type="button"
           label={t("addNewCustomer")}
