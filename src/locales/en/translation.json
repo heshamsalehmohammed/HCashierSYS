@@ -95,5 +95,7 @@
   "receipt":"Receipt",
   "canOrderByCount":"Can order by count",
   "theCount":"Count",
-  "count":"Count"
+  "count":"Count",
+  "stockItemCountDetails":"Amount by count",
+  "totalCount":"Total Count"
 }

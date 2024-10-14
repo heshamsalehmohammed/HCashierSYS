@@ -95,5 +95,7 @@
   "receipt":"الفاتوره",
   "canOrderByCount":"يمكن الطلب عن طريق العدد",
   "theCount":"العدد",
-  "count":"عدد"
+  "count":"عدد",
+  "stockItemCountDetails":"الكمية بالعدد",
+  "totalCount":"العدد الكلي"
 }

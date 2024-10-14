@@ -59,6 +59,7 @@ const OrdersItemsPreparationCard = () => {
     <>
       <CreateStockItemPopup />
       <Card
+      style={{width:'100%'}}
         className={`p-relative orders-items-prep shadow-8 ${
           isFullScreen ? "h-full" : ""
         }`}
@@ -78,13 +79,45 @@ const OrdersItemsPreparationCard = () => {
         <DataTable
           value={ordersItemsPreperations}
           emptyMessage={t("noAvailableRecords")}
-          scrollable={isFullScreen ? false : true}
-          scrollHeight={isFullScreen ? undefined : "50vh"}
+          scrollable={true}
+          scrollHeight={isFullScreen ? '80vh' : "50vh"}
+          
         >
           <Column field="stockItemName" header={t("itemName")} />
           <Column field="stockItemQuantity" header={t("inStock")} />
           <Column field="requiredQuantity" header={t("needToBuy")} />
           <Column
+            field="stockItemCountDetails"
+            header={t("stockItemCountDetails")}
+            width={200}
+            body={(rowData) => {
+              if(!rowData.stockItemCountDetails?.totalCount) return '';
+              return (
+                <div className="flex justify-content-start" style={{minWidth:'125px'}}>
+                  <div className="m-2">
+                    <span className="font-bold">{t("totalCount")}: </span>
+                    <span>{rowData.stockItemCountDetails.totalCount}</span>
+                    {rowData.stockItemCountDetails.customizationsOptionsCount.map(
+                      (o, index) => {
+                        if(!o.count) return '';
+                        return (
+                          <div key={`customizationsOptionsCount-${index}`}>
+                            <span className="font-bold">
+                              {o.stockItemCustomizationSelectedOptionName} :
+                            </span>
+                            <span>
+                              {o.count}
+                            </span>
+                          </div>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+              );
+            }}
+          />
+          {/* <Column
             field="actions"
             header=""
             body={(rowData) => {
@@ -99,7 +132,7 @@ const OrdersItemsPreparationCard = () => {
                 </div>
               );
             }}
-          />
+          /> */}
         </DataTable>
       </Card>
     </>
