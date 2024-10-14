@@ -22,7 +22,8 @@ export const addStockItem = createAsyncThunk(
     delete newStockItem._id;
     delete newStockItem.__v;
     delete newStockItem.addStockItemCustomizationPopup;
-
+    newStockItem.amount = Number(newStockItem.amount)
+    newStockItem.price = Number(newStockItem.price)
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
       delete customization.__v;
@@ -31,6 +32,7 @@ export const addStockItem = createAsyncThunk(
       customization.options.forEach((option) => {
         delete option._id;
         delete option.__v;
+        option.additionalPrice = Number(option.additionalPrice)
       });
     });
     return handleHttpRequestPromise(addStockItemAPI(newStockItem), {
@@ -67,6 +69,8 @@ export const editStockItem = createAsyncThunk(
     delete newStockItem._id;
     delete newStockItem.__v;
     delete newStockItem.addStockItemCustomizationPopup;
+    newStockItem.amount = Number(newStockItem.amount)
+    newStockItem.price = Number(newStockItem.price)
     newStockItem.customizations.forEach((customization) => {
       delete customization._id;
       delete customization.__v;
@@ -75,6 +79,7 @@ export const editStockItem = createAsyncThunk(
       customization.options.forEach((option) => {
         delete option._id;
         delete option.__v;
+        option.additionalPrice = Number(option.additionalPrice)
       });
     });
     return handleHttpRequestPromise(editStockItemAPI(id, newStockItem), {
@@ -250,9 +255,9 @@ const initialState = {
     isShown: false,
     _id: "",
     name: "",
-    amount: 0,
+    amount: '',
     canOrderByCount: false,
-    price: 0,
+    price: '',
     customizations: [],
     addStockItemCustomizationPopup: {
       isShown: false,
@@ -281,8 +286,8 @@ const _closeAddStockItemPopup = (state) => {
     isShown: false,
     _id: "",
     name: "",
-    amount: 0,
-    price: 0,
+    amount: '',
+    price: '',
     canOrderByCount: false,
     customizations: [],
     addStockItemCustomizationPopup: {
@@ -306,10 +311,10 @@ const stockSlice = createSlice({
       state.addStockItemPopup.name = action.payload;
     },
     setAddStockItemPopupAmount: (state, action) => {
-      state.addStockItemPopup.amount = Number(action.payload);
+      state.addStockItemPopup.amount = action.payload;
     },
     setAddStockItemPopupPrice: (state, action) => {
-      state.addStockItemPopup.price = Number(action.payload);
+      state.addStockItemPopup.price = action.payload;
     },
     setAddStockItemPopupCanOrderByCount: (state, action)=>{
       state.addStockItemPopup.canOrderByCount = Boolean(action.payload)
@@ -360,7 +365,7 @@ const stockSlice = createSlice({
       state.addStockItemPopup.addStockItemCustomizationPopup.options.push({
         _id: "",
         name: "",
-        additionalPrice: 0,
+        additionalPrice: '',
       });
     },
     removeStockItemCustomizationOption: (state, action) => {
@@ -381,7 +386,7 @@ const stockSlice = createSlice({
       const value = action.payload.value;
       state.addStockItemPopup.addStockItemCustomizationPopup.options[
         index
-      ].additionalPrice = Number(value);
+      ].additionalPrice = value;
     },
     addStockItemCustomization: (state, action) => {
       const newCustomization = _.cloneDeep(

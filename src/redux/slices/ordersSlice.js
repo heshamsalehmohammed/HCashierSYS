@@ -35,11 +35,15 @@ export const addOrder = createAsyncThunk(
       delete item.__v;
       delete item.stockItemName;
       delete item.itemIndexInOrder;
+      item.amount = Number(item.amount);
+      item.price = Number(item.price);
+      item.count = Number(item.count??0);
       item.stockItemCustomizationsSelectedOptions.forEach((option) => {
         delete option._id;
         delete option.__v;
         delete option.stockItemCustomizationName;
         delete option.stockItemCustomizationSelectedOptionName;
+        option.stockItemCustomizationSelectedOptionAdditionalPrice = Number(option.stockItemCustomizationSelectedOptionAdditionalPrice);
       });
     });
 
@@ -86,11 +90,15 @@ export const editOrder = createAsyncThunk(
       delete item.__v;
       delete item.stockItemName;
       delete item.itemIndexInOrder;
+      item.amount = Number(item.amount);
+      item.price = Number(item.price);
+      item.count = Number(item.count ?? 0);
       item.stockItemCustomizationsSelectedOptions.forEach((option) => {
         delete option._id;
         delete option.__v;
         delete option.stockItemCustomizationName;
         delete option.stockItemCustomizationSelectedOptionName;
+        option.stockItemCustomizationSelectedOptionAdditionalPrice = Number(option.stockItemCustomizationSelectedOptionAdditionalPrice);
       });
     });
 
@@ -275,14 +283,14 @@ export const fetchOrderBackendAction = createAsyncThunk(
 );
 
 const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
-  const count = state.selectStockItemForOrderPopup.count ?? 1;
+  const count = state.selectStockItemForOrderPopup.count ? Number(state.selectStockItemForOrderPopup.count): 1;
   const calculatedPrice =
     count *
-    state.selectStockItemForOrderPopup.amount *
-    (state.selectStockItemForOrderPopup.stockItemPrice +
+    Number(state.selectStockItemForOrderPopup.amount) *
+    (Number(state.selectStockItemForOrderPopup.stockItemPrice) +
       state.selectStockItemForOrderPopup.stockItemCustomizationsSelectedOptions.reduce(
         (acc, cur) =>
-          acc + cur.stockItemCustomizationSelectedOptionAdditionalPrice,
+          acc + Number(cur.stockItemCustomizationSelectedOptionAdditionalPrice),
         0
       ));
 
@@ -292,7 +300,7 @@ const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
 
 const calculateCurrentOrderPrice = (state) => {
   const calculatedPrice = state.currentOrder.items.reduce(
-    (acc, cur) => acc + cur.price,
+    (acc, cur) => acc + Number(cur.price),
     0
   );
 
@@ -307,9 +315,9 @@ const _closeSelectStockItemForOrderPopup = (state) => {
     stockItemName: "",
     stockItemPrice: 0,
     stockItemCustomizationsSelectedOptions: [],
-    amount: 0,
-    count: 0,
-    price: 0,
+    amount: '',
+    count: '',
+    price: '',
   };
 };
 
@@ -369,9 +377,9 @@ const initialState = {
     stockItemName: "",
     stockItemPrice: 0,
     stockItemCustomizationsSelectedOptions: [],
-    amount: 0,
-    count: 0,
-    price: 0,
+    amount: '',
+    count: '',
+    price: '',
   },
   currentOrder: {
     _id: "",
@@ -462,13 +470,13 @@ const ordersSlice = createSlice({
         });
 
       state.selectStockItemForOrderPopup.amount =
-        action.payload.orderStockItem?.amount ?? 0;
+        action.payload.orderStockItem?.amount ?? '';
 
       state.selectStockItemForOrderPopup.count =
-        action.payload.orderStockItem?.count ?? 0;
+        action.payload.orderStockItem?.count ?? '';
 
       state.selectStockItemForOrderPopup.price =
-        action.payload.orderStockItem?.price ?? 0;
+        action.payload.orderStockItem?.price ?? '';
 
       state.selectStockItemForOrderPopup.itemIndexInOrder =
         action.payload.orderStockItem?.itemIndexInOrder ?? null;
@@ -497,11 +505,11 @@ const ordersSlice = createSlice({
       calculateCurrentOrderPrice(state);
     },
     setSelectStockItemForOrderPopupAmount: (state, action) => {
-      state.selectStockItemForOrderPopup.amount = Number(action.payload);
+      state.selectStockItemForOrderPopup.amount = action.payload;
       calculateAndSetSelectStockItemForOrderPopupPrice(state);
     },
     setSelectStockItemForOrderPopupCount: (state, action) => {
-      state.selectStockItemForOrderPopup.count = Number(action.payload);
+      state.selectStockItemForOrderPopup.count = action.payload;
       calculateAndSetSelectStockItemForOrderPopupPrice(state);
     },
     setStockItemCustomizationsSelectedOption: (state, action) => {
