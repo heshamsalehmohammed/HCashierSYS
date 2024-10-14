@@ -145,7 +145,7 @@ const Stock = (props) => {
           style={tableStyles}
           emptyMessage={t("noAvailableRecords")}
           scrollable
-          scrollHeight={fromOrder?"35vh":"70vh"}
+          scrollHeight={fromOrder?"70vh":"70vh"}
         >
           <Column
             field="name"
