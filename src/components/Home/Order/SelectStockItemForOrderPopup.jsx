@@ -15,6 +15,7 @@ import {
 } from "../../../redux/slices/ordersSlice";
 import { Divider } from "primereact/divider";
 import { useTranslation } from "react-i18next";
+import { roundToNearestHalf } from "../../../services/utilities";
 
 const StockItemForOrderPopup = () => {
   const { t } = useTranslation();
@@ -136,7 +137,7 @@ const StockItemForOrderPopup = () => {
       <Divider type="solid" />
       <div className="m-2 text-lg">
         <span className="font-bold">{t("totalPrice")}: </span>{" "}
-        <span>{stockItemForOrderPopupState.price} {t("currency")}</span>
+        <span>{roundToNearestHalf(stockItemForOrderPopupState.price)} {t("currency")}</span>
       </div>
     </Dialog>
   );

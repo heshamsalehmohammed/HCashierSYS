@@ -21,7 +21,7 @@ import { Divider } from "primereact/divider";
 import { Chip } from "primereact/chip";
 import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
-import { formatDate } from "../../../services/utilities";
+import { formatDate, roundToNearestHalf } from "../../../services/utilities";
 import { useTranslation } from "react-i18next";
 import { Message } from "primereact/message";
 import { Sidebar } from "primereact/sidebar";
@@ -229,7 +229,7 @@ const Order = () => {
           <div className="m-2 text-lg">
             <span className="font-bold">{t("totalPrice")}: </span>
             <span>
-              {currentOrder.totalPrice} {t("currency")}
+              {roundToNearestHalf(currentOrder.totalPrice)} {t("currency")}
             </span>
           </div>
         </Fieldset>

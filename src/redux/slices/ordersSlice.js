@@ -16,6 +16,7 @@ import {
 } from "./stockSlice";
 import RouterNavigationSingleton from "../../services/routerNavigationSingleton";
 import { openPopup } from "./utilitiesSlice";
+import { roundToNearestHalf } from "../../services/utilities";
 
 export const addOrder = createAsyncThunk(
   "orders/addOrder",
@@ -283,7 +284,7 @@ const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
         0
       ));
 
-  state.selectStockItemForOrderPopup.price = calculatedPrice;
+  state.selectStockItemForOrderPopup.price = roundToNearestHalf(calculatedPrice);
 };
 
 const calculateCurrentOrderPrice = (state) => {
@@ -292,7 +293,7 @@ const calculateCurrentOrderPrice = (state) => {
     0
   );
 
-  state.currentOrder.totalPrice = calculatedPrice;
+  state.currentOrder.totalPrice = roundToNearestHalf(calculatedPrice);
 };
 
 const _closeSelectStockItemForOrderPopup = (state) => {

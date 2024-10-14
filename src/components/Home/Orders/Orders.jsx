@@ -17,7 +17,7 @@ import {
   setOrdersFilterCriteria,
 } from "../../../redux/slices/ordersSlice";
 import { Tag } from "primereact/tag";
-import { formatDate } from "../../../services/utilities";
+import { formatDate, roundToNearestHalf } from "../../../services/utilities";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
@@ -305,7 +305,7 @@ const Orders = () => {
             body={(rowData) => {
               return (
                 <div className="flex justify-content-start">
-                  {rowData.totalPrice} {t("currency")}
+                  {roundToNearestHalf(rowData.totalPrice)} {t("currency")}
                 </div>
               );
             }}
