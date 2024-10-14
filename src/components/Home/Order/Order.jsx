@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { Message } from "primereact/message";
 import { Sidebar } from "primereact/sidebar";
 import Stock from "../Stock/Stock";
+import OrderReceipt from "./OrderReceipt";
 
 const Order = () => {
   const { t } = useTranslation();
@@ -100,6 +101,7 @@ const Order = () => {
           legend={
             <div className="flex align-items-center">
               <span className="font-bold">{t("customerDetails")}</span>
+              
             </div>
           }
           className="w-full custom-fieldset"
@@ -278,6 +280,7 @@ const Order = () => {
               }}
             />
           )}
+          <OrderReceipt/>
         </div>
       </div>
       <Sidebar

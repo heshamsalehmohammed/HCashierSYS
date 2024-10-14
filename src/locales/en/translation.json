@@ -91,5 +91,6 @@
   "user":"User",
   "users": "Users",
   "refresh":"Refresh",
-  "clearAllFilters":"Clear All Filters"
+  "clearAllFilters":"Clear All Filters",
+  "receipt":"Receipt"
 }
