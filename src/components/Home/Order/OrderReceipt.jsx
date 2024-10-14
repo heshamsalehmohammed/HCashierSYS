@@ -43,7 +43,7 @@ const OrderReceipt = () => {
                     <dt className="receipt__item">{`${item.amount} ${t(
                       "kilos"
                     )} ${item.stockItemName}`}</dt>
-                    <dd className="receipt__cost">{`${item.price} ${t(
+                    <dd className="receipt__cost">{`${roundToNearestHalf(item.price)} ${t(
                       "currency"
                     )}`}</dd>
                   </div>

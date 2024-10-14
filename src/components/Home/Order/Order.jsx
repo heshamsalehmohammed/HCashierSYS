@@ -171,7 +171,7 @@ const Order = () => {
                   />
                 ))}
                 <Chip
-                  label={`${t("totalItemPrice")} ${item.price} ${t(
+                  label={`${t("totalItemPrice")} ${roundToNearestHalf(item.price)} ${t(
                     "currency"
                   )}`}
                   className="m-1 mr-2"
