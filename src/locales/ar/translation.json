@@ -92,5 +92,8 @@
   "users": "المستخدمون",
   "refresh": "اعاده تحميل",
   "clearAllFilters": "الغاء جميع تخصيصات البحث",
-  "receipt":"الفاتوره"
+  "receipt":"الفاتوره",
+  "canOrderByCount":"يمكن الطلب عن طريق العدد",
+  "theCount":"العدد",
+  "count":"عدد"
 }

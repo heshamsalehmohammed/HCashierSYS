@@ -8,6 +8,7 @@ import {
   removeStockItemCustomization,
   selectAddStockItemPopup,
   setAddStockItemPopupAmount,
+  setAddStockItemPopupCanOrderByCount,
   setAddStockItemPopupName,
   setAddStockItemPopupPrice,
 } from "../../../redux/slices/stockSlice";
@@ -18,6 +19,7 @@ import CreateStockItemCustomizationPopup from "./CreateStockItemCustomizationPop
 import { Dropdown } from "primereact/dropdown";
 import { useTranslation } from "react-i18next";
 import { useAppendToContainer } from "../../../hooks/useAppendToContainer";
+import { Checkbox } from "primereact/checkbox";
 
 const CreateStockItemPopup = () => {
   const { t } = useTranslation();
@@ -50,7 +52,7 @@ const CreateStockItemPopup = () => {
     </div>
   );
 
-  const container = useAppendToContainer()
+  const container = useAppendToContainer();
 
   return (
     <Dialog
@@ -73,12 +75,10 @@ const CreateStockItemPopup = () => {
             className="w-12"
             id="itemname"
             value={addStockItemPopup.name}
-            onChange={(e) =>
-              dispatch(setAddStockItemPopupName(e.target.value))
-            }
+            onChange={(e) => dispatch(setAddStockItemPopupName(e.target.value))}
           />
         </FloatLabel>
-        <FloatLabel className="w-12 w-12 md:w-8 mb-4">
+        <FloatLabel className="w-12 w-12 md:w-8 mb-3">
           <label htmlFor="itemprice">{t("itemPricePerKilo")}</label>
           <InputText
             className="w-12"
@@ -90,6 +90,18 @@ const CreateStockItemPopup = () => {
             keyfilter="pnum"
           />
         </FloatLabel>
+        <div className="w-12 w-12 md:w-8 mb-5 flex">
+          <Checkbox
+            inputId="ingredient1"
+            onChange={(e) =>
+              dispatch(setAddStockItemPopupCanOrderByCount(e.checked))
+            }
+            checked={addStockItemPopup.canOrderByCount}
+          />
+          <label htmlFor="ingredient1" className="ml-2">
+            {t('canOrderByCount')}
+          </label>
+        </div>
         <FloatLabel className="w-12 w-12 md:w-8 mb-4">
           <label htmlFor="itemamount">{t("itemAmountInStock")}</label>
           <InputText

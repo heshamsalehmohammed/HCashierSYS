@@ -275,7 +275,9 @@ export const fetchOrderBackendAction = createAsyncThunk(
 );
 
 const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
+  const count = state.selectStockItemForOrderPopup.count ?? 1;
   const calculatedPrice =
+    count *
     state.selectStockItemForOrderPopup.amount *
     (state.selectStockItemForOrderPopup.stockItemPrice +
       state.selectStockItemForOrderPopup.stockItemCustomizationsSelectedOptions.reduce(
@@ -284,7 +286,8 @@ const calculateAndSetSelectStockItemForOrderPopupPrice = (state) => {
         0
       ));
 
-  state.selectStockItemForOrderPopup.price = roundToNearestHalf(calculatedPrice);
+  state.selectStockItemForOrderPopup.price =
+    roundToNearestHalf(calculatedPrice);
 };
 
 const calculateCurrentOrderPrice = (state) => {
@@ -305,6 +308,7 @@ const _closeSelectStockItemForOrderPopup = (state) => {
     stockItemPrice: 0,
     stockItemCustomizationsSelectedOptions: [],
     amount: 0,
+    count: 0,
     price: 0,
   };
 };
@@ -366,6 +370,7 @@ const initialState = {
     stockItemPrice: 0,
     stockItemCustomizationsSelectedOptions: [],
     amount: 0,
+    count: 0,
     price: 0,
   },
   currentOrder: {
@@ -458,6 +463,10 @@ const ordersSlice = createSlice({
 
       state.selectStockItemForOrderPopup.amount =
         action.payload.orderStockItem?.amount ?? 0;
+
+      state.selectStockItemForOrderPopup.count =
+        action.payload.orderStockItem?.count ?? 0;
+
       state.selectStockItemForOrderPopup.price =
         action.payload.orderStockItem?.price ?? 0;
 
@@ -489,6 +498,10 @@ const ordersSlice = createSlice({
     },
     setSelectStockItemForOrderPopupAmount: (state, action) => {
       state.selectStockItemForOrderPopup.amount = Number(action.payload);
+      calculateAndSetSelectStockItemForOrderPopupPrice(state);
+    },
+    setSelectStockItemForOrderPopupCount: (state, action) => {
+      state.selectStockItemForOrderPopup.count = Number(action.payload);
       calculateAndSetSelectStockItemForOrderPopupPrice(state);
     },
     setStockItemCustomizationsSelectedOption: (state, action) => {
@@ -544,6 +557,7 @@ export const {
   closeSelectStockItemForOrderPopup,
   populateSelectStockItemForOrderPopup,
   setSelectStockItemForOrderPopupAmount,
+  setSelectStockItemForOrderPopupCount,
   setStockItemCustomizationsSelectedOption,
   addStockItemToCurrentOrder,
   removeStockItemFromCurrentOrder,

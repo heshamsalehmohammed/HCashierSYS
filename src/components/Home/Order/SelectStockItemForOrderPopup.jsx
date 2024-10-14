@@ -11,6 +11,7 @@ import {
   prepareAndCloseSelectStockItemForOrderPopup,
   selectSelectStockItemForOrderPopup,
   setSelectStockItemForOrderPopupAmount,
+  setSelectStockItemForOrderPopupCount,
   setStockItemCustomizationsSelectedOption,
 } from "../../../redux/slices/ordersSlice";
 import { Divider } from "primereact/divider";
@@ -66,7 +67,9 @@ const StockItemForOrderPopup = () => {
     >
       <div className="m-2 text-lg">
         <span className="font-bold">{t("basePrice")}: </span>{" "}
-        <span>{stockItemForOrderPopupState.stockItemPrice} {t("currency")}</span>
+        <span>
+          {stockItemForOrderPopupState.stockItemPrice} {t("currency")}
+        </span>
       </div>
       <div className=" card flex justify-content-center align-items-center m-1 flex-column">
         <FloatLabel className="w-12 mt-5">
@@ -81,6 +84,20 @@ const StockItemForOrderPopup = () => {
             keyfilter="pnum"
           />
         </FloatLabel>
+        {stockItemState.canOrderByCount && (
+          <FloatLabel className="w-12 mt-5">
+            <label htmlFor="itemcount">{t("theCount")}</label>
+            <InputText
+              className="w-12"
+              id="itemcount"
+              value={stockItemForOrderPopupState.count}
+              onChange={(e) =>
+                dispatch(setSelectStockItemForOrderPopupCount(e.target.value))
+              }
+              keyfilter="pnum"
+            />
+          </FloatLabel>
+        )}
         {stockItemState.customizations.map((customization, index) => {
           const customizationOptions = customization.options.map((o) => {
             if (o.additionalPrice)
@@ -99,7 +116,8 @@ const StockItemForOrderPopup = () => {
             customizationOptions?.find(
               (o) =>
                 o._id ===
-                currentStockItemCustomizationsSelectedOption?.stockItemCustomizationSelectedOptionId ?? 0
+                  currentStockItemCustomizationsSelectedOption?.stockItemCustomizationSelectedOptionId ??
+                0
             ) ?? undefined;
 
           return (
@@ -137,7 +155,10 @@ const StockItemForOrderPopup = () => {
       <Divider type="solid" />
       <div className="m-2 text-lg">
         <span className="font-bold">{t("totalPrice")}: </span>{" "}
-        <span>{roundToNearestHalf(stockItemForOrderPopupState.price)} {t("currency")}</span>
+        <span>
+          {roundToNearestHalf(stockItemForOrderPopupState.price)}{" "}
+          {t("currency")}
+        </span>
       </div>
     </Dialog>
   );

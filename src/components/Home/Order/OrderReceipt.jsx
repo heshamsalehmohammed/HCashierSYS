@@ -38,7 +38,7 @@ const OrderReceipt = () => {
           <dl className="receipt__list">
             {currentOrder.items.map((item, currentOrderItemIndex) => {
               return (
-                <>
+                <div key={`orderitemsinrecipt-${currentOrderItemIndex}`}>
                   <div className="receipt__list-row">
                     <dt className="receipt__item">{`${item.amount} ${t(
                       "kilos"
@@ -47,10 +47,18 @@ const OrderReceipt = () => {
                       "currency"
                     )}`}</dd>
                   </div>
+                  {item.count && (
+                    <div className="receipt__list-row-details">
+                      {t('theCount')} {item.count}
+                    </div>
+                  )}
                   {item.stockItemCustomizationsSelectedOptions.map(
                     (op, ind) => (
-                      <div className="receipt__list-row-details">
-                      {`${op.stockItemCustomizationName} --- ${
+                      <div
+                        key={`stockItemCustomizationsSelectedOptions-${ind}`}
+                        className="receipt__list-row-details"
+                      >
+                        {`${op.stockItemCustomizationName} --- ${
                           op.stockItemCustomizationSelectedOptionName.includes(
                             "-"
                           )
@@ -58,12 +66,12 @@ const OrderReceipt = () => {
                                 "EGP",
                                 " " + t("currency")
                               )
-                            : op.stockItemCustomizationSelectedOptionName 
+                            : op.stockItemCustomizationSelectedOptionName
                         }`}
                       </div>
                     )
                   )}
-                </>
+                </div>
               );
             })}
 

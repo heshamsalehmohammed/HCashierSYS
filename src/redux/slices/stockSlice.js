@@ -251,6 +251,7 @@ const initialState = {
     _id: "",
     name: "",
     amount: 0,
+    canOrderByCount: false,
     price: 0,
     customizations: [],
     addStockItemCustomizationPopup: {
@@ -282,6 +283,7 @@ const _closeAddStockItemPopup = (state) => {
     name: "",
     amount: 0,
     price: 0,
+    canOrderByCount: false,
     customizations: [],
     addStockItemCustomizationPopup: {
       isShown: false,
@@ -309,11 +311,15 @@ const stockSlice = createSlice({
     setAddStockItemPopupPrice: (state, action) => {
       state.addStockItemPopup.price = Number(action.payload);
     },
+    setAddStockItemPopupCanOrderByCount: (state, action)=>{
+      state.addStockItemPopup.canOrderByCount = Boolean(action.payload)
+    },
     populateAddStockItemPopup: (state, action) => {
       state.addStockItemPopup._id = action.payload._id;
       state.addStockItemPopup.amount = action.payload.amount;
       state.addStockItemPopup.name = action.payload.name;
       state.addStockItemPopup.price = action.payload.price;
+      state.addStockItemPopup.canOrderByCount = action.payload.canOrderByCount;
       state.addStockItemPopup.customizations = action.payload.customizations;
     },
     openAddStockItemPopup: (state, action) => {
@@ -427,6 +433,7 @@ const stockSlice = createSlice({
           state.addStockItemPopup.amount = action.payload.amount;
           state.addStockItemPopup.name = action.payload.name;
           state.addStockItemPopup.price = action.payload.price;
+          state.addStockItemPopup.canOrderByCount = action.payload.canOrderByCount;
           state.addStockItemPopup.customizations =
             action.payload.customizations;
 
@@ -458,6 +465,7 @@ export const {
   setAddStockItemPopupName,
   setAddStockItemPopupAmount,
   setAddStockItemPopupPrice,
+  setAddStockItemPopupCanOrderByCount,
   closeAddStockItemPopup,
   populateAddStockItemPopup,
   openAddStockItemPopup,

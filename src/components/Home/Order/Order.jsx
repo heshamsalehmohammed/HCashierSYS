@@ -147,7 +147,7 @@ const Order = () => {
                 />
 
                 <Chip
-                  label={`${item.amount} ${t("kilos")} ${
+                  label={`${item.count ? `${t('count')} ${item.count} - ` : `` }${item.amount} ${t("kilos")} ${
                     item.stockItemName
                   } --- ${item.stockItemPrice} ${t("currency")}`}
                   className="m-1 mr-2"

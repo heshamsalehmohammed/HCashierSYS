@@ -92,5 +92,8 @@
   "users": "Users",
   "refresh":"Refresh",
   "clearAllFilters":"Clear All Filters",
-  "receipt":"Receipt"
+  "receipt":"Receipt",
+  "canOrderByCount":"Can order by count",
+  "theCount":"Count",
+  "count":"Count"
 }
