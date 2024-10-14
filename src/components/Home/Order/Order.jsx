@@ -285,7 +285,7 @@ const Order = () => {
       </div>
       <Sidebar
         visible={searchStockItemForOrderPopup.isShown}
-        position="bottom"
+        position="top"
         onHide={() => dispatch(closeSearchStockItemForOrderPopup())}
         className="custom-downbar"
       >
