@@ -68,7 +68,7 @@ const Order = () => {
   return (
     <div className="">
       <StockItemForOrderPopup />
-      <div className=" px-4 pb-4 pt-4 md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column">
+      <div className={` pb-4 ${canChangeOrderStatus?'pt-4':''} md:px-6 lg:px-8 flex align-items-center justify-content-center flex-column`}>
         {canChangeOrderStatus && (
           <FloatLabel className="w-3 m-1 -mt-6" style={{ minWidth: "276px" }}>
             <Dropdown

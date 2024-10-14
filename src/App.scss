@@ -12,7 +12,8 @@
     box-shadow: rgb(38 57 77 / 28%) 0px 5px 20px -1px;
 }
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
+    height: 5px;
 }
 ::-webkit-scrollbar-track {
     border-radius: 8px;
@@ -22,4 +23,9 @@
 ::-webkit-scrollbar-thumb {
     border-radius: 8px;
     background-color: #06b6d4;
+}
+
+
+.p-datatable .p-datatable-thead > tr > th ,.p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem 0.5rem !important;
 }

@@ -59,8 +59,8 @@ const Stock = (props) => {
         {fromOrder ? (
           <>
             <Button
-              icon="pi pi-plus"
-              className="p-button-success mr-2"
+              icon="pi pi-plus ml-2"
+              className="p-button-success mr-2 p-1 pr-2 pl-2"
               onClick={() => handleSelectItemForOrder(rowData)}
               label={t("selectItem")}
             />
@@ -108,7 +108,7 @@ const Stock = (props) => {
       <CreateStockItemPopup />
       <div
         className={` flex align-items-center justify-content-center flex-column ${
-          fromOrder ? "" : " px-4 pb-1 pt-4 md:px-6 lg:px-8 "
+          fromOrder ? "" : " pb-1 pt-4 md:px-6 lg:px-8 "
         }`}
       >
         <div className="flex align-items-center justify-content-between w-full  flex-column md:flex-row">
