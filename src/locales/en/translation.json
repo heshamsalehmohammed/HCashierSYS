@@ -28,6 +28,8 @@
   "create": "Create",
   "customerName": "Customer Name",
   "address": "Address",
+  "tombstone": "Tombstone",
+  "notes": "Notes",
   "selectItem": "Select Item",
   "addNewItem": "Add New Item",
   "searchByName": "Search by name",

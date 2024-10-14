@@ -28,6 +28,8 @@
   "create": "إنشاء",
   "customerName": "اسم العميل",
   "address": "العنوان",
+  "notes": "ملاحظات",
+  "tombstone": "علامة مميزة",
   "selectItem": "اختر",
   "addNewItem": "إضافة عنصر جديد",
   "searchByName": "ابحث بالاسم",

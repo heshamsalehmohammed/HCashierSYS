@@ -8,7 +8,9 @@ import {
   selectAddCustomerPopup,
   setAddCustomerPopupAddress,
   setAddCustomerPopupName,
+  setAddCustomerPopupNotes,
   setAddCustomerPopupPhone,
+  setAddCustomerPopupTombstone,
 } from "../../../redux/slices/customersSlice";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
@@ -98,7 +100,7 @@ const CreateCustomerPopup = () => {
           />
         </FloatLabel>
 
-        <FloatLabel className="w-12 md:w-8">
+        <FloatLabel className="w-12 md:w-8 mb-4">
           <InputTextarea
             id="Address"
             className="w-12"
@@ -110,6 +112,33 @@ const CreateCustomerPopup = () => {
             cols={25}
           />
           <label htmlFor="Address">{t("address")}</label>
+        </FloatLabel>
+
+        <FloatLabel className="w-12 md:w-8 mb-4">
+          <InputTextarea
+            id="Tombstone"
+            className="w-12"
+            value={addCustomerPopup.tombstone}
+            onChange={(e) =>
+              dispatch(setAddCustomerPopupTombstone(e.target.value))
+            }
+            rows={5}
+            cols={25}
+          />
+          <label htmlFor="Tombstone">{t("tombstone")}</label>
+        </FloatLabel>
+        <FloatLabel className="w-12 md:w-8">
+          <InputTextarea
+            id="Notes"
+            className="w-12"
+            value={addCustomerPopup.notes}
+            onChange={(e) =>
+              dispatch(setAddCustomerPopupNotes(e.target.value))
+            }
+            rows={5}
+            cols={25}
+          />
+          <label htmlFor="Notes">{t("notes")}</label>
         </FloatLabel>
       </div>
     </Dialog>

@@ -182,6 +182,8 @@ const initialState = {
     name: "",
     phone: "",
     address: "",
+    notes:'',
+    tombstone:''
   },
 };
 
@@ -201,12 +203,20 @@ const customersSlice = createSlice({
     setAddCustomerPopupAddress: (state, action) => {
       state.addCustomerPopup.address = action.payload;
     },
+    setAddCustomerPopupNotes: (state, action) => {
+      state.addCustomerPopup.notes = action.payload;
+    },
+    setAddCustomerPopupTombstone: (state, action) => {
+      state.addCustomerPopup.tombstone = action.payload;
+    },
     populateAddCustomerPopup: (state, action) => {
       state.addCustomerPopup.isShown = true;
       state.addCustomerPopup._id = action.payload._id;
       state.addCustomerPopup.name = action.payload.name;
       state.addCustomerPopup.phone = action.payload.phone;
       state.addCustomerPopup.address = action.payload.address;
+      state.addCustomerPopup.tombstone = action.payload.tombstone;
+      state.addCustomerPopup.notes = action.payload.notes;
     },
     openAddCustomerPopup: (state, action) => {
       state.addCustomerPopup.isShown = true;
@@ -219,6 +229,8 @@ const customersSlice = createSlice({
         name: "",
         phone: "",
         address: "",
+        notes:'',
+        tombstone:''
       };
     },
   },
@@ -241,6 +253,9 @@ export const {
   populateAddCustomerPopup,
   closeAddCustomerPopup,
   openAddCustomerPopup,
+  setAddCustomerPopupNotes,
+  setAddCustomerPopupTombstone,
+
 } = customersSlice.actions;
 
 export const selectCustomersSearchTerm = (state) => state.customers.searchTerm;
